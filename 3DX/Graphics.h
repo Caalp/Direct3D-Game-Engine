@@ -8,6 +8,7 @@ public:
 	Graphics(HWND hWnd);
 	Graphics(const Graphics&) = delete;
 	Graphics& operator=(const Graphics&) = delete;
+	HRESULT CompileShader(LPCSTR pScrData, SIZE_T SrcDatalen, LPCSTR pfilename, LPCSTR szentryPoint, LPCSTR shaderModel, ID3DBlob** ppBlobOut);
 	~Graphics();
 	void EndFrame();
 	void ClearFrame(float red,float gren,float blue);
