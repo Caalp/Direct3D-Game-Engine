@@ -51,25 +51,37 @@ Graphics::Graphics(HWND hWnd)
 
 
 }
-HRESULT Graphics::CompileShader(LPCWSTR pScrData, LPCSTR entryPoint, LPCSTR shaderModel, ID3DBlob** ppBlobOut)
+HRESULT CompileShader(LPCWSTR pScrData, LPCSTR entryPoint, LPCSTR shaderModel, ID3DBlob** ppBlobOut)
 {
 	if (pScrData == nullptr || entryPoint == nullptr || shaderModel == nullptr)
 	{
 		OutputDebugString("Init of Arg in Shader Compilation failed!");
 		return E_INVALIDARG;
 	}
-	//ID3DBlob* shaderBlob = nullptr;
+	ID3DBlob* shaderBlob = nullptr;
 	ID3DBlob* errorBlob = nullptr;
 
-	HRESULT hr = D3DCompileFromFile(pScrData, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint, shaderModel, D3DCOMPILE_DEBUG, 0, ppBlobOut, &errorBlob);
+	HRESULT hr = D3DCompileFromFile(pScrData, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint, shaderModel, D3DCOMPILE_DEBUG, 0, &shaderBlob, &errorBlob);
 
 	if (FAILED(hr))
 	{
 		OutputDebugString("Compilation of Shader is FAILED");
 		return E_UNEXPECTED;
 	}
-
+	*ppBlobOut = shaderBlob;
 	return S_OK;
+}
+ID3D11Device* Graphics::GetDevice()
+{
+	return pDevice.Get();
+}
+ID3D11DeviceContext * Graphics::GetContext()
+{
+	return pImmediateContext.Get();
+}
+ID3D11RenderTargetView * Graphics::GetTarget()
+{
+	return pTarget.Get();
 }
 void Graphics::DrawTestTriangle()
 {
@@ -120,7 +132,7 @@ void Graphics::DrawTestTriangle()
 
 	// create vertex shader
 	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
-	CompileShader(L"VertexShader.cso", "main", "vs_5_0", pBlob.GetAddressOf()); // compile shader in runtime
+	CompileShader(L"VertexShader.cso", "main", "vs_5_0", &pBlob); // compile shader in runtime
 	//(D3DReadFileToBlob(L"VertexShader.cso", &pBlob));
 	(pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader));
 
@@ -354,8 +366,10 @@ void Graphics::DrawCube(float angle, float x, float y)
 	pImmediateContext->PSSetShader(pPixelShader.Get(), nullptr, 0u);
 
 	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
-
-	(D3DReadFileToBlob(L"VertexShader.cso", &pBlob));
+	CompileShader(L"VertexShader.hlsl", "main", "vs_5_0", &pBlob); // compile shader in runtime
+	//(D3DReadFileToBlob(L"VertexShader.cso", &pBlob));
+	auto bufsize = pBlob->GetBufferPointer();
+	auto bb = pBlob->GetBufferSize();
 	pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader);
 	pImmediateContext->VSSetShader(pVertexShader.Get(), nullptr, 0u);
 	

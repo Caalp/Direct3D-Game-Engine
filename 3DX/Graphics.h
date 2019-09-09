@@ -9,7 +9,10 @@ public:
 	~Graphics() = default;
 	Graphics(const Graphics&) = delete;
 	Graphics& operator=(const Graphics&) = delete;
-	HRESULT CompileShader(LPCWSTR pScrData,LPCSTR szentryPoint, LPCSTR shaderModel, ID3DBlob** ppBlobOut);
+	friend HRESULT CompileShader(LPCWSTR pScrData,LPCSTR szentryPoint, LPCSTR shaderModel, ID3DBlob** ppBlobOut);
+	ID3D11Device* GetDevice();
+	ID3D11DeviceContext* GetContext();
+	ID3D11RenderTargetView* GetTarget();
 	void DrawTestTriangle();
 	void DrawCube(float angle, float x, float y);
 	

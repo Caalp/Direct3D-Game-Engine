@@ -26,8 +26,7 @@ std::vector<uint8_t> ReadData(const std::string filename)
 	}
 	return data;
 }
-
-VertexShader::VertexShader(VS_PROP ch, Graphics& gfx)
+VertexShader::VertexShader()
 {
 	
 	m_pVertexLayout = nullptr;
@@ -37,10 +36,7 @@ VertexShader::VertexShader(VS_PROP ch, Graphics& gfx)
 	m_pcbVSLighting = nullptr;
 	m_enableLights = true;
 
-	if (ch == VS_2D)
-	{
-
-	}
+	
 }
 
 VertexShader::~VertexShader()
@@ -52,7 +48,7 @@ VertexShader::~VertexShader()
 	SAFE_RELEASE(m_pcbVSLighting);
 }
 
-HRESULT VertexShader::OnRestore(Graphics& gfx)
+HRESULT VertexShader::InitVS()
 {
 	HRESULT hr;
 	SAFE_RELEASE(m_pVertexLayout);
@@ -63,23 +59,64 @@ HRESULT VertexShader::OnRestore(Graphics& gfx)
 
 	// Load and compile the vertex shader. Using the lowest
 	// possible profile for broadest feature level support
-	ID3DBlob* pVertexShaderBuffer = nullptr;
+	// Creation of Vertexbuffer
+	wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
+	D3D11_BUFFER_DESC vbdesc = {};
+	vbdesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbdesc.Usage = D3D11_USAGE_DEFAULT;
+	vbdesc.CPUAccessFlags = 0u;
+	vbdesc.MiscFlags = 0u;
+	vbdesc.ByteWidth = sizeof(vertices); // size of the vertices array
+	vbdesc.StructureByteStride = sizeof(Vertex);
+	// data for initializing a subresource 
+	D3D11_SUBRESOURCE_DATA sd = {};
+	sd.pSysMem = vertices; // pointer to initialization data
+	hr = pDevice->CreateBuffer(&vbdesc, &sd, pVertexBuffer.GetAddressOf());
+
+	// error check for creation of buffer here 
+
+
+	const UINT stride = sizeof(Vertex); // each stride has the size of element used in buffer 
+	const UINT offset = 0u; // offset number of the bytes first element in the buffer and first element will be used 
+	// bind an array of vertex buffers to the input assembler 
+	
+	ID3D11Buffer* indexBuffer_;
+	WORD indices[] =
+	{
+		0,2,1, 2,3,1,
+		1,3,5, 3,7,5,
+		2,6,3, 3,6,7,
+		4,5,7, 4,7,6,
+		0,4,2, 2,4,6,
+		0,1,4, 1,5,4
+	};
+	D3D11_BUFFER_DESC indexDesc;
+	ZeroMemory(&indexDesc, sizeof(indexDesc));
+	indexDesc.Usage = D3D11_USAGE_DEFAULT;
+	indexDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	indexDesc.ByteWidth = sizeof(indices);
+	indexDesc.StructureByteStride = sizeof(unsigned short);
+	indexDesc.CPUAccessFlags = 0;
+	sd.pSysMem = indices;
+
+	hr = pDevice->CreateBuffer(&indexDesc, &sd, &indexBuffer_);
+	pImmediateContext->IASetIndexBuffer(indexBuffer_, DXGI_FORMAT_R16_UINT, 0);
+	
+	wrl::ComPtr<ID3DBlob> pBlob;
+	
+
+	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
+	CompileShader(L"VertexShader.hlsl", "main", "vs_5_0", &pBlob); // compile shader in runtime
+	
+	auto bufsize = pBlob->GetBufferPointer();
+	auto bb = pBlob->GetBufferSize();
+	pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader);
+	pImmediateContext->VSSetShader(pVertexShader.Get(), nullptr, 0u);
+
 	
 	
-	auto vertexShaderBytecode = gfx.CompileShader();
-	if (hr)
-		 
-	{
-		SAFE_RELEASE(pVertexShaderBuffer);
-		return hr;
-	}
-	if (FAILED(hr = gfx.getDevice()->CreateVertexShader(
-		pVertexShaderBuffer->GetBufferPointer(),
-		pVertexShaderBuffer->GetBufferSize(), NULL, &m_pVertexShader)))
-	{
-		SAFE_RELEASE(pVertexShaderBuffer);
-		return hr;
-	}
+	
+	
 	
 }
 

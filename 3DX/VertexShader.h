@@ -2,17 +2,16 @@
 #include <d3d11.h>
 #include "Graphics.h"
 #define SAFE_RELEASE(p) { if ( (p) ) { (p)->Release(); (p) = 0; } }
-enum VS_PROP
-{
-	VS_2D,
-	VS_3D
-};
+
+namespace wrl = Microsoft::WRL;
+
 class VertexShader
 {
 public:
-	VertexShader(VS_PROP ch,Graphics& gfx);
+	
+	VertexShader();
 	~VertexShader();
-	HRESULT OnRestore();
+	HRESULT InitVS();
 	
 protected:
 	ID3D11VertexShader* m_pVertexShader;
@@ -21,6 +20,6 @@ protected:
 	ID3D11Buffer* m_pcbVSMaterial;
 	ID3D11Buffer* m_pcbVSLighting;
 	bool m_enableLights;
-	VS_PROP c;
+	
 	
 };

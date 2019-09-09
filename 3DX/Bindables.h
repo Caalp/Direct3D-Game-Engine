@@ -17,8 +17,7 @@ class Bindables
 
 
 protected:
-	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
-	wrl::ComPtr<ID3D10PixelShader> pPixelShader;
+	
 	wrl::ComPtr<ID3DBlob> pBlob;
 	wrl::ComPtr<ID3D11InputLayout> pIL;
 	
