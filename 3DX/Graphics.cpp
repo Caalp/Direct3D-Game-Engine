@@ -1,6 +1,14 @@
 #include "Graphics.h"
+#include <d3dcompiler.h>
+#include <sstream>
+#include <directxmath.h>
+namespace wrl = Microsoft::WRL;
 
 #pragma comment(lib,"d3d11.lib")
+#pragma comment(lib, "D3DCompiler.lib")
+
+
+
 Graphics::Graphics(HWND hWnd)
 {
 	DXGI_SWAP_CHAIN_DESC scd = {};
@@ -20,83 +28,443 @@ Graphics::Graphics(HWND hWnd)
 	scd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	scd.Flags = 0;
 
-	D3D11CreateDeviceAndSwapChain(NULL,
+	D3D11CreateDeviceAndSwapChain(
+		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
-		NULL,
+		nullptr,
 		0,
-		NULL,
+		nullptr,
 		0,
 		D3D11_SDK_VERSION,
 		&scd,
 		&pSwapChain,
 		&pDevice,
-		NULL,
+		nullptr,
 		&pImmediateContext);
 
-	ID3D11Resource* pBackBuffer = nullptr;
-	pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&pBackBuffer));
-	pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &pTarget);
-	pBackBuffer->Release();
+	wrl::ComPtr<ID3D11Resource> pBackBuffer ;
+	pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer);
+	pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &pTarget);
+	//pBackBuffer->Release();
+
+
+
 
 }
-
-HRESULT Graphics::CompileShader(LPCSTR pScrData, SIZE_T SrcDatalen, LPCSTR pfilename, LPCSTR szentryPoint, LPCSTR shaderModel, ID3DBlob ** ppBlobOut)
+HRESULT Graphics::CompileShader(LPCWSTR pScrData, LPCSTR entryPoint, LPCSTR shaderModel, ID3DBlob** ppBlobOut)
 {
-	
-	HRESULT hr = S_OK;
-	HRESULT hr = S_OK;
-	DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
-#if defined( DEBUG ) || defined( _DEBUG )
-	// Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-	// Setting this flag improves the shader debugging experience, but still
-	// allows the shaders to be optimized and to run exactly the way they will
-	// run in the release configuration of this program.
-	dwShaderFlags |= D3DCOMPILE_DEBUG;
-#endif
-	ID3DBlob* pErrorBlob;
-	hr = D3DX11CompileFromMemory(pSrcData, SrcDataLen,
-		pFileName, NULL, NULL, szEntryPoint, szShaderModel,
-		dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL);
+	if (pScrData == nullptr || entryPoint == nullptr || shaderModel == nullptr)
+	{
+		OutputDebugString("Init of Arg in Shader Compilation failed!");
+		return E_INVALIDARG;
+	}
+	//ID3DBlob* shaderBlob = nullptr;
+	ID3DBlob* errorBlob = nullptr;
+
+	HRESULT hr = D3DCompileFromFile(pScrData, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint, shaderModel, D3DCOMPILE_DEBUG, 0, ppBlobOut, &errorBlob);
+
 	if (FAILED(hr))
 	{
-		if (pErrorBlob != NULL)
-			OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
-		if (pErrorBlob) pErrorBlob->Release();
-		return hr;
+		OutputDebugString("Compilation of Shader is FAILED");
+		return E_UNEXPECTED;
 	}
-	if (pErrorBlob)
-		pErrorBlob->Release();
+
 	return S_OK;
+}
+void Graphics::DrawTestTriangle()
+{
+	HRESULT hr;
+	// create vertex struct that holds vertex data
+	struct Vertex
+	{
+		float x;
+		float y;
+		float r;
+		float g;
+		float b;
+	};
+	
+	const Vertex vertices[] =
+	{
+		{ 0.0f,0.5f,1.0f,0.0f,0.0f },
+		{ 0.5f,-0.5f,0.0f,1.0f,0.0f },
+		{ -0.5f,-0.5f,0.0f,0.0f,1.0f },
+	};
+	wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
+	D3D11_BUFFER_DESC bd = {};
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.CPUAccessFlags = 0u;
+	bd.MiscFlags = 0u;
+	bd.ByteWidth = sizeof(vertices);
+	bd.StructureByteStride = sizeof(Vertex);
+	D3D11_SUBRESOURCE_DATA sd = {};
+	sd.pSysMem = vertices;
+	(pDevice->CreateBuffer(&bd, &sd, &pVertexBuffer));
+
+	// Bind vertex buffer to pipeline
+	const UINT stride = sizeof(Vertex);
+	const UINT offset = 0u;
+	pImmediateContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
+
+
+	// create pixel shader
+	wrl::ComPtr<ID3D11PixelShader> pPixelShader;
+	wrl::ComPtr<ID3DBlob> pBlob;
+	(D3DReadFileToBlob(L"PixelShader.cso", &pBlob));
+	(pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader));
+
+	// bind pixel shader
+	pImmediateContext->PSSetShader(pPixelShader.Get(), nullptr, 0u);
+
+
+	// create vertex shader
+	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
+	CompileShader(L"VertexShader.cso", "main", "vs_5_0", pBlob.GetAddressOf()); // compile shader in runtime
+	//(D3DReadFileToBlob(L"VertexShader.cso", &pBlob));
+	(pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader));
+
+	// bind vertex shader
+	pImmediateContext->VSSetShader(pVertexShader.Get(), nullptr, 0u);
+
+
+	// holds a defination about how to feed the vertex data laid out in to memory at stage of input assembler
+	wrl::ComPtr<ID3D11InputLayout> pInputLayout;
+	const D3D11_INPUT_ELEMENT_DESC ied[] =
+	{
+		{ "Position",0,DXGI_FORMAT_R32G32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		//{ "Color",0,DXGI_FORMAT_R32G32B32_FLOAT,0,8u,D3D11_INPUT_PER_VERTEX_DATA,0 },
+	};
+	(pDevice->CreateInputLayout(
+		ied, (UINT)std::size(ied),
+		pBlob->GetBufferPointer(),
+		pBlob->GetBufferSize(),
+		&pInputLayout
+	));
+
+	// bind vertex layout
+	pImmediateContext->IASetInputLayout(pInputLayout.Get());
+
+
+	// bind render target
+	pImmediateContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), nullptr);
+
+
+	// Set primitive topology to triangle list (groups of 3 vertices)
+	pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+
+	// configure viewport
+	D3D11_VIEWPORT vp;
+	vp.Width = 800;
+	vp.Height = 600;
+	vp.MinDepth = 0;
+	vp.MaxDepth = 1;
+	vp.TopLeftX = 0;
+	vp.TopLeftY = 0;
+	pImmediateContext->RSSetViewports(1u, &vp);
+
+
+	(pImmediateContext->Draw((UINT)std::size(vertices), 0u));
+
+	
+
+	
 
 }
 
-Graphics::~Graphics()
+
+
+void Graphics::DrawCube(float angle, float x, float y)
 {
-	if (pTarget != nullptr)
+	HRESULT hr; 
+
+	
+	// create struct type that holds vertex data
+	struct Vertex
 	{
-		pTarget->Release();
-	}
-	if (pImmediateContext != nullptr)
+		float x;
+		float y;
+		float z;
+	};
+	float pitch(1.0f), yaw(1.0f), roll(1.0f);
+	
+		DirectX::XMMATRIX r;
+	    DirectX::XMMATRIX t;
+	
+	
+	
+	   DirectX::XMMATRIX viewMatrix_;
+		
+	   DirectX::XMMATRIX projMatrix_;
+	r = DirectX::XMMatrixRotationRollPitchYaw(angle, yaw, roll);
+	t= DirectX::XMMatrixTranslation(x, y, 4.0f);
+	D3D11_BUFFER_DESC bdsc{};
+	bdsc.ByteWidth = sizeof(DirectX::XMMATRIX);
+	bdsc.Usage = D3D11_USAGE_DYNAMIC;
+	bdsc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	bdsc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	bdsc.MiscFlags = 0u;
+	bdsc.StructureByteStride = 0u;
+
+	ID3D11Buffer* worldviewM;
+	ID3D11Buffer* projM;
+	ID3D11Buffer* viewM;
+	D3D11_SUBRESOURCE_DATA InitData = {};
+	InitData.pSysMem = &r;
+	
+
+	float scaleX(1.0f), scaleY(1.0f), scaleZ(1.0f);
+	viewMatrix_ = DirectX::XMMatrixIdentity();
+	projMatrix_ = DirectX::XMMatrixPerspectiveLH(1.0f,3.0f / 4.0f,0.5f,10.0f);
+	viewMatrix_ = DirectX::XMMatrixTranspose(viewMatrix_);
+	projMatrix_ = DirectX::XMMatrixTranspose(projMatrix_);
+
+	
+	const Vertex vertices[] =
 	{
-		pImmediateContext->Release();
-	}
-	if (pSwapChain != nullptr)
+	
+		{ -1.0f,-1.0f,-1.0f	 },
+		{ 1.0f,-1.0f,-1.0f	 },
+		{ -1.0f,1.0f,-1.0f	 },
+		{ 1.0f,1.0f,-1.0f	  },
+		{ -1.0f,-1.0f,1.0f	 },
+		{ 1.0f,-1.0f,1.0f	  },
+		{ -1.0f,1.0f,1.0f	 },
+		{ 1.0f,1.0f,1.0f	 },
+	};
+	
+	
+	// Creation of Vertexbuffer
+	wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
+	D3D11_BUFFER_DESC vbdesc = {};
+	vbdesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbdesc.Usage = D3D11_USAGE_DEFAULT;
+	vbdesc.CPUAccessFlags = 0u;
+	vbdesc.MiscFlags = 0u;
+	vbdesc.ByteWidth = sizeof(vertices); // size of the vertices array
+	vbdesc.StructureByteStride = sizeof(Vertex);
+	// data for initializing a subresource 
+	D3D11_SUBRESOURCE_DATA sd = {};
+	sd.pSysMem = vertices; // pointer to initialization data
+	hr = pDevice->CreateBuffer(&vbdesc, &sd, pVertexBuffer.GetAddressOf());
+
+	// error check for creation of buffer here 
+
+
+	const UINT stride = sizeof(Vertex); // each stride has the size of element used in buffer 
+	const UINT offset = 0u; // offset number of the bytes first element in the buffer and first element will be used 
+	// bind an array of vertex buffers to the input assembler 
+	pImmediateContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
+	ID3D11Buffer* indexBuffer_;
+	WORD indices[] =
 	{
-		pSwapChain->Release();
-	}
-	if (pDevice != nullptr)
+		0,2,1, 2,3,1,
+		1,3,5, 3,7,5,
+		2,6,3, 3,6,7,
+		4,5,7, 4,7,6,
+		0,4,2, 2,4,6,
+		0,1,4, 1,5,4
+	};
+	D3D11_BUFFER_DESC indexDesc;
+	ZeroMemory(&indexDesc, sizeof(indexDesc));
+	indexDesc.Usage = D3D11_USAGE_DEFAULT;
+	indexDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	indexDesc.ByteWidth = sizeof(indices);
+	indexDesc.StructureByteStride = sizeof(unsigned short);
+	indexDesc.CPUAccessFlags = 0;
+	sd.pSysMem = indices;
+
+	hr = pDevice->CreateBuffer(&indexDesc,&sd, &indexBuffer_);
+	pImmediateContext->IASetIndexBuffer(indexBuffer_, DXGI_FORMAT_R16_UINT, 0);
+	using namespace DirectX;
+	
+	
+		/*XMMATRIX transform;
+
+	
+	
+	
+	transform = XMMatrixTranspose(
+				
+				XMMatrixRotationZ(angle*6) *
+				XMMatrixRotationX(angle*6) *
+				XMMatrixTranslation(x,y,4.0f) *
+				XMMatrixPerspectiveLH(1.0f,3.0f / 4.0f,0.5f,10.0f)
+			);
+	
+	wrl::ComPtr<ID3D11Buffer> pConstantBuffer;
+	D3D11_BUFFER_DESC cbd;
+	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbd.Usage = D3D11_USAGE_DYNAMIC;
+	cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	cbd.MiscFlags = 0u;
+	cbd.ByteWidth = sizeof(XMMATRIX);
+	cbd.StructureByteStride = 0u;
+	D3D11_SUBRESOURCE_DATA csd = {};
+	csd.pSysMem = &transform;
+    pDevice->CreateBuffer(&cbd, &csd, &pConstantBuffer);*/
+
+	// bind constant buffer to vertex shader
+	//pImmediateContext->VSSetConstantBuffers(3u, 1u, pConstantBuffer.GetAddressOf());
+
+
+	struct ConstantBuffer2
 	{
-		pDevice->Release();
+		struct
+		{
+			float r;
+			float g;
+			float b;
+			float a;
+		} face_colors[6];
+	};
+	const ConstantBuffer2 cb2 =
+	{
+		{
+			{1.0f,0.0f,1.0f},
+			{1.0f,0.0f,0.0f},
+			{0.0f,1.0f,0.0f},
+			{0.0f,0.0f,1.0f},
+			{1.0f,1.0f,0.0f},
+			{0.0f,1.0f,1.0f},
+		}
+	};
+	wrl::ComPtr<ID3D11Buffer> pConstantBuffer2;
+	D3D11_BUFFER_DESC cbd2;
+	cbd2.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbd2.Usage = D3D11_USAGE_DEFAULT;
+	cbd2.CPUAccessFlags = 0u;
+	cbd2.MiscFlags = 0u;
+	cbd2.ByteWidth = sizeof(cb2);
+	cbd2.StructureByteStride = 0u;
+	D3D11_SUBRESOURCE_DATA csd2 = {};
+	csd2.pSysMem = &cb2;
+	pDevice->CreateBuffer(&cbd2, &csd2, &pConstantBuffer2);
+
+	// bind constant buffer to pixel shader
+	pImmediateContext->PSSetConstantBuffers(0u, 1u, pConstantBuffer2.GetAddressOf());
+
+	
+	wrl::ComPtr<ID3DBlob> pBlob;
+	wrl::ComPtr<ID3D11PixelShader> pPixelShader;
+
+	(D3DReadFileToBlob(L"PixelShader.cso", &pBlob));
+	(pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader));
+	pImmediateContext->PSSetShader(pPixelShader.Get(), nullptr, 0u);
+
+	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
+
+	(D3DReadFileToBlob(L"VertexShader.cso", &pBlob));
+	pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader);
+	pImmediateContext->VSSetShader(pVertexShader.Get(), nullptr, 0u);
+	
+	// bind vertex shader
+	
+	D3D11_SUBRESOURCE_DATA Init = {};
+	
+		DirectX::XMMATRIX worldMatrix_;
+	
+	
+	worldMatrix_= r * t;
+	worldMatrix_ = DirectX::XMMatrixTranspose(worldMatrix_);
+	Init.pSysMem = &worldMatrix_;
+	hr = pDevice->CreateBuffer(&bdsc, &Init, &worldviewM);
+	
+	
+	Init.pSysMem = &viewMatrix_;
+	hr = pDevice->CreateBuffer(&bdsc, &Init, &viewM);
+	
+	Init.pSysMem = &projMatrix_;
+	hr = pDevice->CreateBuffer(&bdsc, &Init, &projM);
+
+	//pImmediateContext->UpdateSubresource(worldviewM, 0, 0, &worldMatrix_, 0, 0);
+	//pImmediateContext->UpdateSubresource(prM, 0, 0, &viewMatrix_, 0, 0);
+	//pImmediateContext->UpdateSubresource(viewM, 0, 0, &pj.projMatrix_, 0, 0);
+
+	
+	pImmediateContext->VSSetConstantBuffers(0u, 1, &worldviewM);
+	pImmediateContext->VSSetConstantBuffers(1u, 1, &viewM);
+	pImmediateContext->VSSetConstantBuffers(2u, 1, &projM);
+
+	//
+	// depth tex
+	wrl::ComPtr<ID3D11Texture2D> depthTex;
+	wrl::ComPtr<ID3D11DepthStencilView> dsView;
+	D3D11_TEXTURE2D_DESC  depthTexDesc;
+	ZeroMemory(&depthTexDesc, sizeof(depthTexDesc));
+	depthTexDesc.Width = 800;
+	depthTexDesc.Height = 600;
+	depthTexDesc.MipLevels = 1;
+	depthTexDesc.ArraySize = 1;
+	depthTexDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthTexDesc.SampleDesc.Count = 1;
+	depthTexDesc.SampleDesc.Quality = 0;
+	depthTexDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthTexDesc.CPUAccessFlags = 0;
+	depthTexDesc.MiscFlags = 0;
+
+	hr = pDevice->CreateTexture2D(&depthTexDesc, NULL, depthTex.GetAddressOf());
+	// depth stencil view creation
+	D3D11_DEPTH_STENCIL_VIEW_DESC dsv;
+	ZeroMemory(&dsv, sizeof(dsv));
+	dsv.Format = depthTexDesc.Format;
+	dsv.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	dsv.Texture2D.MipSlice = 0;
+
+	hr = pDevice->CreateDepthStencilView(depthTex.Get(), &dsv, &dsView);
+	
+
+	// Bind vertex buffer to pipeline
+	wrl::ComPtr<ID3D11InputLayout> pInputLayout; // an input-layout holds definition of how to feed vertex data that laid out in memory
+	const D3D11_INPUT_ELEMENT_DESC ied[] =
+	{
+		{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		//{ "Color",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0 },
+	};
+	hr = (pDevice->CreateInputLayout(
+		ied, (UINT)std::size(ied),
+		pBlob->GetBufferPointer(), // pointer to the compiled shader code
+		pBlob->GetBufferSize(),
+		&pInputLayout
+	));
+	if (FAILED(hr))
+	{
+		OutputDebugString("Creating InputLayout Failed!");
+		exit(-1);
 	}
+	
+	pImmediateContext->IASetInputLayout(pInputLayout.Get());
+	pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pImmediateContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), nullptr);
+	
+	D3D11_VIEWPORT vp;
+	vp.Width = 800.0f;
+	vp.Height = 600.0f;
+	vp.MinDepth = 0;
+	vp.MaxDepth = 1.0f;
+	vp.TopLeftX = 0.0f;
+	vp.TopLeftY = 0.0f;
+
+	pImmediateContext->RSSetViewports(1u, &vp);
+
+	pImmediateContext->DrawIndexed((UINT)std::size(indices), 0u, 0u);
+
+	//pSwapChain->Present(0, 0);
+
+	
+	
 }
 
 void Graphics::EndFrame()
 {
-	pSwapChain->Present(1u, 0u);
+	HRESULT hr;
+	hr = pSwapChain->Present(1u, 0u);
 }
 
 void Graphics::ClearFrame(float red, float green, float blue)
 {
 	float color[] = { red,green,blue,1.0f };
-	pImmediateContext->ClearRenderTargetView(pTarget, color);
+	pImmediateContext->ClearRenderTargetView(pTarget.Get(), color);
 }
