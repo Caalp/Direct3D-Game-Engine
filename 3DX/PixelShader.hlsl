@@ -2,12 +2,15 @@
 //{
 //	//return float4(color,1.0f);
 //}
-cbuffer CBuf : register(b0)
-{
-	float4 face_colors[6];
-};
+//cbuffer CBuf : register(b0)
+//{
+//	float4 face_colors[6];
+//};
 
-float4 main(uint tid : SV_PrimitiveID) : SV_Target
+Texture2D tex;
+SamplerState sampState;
+
+float4 main(float2 tc : TexCoord) : SV_Target
 {
-	return face_colors[tid / 2];
+	return tex.Sample(sampState,tc);
 }

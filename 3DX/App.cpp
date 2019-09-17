@@ -1,6 +1,7 @@
 #include "App.h"
 #include <time.h>
 
+
 App::App() :
 	wnd(800, 600, "Hello")
 {

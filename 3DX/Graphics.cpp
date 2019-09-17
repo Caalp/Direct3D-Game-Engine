@@ -1,13 +1,34 @@
 #include "Graphics.h"
-#include <d3dcompiler.h>
+#include "DDSTextureLoader.h"
 #include <sstream>
-#include <directxmath.h>
+#include "DDSTextureLoader.h"
+#include "Surface.h"
 namespace wrl = Microsoft::WRL;
 
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib, "D3DCompiler.lib")
+#pragma comment(lib,"DirectXTK.lib")
 
+HRESULT Graphics::CompileShader(LPCWSTR pScrData, LPCSTR entryPoint, LPCSTR shaderModel, ID3DBlob** ppBlobOut)
+{
+	if (pScrData == nullptr || entryPoint == nullptr || shaderModel == nullptr)
+	{
+		OutputDebugString("Init of Arg in Shader Compilation failed!");
+		return E_INVALIDARG;
+	}
+	ID3DBlob* shaderBlob = nullptr;
+	ID3DBlob* errorBlob = nullptr;
 
+	HRESULT hr = D3DCompileFromFile(pScrData, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint, shaderModel, D3DCOMPILE_DEBUG, 0, &shaderBlob, &errorBlob);
+
+	if (FAILED(hr))
+	{
+		OutputDebugString("Compilation of Shader is FAILED");
+		return E_UNEXPECTED;
+	}
+	*ppBlobOut = shaderBlob;
+	return S_OK;
+}
 
 Graphics::Graphics(HWND hWnd)
 {
@@ -51,38 +72,7 @@ Graphics::Graphics(HWND hWnd)
 
 
 }
-HRESULT CompileShader(LPCWSTR pScrData, LPCSTR entryPoint, LPCSTR shaderModel, ID3DBlob** ppBlobOut)
-{
-	if (pScrData == nullptr || entryPoint == nullptr || shaderModel == nullptr)
-	{
-		OutputDebugString("Init of Arg in Shader Compilation failed!");
-		return E_INVALIDARG;
-	}
-	ID3DBlob* shaderBlob = nullptr;
-	ID3DBlob* errorBlob = nullptr;
 
-	HRESULT hr = D3DCompileFromFile(pScrData, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint, shaderModel, D3DCOMPILE_DEBUG, 0, &shaderBlob, &errorBlob);
-
-	if (FAILED(hr))
-	{
-		OutputDebugString("Compilation of Shader is FAILED");
-		return E_UNEXPECTED;
-	}
-	*ppBlobOut = shaderBlob;
-	return S_OK;
-}
-ID3D11Device* Graphics::GetDevice()
-{
-	return pDevice.Get();
-}
-ID3D11DeviceContext * Graphics::GetContext()
-{
-	return pImmediateContext.Get();
-}
-ID3D11RenderTargetView * Graphics::GetTarget()
-{
-	return pTarget.Get();
-}
 void Graphics::DrawTestTriangle()
 {
 	HRESULT hr;
@@ -132,8 +122,8 @@ void Graphics::DrawTestTriangle()
 
 	// create vertex shader
 	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
-	CompileShader(L"VertexShader.cso", "main", "vs_5_0", &pBlob); // compile shader in runtime
-	//(D3DReadFileToBlob(L"VertexShader.cso", &pBlob));
+	//CompileShader(L"VertexShader.cso", "main", "vs_5_0", &pBlob); // compile shader in runtime
+	(D3DReadFileToBlob(L"VertexShader.cso", &pBlob));
 	(pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader));
 
 	// bind vertex shader
@@ -198,13 +188,16 @@ void Graphics::DrawCube(float angle, float x, float y)
 		float x;
 		float y;
 		float z;
+		struct
+		{
+			float u;
+			float v;
+		}tex;
 	};
-	float pitch(1.0f), yaw(1.0f), roll(1.0f);
+	float pitch(0.5f), yaw(0.5f), roll(0.5f);
 	
 		DirectX::XMMATRIX r;
 	    DirectX::XMMATRIX t;
-	
-	
 	
 	   DirectX::XMMATRIX viewMatrix_;
 		
@@ -233,20 +226,28 @@ void Graphics::DrawCube(float angle, float x, float y)
 	projMatrix_ = DirectX::XMMatrixTranspose(projMatrix_);
 
 	
-	const Vertex vertices[] =
+	Vertex vertices[] =
 	{
 	
-		{ -1.0f,-1.0f,-1.0f	 },
-		{ 1.0f,-1.0f,-1.0f	 },
-		{ -1.0f,1.0f,-1.0f	 },
-		{ 1.0f,1.0f,-1.0f	  },
-		{ -1.0f,-1.0f,1.0f	 },
-		{ 1.0f,-1.0f,1.0f	  },
-		{ -1.0f,1.0f,1.0f	 },
-		{ 1.0f,1.0f,1.0f	 },
+		/*{ -1.0f,-1.0f,-1.0,{0.0f,0.0f}},
+		{ 1.0f,-1.0f,-1.0f,{1.0f,0.0f}},
+		{ -1.0f,1.0f,-1.0f,{0.0f,1.0f}},
+		{ 1.0f,1.0f,-1.0f,{1.0f,1.0f} },
+		{ -1.0f,-1.0f,1.0f,{0.0f,0.0f}},
+		{ 1.0f,-1.0f,1.0f,{1.0f,0.0f}	},
+		{ -1.0f,1.0f,1.0f,{0.0f,1.0f}	},
+		{ 1.0f,1.0f,1.0f,{1.0f,1.0f}	},*/
+		{-1.0f,-1.0f,0.0f},
+		{1.0f,-1.0f,0.0f},
+		{-1.0f,1.0f,0.0f},
+		{1.0f,1.0f,0.0f,},
 	};
 	
-	
+	vertices[0].tex = { 0.0f,0.0f };
+	vertices[1].tex = { 1.0f,0.0f };
+	vertices[2].tex = { 0.0f,1.0f };
+	vertices[3].tex = { 1.0f,1.0f };
+
 	// Creation of Vertexbuffer
 	wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
 	D3D11_BUFFER_DESC vbdesc = {};
@@ -271,12 +272,14 @@ void Graphics::DrawCube(float angle, float x, float y)
 	ID3D11Buffer* indexBuffer_;
 	WORD indices[] =
 	{
-		0,2,1, 2,3,1,
+		/*0,2,1, 2,3,1,
 		1,3,5, 3,7,5,
 		2,6,3, 3,6,7,
 		4,5,7, 4,7,6,
 		0,4,2, 2,4,6,
-		0,1,4, 1,5,4
+		0,1,4, 1,5,4*/
+		0,2,1,
+		2,3,1,
 	};
 	D3D11_BUFFER_DESC indexDesc;
 	ZeroMemory(&indexDesc, sizeof(indexDesc));
@@ -321,47 +324,48 @@ void Graphics::DrawCube(float angle, float x, float y)
 	//pImmediateContext->VSSetConstantBuffers(3u, 1u, pConstantBuffer.GetAddressOf());
 
 
-	struct ConstantBuffer2
-	{
-		struct
-		{
-			float r;
-			float g;
-			float b;
-			float a;
-		} face_colors[6];
-	};
-	const ConstantBuffer2 cb2 =
-	{
-		{
-			{1.0f,0.0f,1.0f},
-			{1.0f,0.0f,0.0f},
-			{0.0f,1.0f,0.0f},
-			{0.0f,0.0f,1.0f},
-			{1.0f,1.0f,0.0f},
-			{0.0f,1.0f,1.0f},
-		}
-	};
-	wrl::ComPtr<ID3D11Buffer> pConstantBuffer2;
-	D3D11_BUFFER_DESC cbd2;
-	cbd2.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cbd2.Usage = D3D11_USAGE_DEFAULT;
-	cbd2.CPUAccessFlags = 0u;
-	cbd2.MiscFlags = 0u;
-	cbd2.ByteWidth = sizeof(cb2);
-	cbd2.StructureByteStride = 0u;
-	D3D11_SUBRESOURCE_DATA csd2 = {};
-	csd2.pSysMem = &cb2;
-	pDevice->CreateBuffer(&cbd2, &csd2, &pConstantBuffer2);
+	//struct ConstantBuffer2
+	//{
+	//	struct
+	//	{
+	//		float r;
+	//		float g;
+	//		float b;
+	//		float a;
+	//	} face_colors[6];
+	//};
+	//const ConstantBuffer2 cb2 =
+	//{
+	//	{
+	//		{1.0f,0.0f,1.0f},
+	//		{1.0f,0.0f,0.0f},
+	//		{0.0f,1.0f,0.0f},
+	//		{0.0f,0.0f,1.0f},
+	//		{1.0f,1.0f,0.0f},
+	//		{0.0f,1.0f,1.0f},
+	//	}
+	//};
+	//wrl::ComPtr<ID3D11Buffer> pConstantBuffer2;
+	//D3D11_BUFFER_DESC cbd2;
+	//cbd2.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	//cbd2.Usage = D3D11_USAGE_DEFAULT;
+	//cbd2.CPUAccessFlags = 0u;
+	//cbd2.MiscFlags = 0u;
+	//cbd2.ByteWidth = sizeof(cb2);
+	//cbd2.StructureByteStride = 0u;
+	//D3D11_SUBRESOURCE_DATA csd2 = {};
+	//csd2.pSysMem = &cb2;
+	//pDevice->CreateBuffer(&cbd2, &csd2, &pConstantBuffer2);
 
-	// bind constant buffer to pixel shader
-	pImmediateContext->PSSetConstantBuffers(0u, 1u, pConstantBuffer2.GetAddressOf());
+	//// bind constant buffer to pixel shader
+	//pImmediateContext->PSSetConstantBuffers(0u, 1u, pConstantBuffer2.GetAddressOf());
 
 	
 	wrl::ComPtr<ID3DBlob> pBlob;
 	wrl::ComPtr<ID3D11PixelShader> pPixelShader;
 
-	(D3DReadFileToBlob(L"PixelShader.cso", &pBlob));
+	hr = CompileShader(L"PixelShader.hlsl", "main", "ps_5_0", &pBlob); // compile shader in runtime
+	//(D3DReadFileToBlob(L"PixelShader.cso", &pBlob));
 	(pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader));
 	pImmediateContext->PSSetShader(pPixelShader.Get(), nullptr, 0u);
 
@@ -378,8 +382,64 @@ void Graphics::DrawCube(float angle, float x, float y)
 	D3D11_SUBRESOURCE_DATA Init = {};
 	
 		DirectX::XMMATRIX worldMatrix_;
+	// Texture Mapping Bussiness/////////////////////////////////////////////////////////////////////
+		
+		wrl::ComPtr<ID3D11ShaderResourceView> srv;
+		wrl::ComPtr<ID3D11SamplerState> pSampler;
+		ID3D11Texture2D* ptex;
+		
+		D3D11_TEXTURE2D_DESC tex2desc;
+		Surface wall = Surface("kappa50.bmp");
+		const int h = wall.GetHeight();
+		const int w = wall.GetWidth();
 	
-	
+		
+		//hr = DirectX::CreateDDSTextureFromFile(pDevice.Get(),text,&restex, srv.GetAddressOf(), 0u, nullptr);
+		tex2desc.Width = wall.GetWidth();
+		tex2desc.Height = wall.GetHeight();
+		tex2desc.MipLevels = 1;
+		tex2desc.ArraySize = 1;
+		tex2desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+		tex2desc.SampleDesc.Quality = 0;
+		tex2desc.SampleDesc.Count = 1;
+		tex2desc.Usage = D3D11_USAGE_DEFAULT;
+		tex2desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		tex2desc.CPUAccessFlags = 0;
+		tex2desc.MiscFlags = 0;
+		
+		D3D11_SUBRESOURCE_DATA sd0 = {};
+		sd0.pSysMem = wall.GetColorPointer();
+		sd0.SysMemPitch = wall.GetWidth() * sizeof(Color);
+		//
+		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+		srvDesc.Format = tex2desc.Format;
+		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.Texture2D.MostDetailedMip = 0;
+		srvDesc.Texture2D.MipLevels = 1;
+
+		pDevice->CreateTexture2D(&tex2desc, &sd0, &ptex);
+
+		pDevice->CreateShaderResourceView(ptex, &srvDesc, srv.GetAddressOf());
+		
+		//
+		
+		//
+		
+		//
+		
+		D3D11_SAMPLER_DESC sampler_desc = {};
+		sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		
+		pDevice->CreateSamplerState(&sampler_desc, &pSampler);
+		//
+		pImmediateContext->PSSetSamplers(0, 1u, pSampler.GetAddressOf());
+		//
+		pImmediateContext->PSSetShaderResources(0u, 1u, srv.GetAddressOf());
+		//
+	/////////////////////////////////////////////////////////////////////////////////////////////////
 	worldMatrix_= r * t;
 	worldMatrix_ = DirectX::XMMatrixTranspose(worldMatrix_);
 	Init.pSysMem = &worldMatrix_;
@@ -436,6 +496,7 @@ void Graphics::DrawCube(float angle, float x, float y)
 	{
 		{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
 		//{ "Color",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		{"TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0},
 	};
 	hr = (pDevice->CreateInputLayout(
 		ied, (UINT)std::size(ied),

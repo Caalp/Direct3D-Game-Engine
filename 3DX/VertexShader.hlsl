@@ -33,7 +33,18 @@ cbuffer cbChangeOnResize : register (b2)
 
 
 //
-float4 main(float3 pos : Position) : SV_Position
+struct VSOut
 {
-	return mul(float4(pos,1.0f),mul(worldMatrix,mul(viewMatrix,projMatrix)));
+	
+	float2 tex : TexCoord;
+	float4 pos : SV_POSITION;
+	
+};
+VSOut main(float3 pos : Position,float2 tex : TexCoord)
+{
+	VSOut vso;
+
+	vso.pos =  mul(float4(pos,1.0f),mul(worldMatrix,mul(viewMatrix,projMatrix)));
+	vso.tex = tex;
+	return vso;
 }
