@@ -22,6 +22,12 @@
     <Filter Include="Header Files\Bindables">
       <UniqueIdentifier>{2b5e3e94-00b5-4027-bf7e-6f114746ceab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Drawables">
+      <UniqueIdentifier>{e8401085-cf14-4e92-90e1-f50c8a2f26c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Bindables">
+      <UniqueIdentifier>{d8149959-5dd8-4007-9e81-b1bd8cf694bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -55,22 +61,31 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Bindables.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VertexBuffer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Bindables</Filter>
     </ClCompile>
     <ClCompile Include="PixelShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VertexShader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InputLayout.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Bindables</Filter>
     </ClCompile>
     <ClCompile Include="PrimitiveTopology.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="SamplerState.cpp">
+      <Filter>Source Files\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexBuffer.cpp">
+      <Filter>Source Files\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexShader.cpp">
+      <Filter>Source Files\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexBuff.cpp">
+      <Filter>Source Files\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="InputLayout.cpp">
+      <Filter>Source Files\Bindables</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +136,24 @@
     </ClInclude>
     <ClInclude Include="PrimitiveTopology.h">
       <Filter>Header Files\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstBuffs.h">
+      <Filter>Header Files\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="TransCB_.h">
+      <Filter>Header Files\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexBuff.h">
+      <Filter>Header Files\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="SamplerState.h">
+      <Filter>Header Files\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawableBase.h">
+      <Filter>Header Files\Drawables</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

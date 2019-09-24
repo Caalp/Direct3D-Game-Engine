@@ -114,7 +114,7 @@ Color Surface::GetPixel(int x, int y)const
 	return pPixel[y*width+x];
 }
 
-Color* Surface::GetColorPointer()
+const Color* Surface::GetColorPointer() const 
 {
 	return pPixel.get();
 }

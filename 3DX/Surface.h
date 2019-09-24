@@ -14,7 +14,7 @@ public:
 	~Surface();
 	void PutPixel(int x, int y, Color c);
 	Color GetPixel(int x, int y) const;
-	Color* GetColorPointer();
+	const Color* GetColorPointer() const;
 	int GetWidth() const;
 	int GetHeight()const;
 public:
