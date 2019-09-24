@@ -229,24 +229,24 @@ void Graphics::DrawCube(float angle, float x, float y)
 	Vertex vertices[] =
 	{
 	
-		/*{ -1.0f,-1.0f,-1.0,{0.0f,0.0f}},
+		{ -1.0f,-1.0f,-1.0,{0.0f,0.0f}},
 		{ 1.0f,-1.0f,-1.0f,{1.0f,0.0f}},
 		{ -1.0f,1.0f,-1.0f,{0.0f,1.0f}},
 		{ 1.0f,1.0f,-1.0f,{1.0f,1.0f} },
 		{ -1.0f,-1.0f,1.0f,{0.0f,0.0f}},
 		{ 1.0f,-1.0f,1.0f,{1.0f,0.0f}	},
 		{ -1.0f,1.0f,1.0f,{0.0f,1.0f}	},
-		{ 1.0f,1.0f,1.0f,{1.0f,1.0f}	},*/
-		{-1.0f,-1.0f,0.0f},
+		{ 1.0f,1.0f,1.0f,{1.0f,1.0f}	},
+		/*{-1.0f,-1.0f,0.0f},
 		{1.0f,-1.0f,0.0f},
 		{-1.0f,1.0f,0.0f},
-		{1.0f,1.0f,0.0f,},
+		{1.0f,1.0f,0.0f,},*/
 	};
 	
-	vertices[0].tex = { 0.0f,0.0f };
+	/*vertices[0].tex = { 0.0f,0.0f };
 	vertices[1].tex = { 1.0f,0.0f };
 	vertices[2].tex = { 0.0f,1.0f };
-	vertices[3].tex = { 1.0f,1.0f };
+	vertices[3].tex = { 1.0f,1.0f };*/
 
 	// Creation of Vertexbuffer
 	wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
@@ -272,14 +272,14 @@ void Graphics::DrawCube(float angle, float x, float y)
 	ID3D11Buffer* indexBuffer_;
 	WORD indices[] =
 	{
-		/*0,2,1, 2,3,1,
+		0,2,1, 2,3,1,
 		1,3,5, 3,7,5,
 		2,6,3, 3,6,7,
 		4,5,7, 4,7,6,
 		0,4,2, 2,4,6,
-		0,1,4, 1,5,4*/
-		0,2,1,
-		2,3,1,
+		0,1,4, 1,5,4
+		/*0,2,1,
+		2,3,1,*/
 	};
 	D3D11_BUFFER_DESC indexDesc;
 	ZeroMemory(&indexDesc, sizeof(indexDesc));
@@ -463,7 +463,7 @@ void Graphics::DrawCube(float angle, float x, float y)
 
 	//
 	// depth tex
-	wrl::ComPtr<ID3D11Texture2D> depthTex;
+	wrl::ComPtr<ID3D11Texture2D> depthTex; 
 	wrl::ComPtr<ID3D11DepthStencilView> dsView;
 	D3D11_TEXTURE2D_DESC  depthTexDesc;
 	ZeroMemory(&depthTexDesc, sizeof(depthTexDesc));

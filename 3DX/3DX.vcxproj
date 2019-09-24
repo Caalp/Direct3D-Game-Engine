@@ -126,18 +126,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bindables.cpp" />
     <ClCompile Include="CustomException.cpp" />
     <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="InputLayout.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="PixelShader.cpp" />
+    <ClCompile Include="PrimitiveTopology.cpp" />
     <ClCompile Include="Surface.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Timer.h" />
+    <ClCompile Include="VertexBuffer.cpp" />
+    <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bindables.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="CustomException.h" />
     <ClInclude Include="Graphics.h" />
@@ -145,8 +152,12 @@
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="App.h" />
+    <ClInclude Include="PixelShader.h" />
+    <ClInclude Include="PrimitiveTopology.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Surface.h" />
+    <ClInclude Include="VertexBuffer.h" />
+    <ClInclude Include="VertexShader.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="WinHeader.h" />
   </ItemGroup>

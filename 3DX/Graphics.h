@@ -9,6 +9,7 @@
 
 class Graphics
 {
+	friend class Bindables;
 public:
 	Graphics(HWND hWnd);
 	~Graphics() = default;
