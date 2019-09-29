@@ -29,6 +29,18 @@ public:
 		InitData.pSysMem = &cb;
 		GetDevice(gfx)->CreateBuffer(&bdsc, &InitData, &pConstBuffer);
 	}
+	ConstBuffs(Graphics& gfx)
+	{
+		D3D11_BUFFER_DESC bdsc{};
+		bdsc.ByteWidth = sizeof(C);
+		bdsc.Usage = D3D11_USAGE_DYNAMIC;
+		bdsc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		bdsc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		bdsc.MiscFlags = 0u;
+		bdsc.StructureByteStride = 0u
+
+		GetDevice(gfx)->CreateBuffer(&bdsc, nullptr, &pConstBuffer);
+	}
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pConstBuffer;
 };
@@ -41,6 +53,10 @@ public:
 	{
 		GetContext(gfx)->VSSetConstantBuffers(0u, 1u, pConstBuffer.GetAddressof());
 	}
+	void Bind(Graphics& gfx, UINT startSlot,UINT numofBuff) override
+	{
+		GetContext(gfx)->VSSetConstantBuffers(startSlot,numofBuff, pConstBuffer.GetAddressof());
+	}
 };
 
 template <typename C>
@@ -50,5 +66,9 @@ public:
 	void Bind(Graphics& gfx) override
 	{
 		GetContext(gfx)->PSSetConstantBuffers(0u, 1u, pConstBuffer.GetAddressOf());
+	}
+	void Bind(Graphics& gfx, UINT startSlot, UINT numofBuff override
+	{
+		GetContext(gfx)->VSSetConstantBuffers(startSlot, numofBuff, pConstBuffer.GetAddressof());
 	}
 };

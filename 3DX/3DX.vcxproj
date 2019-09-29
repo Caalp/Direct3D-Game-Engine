@@ -127,7 +127,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Bindables.cpp" />
+    <ClCompile Include="Box.cpp" />
     <ClCompile Include="CustomException.cpp" />
+    <ClCompile Include="DrawableBase.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="IndexBuff.cpp" />
     <ClCompile Include="InputLayout.cpp" />
@@ -141,6 +143,7 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Timer.h" />
+    <ClCompile Include="TransCB_.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -148,6 +151,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bindables.h" />
+    <ClInclude Include="Box.h" />
+    <ClInclude Include="DrawableSource.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="ConstBuffs.h" />
     <ClInclude Include="CustomException.h" />
