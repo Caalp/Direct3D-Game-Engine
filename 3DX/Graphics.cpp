@@ -66,6 +66,16 @@ Graphics::Graphics(HWND hWnd)
 	wrl::ComPtr<ID3D11Resource> pBackBuffer ;
 	pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer);
 	pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &pTarget);
+	pImmediateContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), nullptr);
+	D3D11_VIEWPORT vp;
+	vp.Width = 800.0f;
+	vp.Height = 600.0f;
+	vp.MinDepth = 0;
+	vp.MaxDepth = 1.0f;
+	vp.TopLeftX = 0.0f;
+	vp.TopLeftY = 0.0f;
+
+	pImmediateContext->RSSetViewports(1u, &vp);
 	//pBackBuffer->Release();
 
 
@@ -463,31 +473,31 @@ void Graphics::DrawCube(float angle, float x, float y)
 
 	//
 	// depth tex
-	wrl::ComPtr<ID3D11Texture2D> depthTex; 
-	wrl::ComPtr<ID3D11DepthStencilView> dsView;
-	D3D11_TEXTURE2D_DESC  depthTexDesc;
-	ZeroMemory(&depthTexDesc, sizeof(depthTexDesc));
-	depthTexDesc.Width = 800;
-	depthTexDesc.Height = 600;
-	depthTexDesc.MipLevels = 1;
-	depthTexDesc.ArraySize = 1;
-	depthTexDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthTexDesc.SampleDesc.Count = 1;
-	depthTexDesc.SampleDesc.Quality = 0;
-	depthTexDesc.Usage = D3D11_USAGE_DEFAULT;
-	depthTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	depthTexDesc.CPUAccessFlags = 0;
-	depthTexDesc.MiscFlags = 0;
+	//wrl::ComPtr<ID3D11Texture2D> depthTex; 
+	//wrl::ComPtr<ID3D11DepthStencilView> dsView;
+	//D3D11_TEXTURE2D_DESC  depthTexDesc;
+	//ZeroMemory(&depthTexDesc, sizeof(depthTexDesc));
+	//depthTexDesc.Width = 800;
+	//depthTexDesc.Height = 600;
+	//depthTexDesc.MipLevels = 1;
+	//depthTexDesc.ArraySize = 1;
+	//depthTexDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	//depthTexDesc.SampleDesc.Count = 1;
+	//depthTexDesc.SampleDesc.Quality = 0;
+	//depthTexDesc.Usage = D3D11_USAGE_DEFAULT;
+	//depthTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	//depthTexDesc.CPUAccessFlags = 0;
+	//depthTexDesc.MiscFlags = 0;
 
-	hr = pDevice->CreateTexture2D(&depthTexDesc, NULL, depthTex.GetAddressOf());
-	// depth stencil view creation
-	D3D11_DEPTH_STENCIL_VIEW_DESC dsv;
-	ZeroMemory(&dsv, sizeof(dsv));
-	dsv.Format = depthTexDesc.Format;
-	dsv.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	dsv.Texture2D.MipSlice = 0;
+	//hr = pDevice->CreateTexture2D(&depthTexDesc, NULL, depthTex.GetAddressOf());
+	//// depth stencil view creation
+	//D3D11_DEPTH_STENCIL_VIEW_DESC dsv;
+	//ZeroMemory(&dsv, sizeof(dsv));
+	//dsv.Format = depthTexDesc.Format;
+	//dsv.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	//dsv.Texture2D.MipSlice = 0;
 
-	hr = pDevice->CreateDepthStencilView(depthTex.Get(), &dsv, &dsView);
+	//hr = pDevice->CreateDepthStencilView(depthTex.Get(), &dsv, &dsView);
 	
 
 	// Bind vertex buffer to pipeline
@@ -512,9 +522,9 @@ void Graphics::DrawCube(float angle, float x, float y)
 	
 	pImmediateContext->IASetInputLayout(pInputLayout.Get());
 	pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	pImmediateContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), nullptr);
+	//pImmediateContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), nullptr);
 	
-	D3D11_VIEWPORT vp;
+	/*D3D11_VIEWPORT vp;
 	vp.Width = 800.0f;
 	vp.Height = 600.0f;
 	vp.MinDepth = 0;
@@ -523,13 +533,18 @@ void Graphics::DrawCube(float angle, float x, float y)
 	vp.TopLeftY = 0.0f;
 
 	pImmediateContext->RSSetViewports(1u, &vp);
-
-	pImmediateContext->DrawIndexed((UINT)std::size(indices), 0u, 0u);
+*/
+	pImmediateContext->DrawIndexed(36u, 0u, 0u);
 
 	//pSwapChain->Present(0, 0);
 
 	
 	
+}
+
+void Graphics::DrawIndexed(UINT count)
+{
+	pImmediateContext->DrawIndexed(count, 0u, 0u);
 }
 
 void Graphics::EndFrame()
@@ -542,4 +557,14 @@ void Graphics::ClearFrame(float red, float green, float blue)
 {
 	float color[] = { red,green,blue,1.0f };
 	pImmediateContext->ClearRenderTargetView(pTarget.Get(), color);
+}
+
+void Graphics::SetProjection(DirectX::FXMMATRIX proj) noexcept
+{
+	projection = proj;
+}
+
+DirectX::XMMATRIX Graphics::GetProjection() const noexcept
+{
+	return projection;
 }

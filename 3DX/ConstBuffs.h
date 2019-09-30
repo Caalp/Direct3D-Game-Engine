@@ -23,7 +23,7 @@ public:
 		bdsc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		bdsc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		bdsc.MiscFlags = 0u;
-		bdsc.StructureByteStride = 0u
+		bdsc.StructureByteStride = 0u;
 
 		D3D11_SUBRESOURCE_DATA InitData = {};
 		InitData.pSysMem = &cb;
@@ -37,7 +37,7 @@ public:
 		bdsc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		bdsc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		bdsc.MiscFlags = 0u;
-		bdsc.StructureByteStride = 0u
+		bdsc.StructureByteStride = 0u;
 
 		GetDevice(gfx)->CreateBuffer(&bdsc, nullptr, &pConstBuffer);
 	}
@@ -48,27 +48,33 @@ protected:
 template <typename C>
 class VSConstBuff : public ConstBuffs<C>
 {
+
 public:
+	using ConstBuffs<C>::ConstBuffs;
+	
 	void Bind(Graphics& gfx) override
 	{
-		GetContext(gfx)->VSSetConstantBuffers(0u, 1u, pConstBuffer.GetAddressof());
+		Bindables::GetContext(gfx)->VSSetConstantBuffers(0u, 1u,ConstBuffs<C>::pConstBuffer.GetAddressOf());
 	}
 	void Bind(Graphics& gfx, UINT startSlot,UINT numofBuff) override
 	{
-		GetContext(gfx)->VSSetConstantBuffers(startSlot,numofBuff, pConstBuffer.GetAddressof());
+		Bindables::GetContext(gfx)->VSSetConstantBuffers(startSlot,numofBuff, ConstBuffs<C>::pConstBuffer.GetAddressOf());
 	}
 };
 
 template <typename C>
 class PSConstBuff : public ConstBuffs<C>
 {
+	//using ConstBuffs<C>::pConstBuffer;
 public:
+	using ConstBuffs<C>::ConstBuffs;
+
 	void Bind(Graphics& gfx) override
 	{
-		GetContext(gfx)->PSSetConstantBuffers(0u, 1u, pConstBuffer.GetAddressOf());
+		Bindables::GetContext(gfx)->PSSetConstantBuffers(0u, 1u, ConstBuffs<C>::pConstBuffer.GetAddressOf());
 	}
-	void Bind(Graphics& gfx, UINT startSlot, UINT numofBuff override
+	/*void Bind(Graphics& gfx, UINT startSlot, UINT numofBuff override
 	{
 		GetContext(gfx)->VSSetConstantBuffers(startSlot, numofBuff, pConstBuffer.GetAddressof());
-	}
+	}*/
 };

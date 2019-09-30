@@ -20,7 +20,7 @@ Texture::Texture(Graphics & gfx, const Surface& s)
 	sd0.pSysMem = s.GetColorPointer();
 	sd0.SysMemPitch = s.GetWidth() * sizeof(Color);
 
-	GetDevice(gfx)->CreateTexture2D(&tex2desc, &sd0, &ptex);
+	
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 	srvDesc.Format = tex2desc.Format;
@@ -28,7 +28,8 @@ Texture::Texture(Graphics & gfx, const Surface& s)
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	srvDesc.Texture2D.MipLevels = 1;
 
-	GetDevice(gfx)->CreateShaderResourceView(ptex.Get(), &srvDesc, srv.GetAddressOf());;
+	GetDevice(gfx)->CreateTexture2D(&tex2desc, &sd0, &ptex);
+	GetDevice(gfx)->CreateShaderResourceView(ptex.Get(), &srvDesc, &srv);
 
 }
 

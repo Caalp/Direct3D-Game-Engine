@@ -13,28 +13,35 @@
 Box::Box(Graphics & gfx, float x, float y) :
 	x(x), y(y)
 {
-	if (isBindsEmpty())
+	if (true)
 	{
-		struct Vertex 
+		struct Vertex
 		{
 			float x;
 			float y;
 			float z;
+			struct
+			{
+				float u;
+				float v;
+			}tex;
 		};
 		std::vector<Vertex> vertices =
 		{
-			{ -1.0f,-1.0f,-1.0},
-			{ 1.0f,-1.0f,-1.0f},
-			{ -1.0f,1.0f,-1.0f},
-			{ 1.0f,1.0f,-1.0f},
-			{ -1.0f,-1.0f,1.0f},
-			{ 1.0f,-1.0f,1.0f},
-			{ -1.0f,1.0f,1.0f},
-			{ 1.0f,1.0f,1.0f},
+			{ -1.0f,-1.0f,-1.0,{0.0f,0.0f}},
+		{ 1.0f,-1.0f,-1.0f,{1.0f,0.0f}},
+		{ -1.0f,1.0f,-1.0f,{0.0f,1.0f}},
+		{ 1.0f,1.0f,-1.0f,{1.0f,1.0f} },
+		{ -1.0f,-1.0f,1.0f,{0.0f,0.0f}},
+		{ 1.0f,-1.0f,1.0f,{1.0f,0.0f}	},
+		{ -1.0f,1.0f,1.0f,{0.0f,1.0f}	},
+		{ 1.0f,1.0f,1.0f,{1.0f,1.0f}	},
 		};
 		AddToStaticBind(std::make_unique<VertexBuffer>(gfx,vertices));
 		AddToStaticBind(std::make_unique<PixelShader>(gfx, L"PixelShader.hlsl", "main", "ps_5_0"));
-		AddToStaticBind(std::make_unique<VertexShader>(gfx, L"VertexShader.hlsl", "main", "vs_5_0"));
+		auto vs = std::make_unique<VertexShader>(gfx, L"VertexShader.hlsl", "main", "vs_5_0");
+		auto vsBlob = vs->GetVBlob();
+		AddToStaticBind(std::move(vs));
 		std::vector<WORD> indices=
 		{
 			0,2,1, 2,3,1,
@@ -47,18 +54,23 @@ Box::Box(Graphics & gfx, float x, float y) :
 		};
 		AddToStaticBind(std::make_unique<IndexBuff>(gfx, indices));
 		Surface wall = Surface("kappa50.bmp");
-		AddToStaticBind(std::make_unique<Texture>(gfx, wall));
 		AddToStaticBind(std::make_unique<SamplerState>(gfx));
-
+		AddToStaticBind(std::make_unique<Texture>(gfx, wall));
+		
+		AddToStaticBind(std::make_unique<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
 			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			//{ "Color",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0 },
 			{"TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0},
 		};
-		AddToBinds(std::make_unique<InputLayout>(gfx,ied,))
+		AddToBinds(std::make_unique<InputLayout>(gfx, ied, vsBlob));
 	}
-	
+		/*auto transCB = std::make_unique<TransCB_>(gfx);
+		transCB->SetworldM_(gfx,DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll)*DirectX::XMMatrixTranslation(x, y, 4.0f)));
+		transCB->SetprojM_(gfx, (DirectX::XMMatrixTranspose(DirectX::XMMatrixIdentity())));
+		transCB->SetviewM_(gfx, (DirectX::XMMatrixTranspose(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 10.0f))));
+		AddBind(std::move(transCB));*/
+		AddBind(std::make_unique<TransCB_>(gfx, *this));
 }
 
 void Box::Update(float ft)
@@ -67,4 +79,13 @@ void Box::Update(float ft)
 	yaw += ft;
 	roll += ft;
 
+}
+
+DirectX::XMMATRIX Box::GetTransformXM() const
+{
+	namespace dx = DirectX;
+	return 
+		dx::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
+		
+		dx::XMMatrixTranslation(x, y, 4.0f);
 }

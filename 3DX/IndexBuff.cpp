@@ -6,13 +6,13 @@ IndexBuff::IndexBuff(Graphics & gfx, std::vector<WORD>& v)
 	ZeroMemory(&indexDesc, sizeof(indexDesc));
 	indexDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	indexDesc.ByteWidth = sizeof(v);
+	indexDesc.ByteWidth = UINT(v.size() * sizeof(unsigned short));
 	indexDesc.StructureByteStride = sizeof(unsigned short);
 	indexDesc.CPUAccessFlags = 0;
 	D3D11_SUBRESOURCE_DATA sd = {};
-	sd.pSysMem = &v;
+	sd.pSysMem = v.data();
 
-	GetDevice(gfx)->CreateBuffer(&indexDesc, &sd, indexBuffer_.GetAddressOf());
+	GetDevice(gfx)->CreateBuffer(&indexDesc, &sd, &indexBuffer_);
 }
 
 void IndexBuff::Bind(Graphics& gfx)

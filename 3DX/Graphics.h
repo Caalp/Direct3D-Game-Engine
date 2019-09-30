@@ -18,11 +18,14 @@ public:
 	HRESULT CompileShader(LPCWSTR pScrData,LPCSTR szentryPoint, LPCSTR shaderModel, ID3DBlob** ppBlobOut);
 	void DrawTestTriangle();
 	void DrawCube(float angle, float x, float y);
-	
+	void DrawIndexed(UINT count);
 	void EndFrame();
 	void ClearFrame(float red,float gren,float blue);
 	friend class Box;
-
+	void SetProjection(DirectX::FXMMATRIX proj) noexcept;
+	DirectX::XMMATRIX GetProjection() const noexcept;
+private:
+	DirectX::XMMATRIX projection;
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> pSwapChain;

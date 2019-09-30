@@ -1,19 +1,19 @@
-cbuffer cbChangesEveryFrame : register(b0)
-{
-	matrix worldMatrix;
-}
-cbuffer cbNeverChanges : register(b1)
-{
-	matrix viewMatrix;
-}
-cbuffer cbChangeOnResize : register (b2)
-{
-	matrix projMatrix;
-}
-//cbuffer CBuf : register (b3)
+//cbuffer cbChangesEveryFrame : register(b0)
 //{
-//	matrix transform;
-//};
+//	matrix worldMatrix;
+//}
+//cbuffer cbNeverChanges : register(b1)
+//{
+//	matrix viewMatrix;
+//}
+//cbuffer cbChangeOnResize : register (b2)
+//{
+//	matrix projMatrix;
+//}
+cbuffer CBuf : register (b0)
+{
+	matrix transform;
+};
 
 
 
@@ -44,7 +44,8 @@ VSOut main(float3 pos : Position,float2 tex : TexCoord)
 {
 	VSOut vso;
 
-	vso.pos =  mul(float4(pos,1.0f),mul(worldMatrix,mul(viewMatrix,projMatrix)));
+	//vso.pos =  mul(float4(pos,1.0f),mul(worldMatrix,mul(viewMatrix,projMatrix)));
+	vso.pos = mul(float4(pos, 1.0f), transform);
 	vso.tex = tex;
 	return vso;
 }
