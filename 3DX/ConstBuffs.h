@@ -3,6 +3,7 @@
 template<typename C>
 class ConstBuffs : public Bindables
 {
+	
 public:
 	void Update(Graphics& gfx, const C& cb)
 	{
@@ -14,7 +15,9 @@ public:
 		);
 		memcpy(MappedSource.pData, &cb, sizeof(cb));
 		GetContext(gfx)->Unmap(pConstBuffer.Get(), 0u);
+		
 	}
+	
 	ConstBuffs(Graphics& gfx, const C& cb)
 	{
 		D3D11_BUFFER_DESC bdsc{};
@@ -48,13 +51,13 @@ protected:
 template <typename C>
 class VSConstBuff : public ConstBuffs<C>
 {
-
+	using ConstBuffs<C>::pConstBuffer;
 public:
 	using ConstBuffs<C>::ConstBuffs;
 	
 	void Bind(Graphics& gfx) override
 	{
-		Bindables::GetContext(gfx)->VSSetConstantBuffers(0u, 1u,ConstBuffs<C>::pConstBuffer.GetAddressOf());
+		Bindables::GetContext(gfx)->VSSetConstantBuffers(1u, 1u,pConstBuffer.GetAddressOf());
 	}
 	void Bind(Graphics& gfx, UINT startSlot,UINT numofBuff) override
 	{
@@ -65,13 +68,13 @@ public:
 template <typename C>
 class PSConstBuff : public ConstBuffs<C>
 {
-	//using ConstBuffs<C>::pConstBuffer;
+	using ConstBuffs<C>::pConstBuffer;
 public:
 	using ConstBuffs<C>::ConstBuffs;
 
 	void Bind(Graphics& gfx) override
 	{
-		Bindables::GetContext(gfx)->PSSetConstantBuffers(0u, 1u, ConstBuffs<C>::pConstBuffer.GetAddressOf());
+		Bindables::GetContext(gfx)->PSSetConstantBuffers(0u, 1u,pConstBuffer.GetAddressOf());
 	}
 	/*void Bind(Graphics& gfx, UINT startSlot, UINT numofBuff override
 	{

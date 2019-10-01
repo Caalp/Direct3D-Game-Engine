@@ -18,9 +18,9 @@ public:
 		vbdesc.StructureByteStride = sizeof(V);
 		// data for initializing a subresource 
 		D3D11_SUBRESOURCE_DATA sd = {};
-		sd.pSysMem = &v; // pointer to initialization data
-		GetDevice(gfx)->CreateBuffer(&vbdesc, &sd, pVertexBuffer.GetAddressOf());
-		const UINT stride = sizeof(V); // each stride has the size of element used in buffer 
+		sd.pSysMem = v.data(); // pointer to initialization data
+		GetDevice(gfx)->CreateBuffer(&vbdesc, &sd, &pVertexBuffer);
+		
 		
 	}
 	void Bind(Graphics& gfx);

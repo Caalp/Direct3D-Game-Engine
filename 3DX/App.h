@@ -1,6 +1,7 @@
 #pragma once
 #include "Window.h"
 #include "Timer.h"
+#include "Camera.h"
 class App
 {
 public:
@@ -12,4 +13,5 @@ private:
 private:
 	Window wnd;
 	Timer timer;
+	Camera cam;
 };

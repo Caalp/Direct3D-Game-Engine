@@ -56,14 +56,14 @@ Box::Box(Graphics & gfx, float x, float y) :
 		Surface wall = Surface("kappa50.bmp");
 		AddToStaticBind(std::make_unique<SamplerState>(gfx));
 		AddToStaticBind(std::make_unique<Texture>(gfx, wall));
-		
-		AddToStaticBind(std::make_unique<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
 			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
 			{"TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0},
 		};
 		AddToBinds(std::make_unique<InputLayout>(gfx, ied, vsBlob));
+		AddToStaticBind(std::make_unique<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+		
 	}
 		/*auto transCB = std::make_unique<TransCB_>(gfx);
 		transCB->SetworldM_(gfx,DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll)*DirectX::XMMatrixTranslation(x, y, 4.0f)));
@@ -81,11 +81,31 @@ void Box::Update(float ft)
 
 }
 
-DirectX::XMMATRIX Box::GetTransformXM() const
+
+
+
+
+DirectX::XMMATRIX Box::GetViewXM() const
 {
-	namespace dx = DirectX;
-	return 
-		dx::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
-		
-		dx::XMMatrixTranslation(x, y, 4.0f);
+	return GetViewMatrix();
 }
+
+DirectX::XMMATRIX Box::GetWorldXM() const
+{
+
+	return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(x, y, 4.0f);
+}
+
+DirectX::XMMATRIX Box::GetProjXM() const
+{
+	return DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 10.0f);
+}
+
+//DirectX::XMMATRIX Box::GetTransformXM() const
+//{
+//	namespace dx = DirectX;
+//	return 
+//		dx::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
+//		
+//		dx::XMMatrixTranslation(x, y, 4.0f);
+//}
