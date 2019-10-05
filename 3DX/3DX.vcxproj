@@ -160,6 +160,7 @@
     <ClInclude Include="CustomException.h" />
     <ClInclude Include="DrawableBase.h" />
     <ClInclude Include="Graphics.h" />
+    <ClInclude Include="GUtility.h" />
     <ClInclude Include="IndexBuff.h" />
     <ClInclude Include="InputLayout.h" />
     <ClInclude Include="Keyboard.h" />

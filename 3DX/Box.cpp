@@ -10,7 +10,7 @@
 #include "SamplerState.h"
 #include "Texture.h"
 #include "Surface.h"
-Box::Box(Graphics & gfx, float x, float y) :
+Box::Box(Graphics & gfx, Camera& cam, float x, float y) : cam(cam),
 	x(x), y(y)
 {
 	if (true)
@@ -71,6 +71,7 @@ Box::Box(Graphics & gfx, float x, float y) :
 		transCB->SetviewM_(gfx, (DirectX::XMMatrixTranspose(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 10.0f))));
 		AddBind(std::move(transCB));*/
 		AddBind(std::make_unique<TransCB_>(gfx, *this));
+		//AddBind(std::make_unique<TransCB_(gfx,))
 }
 
 void Box::Update(float ft)
@@ -84,10 +85,14 @@ void Box::Update(float ft)
 
 
 
+//std::unique_ptr<DirectX::XMMATRIX> Box::GetViewXM() const
+//{
+//	 return ;
+//}
 
 DirectX::XMMATRIX Box::GetViewXM() const
 {
-	return GetViewMatrix();
+	return cam.GetViewMatrix();
 }
 
 DirectX::XMMATRIX Box::GetWorldXM() const

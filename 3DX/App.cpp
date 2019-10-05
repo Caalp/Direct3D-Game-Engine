@@ -3,7 +3,8 @@
 #include "Box.h"
 
 App::App() :
-	wnd(800, 600, "Hello")
+	wnd(800, 600, "Hello") ,x(0.5f),y(0.5f),z(-2.0f)
+	
 {
 }
 
@@ -27,35 +28,61 @@ int App::Go()
 void App::Update()
 {
 	//wnd.gfx().DrawTestTriangle();
-	
+	dt = 0.5f;
 	const float c = sin(timer.Peek()) / 2.0f + 0.5f;
 	wnd.gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 10.0f));
 	wnd.gfx().ClearFrame(c, 0.4f, 0.5f);
-	cam.SetPos(0.2175, 0.1275, 25.0f);
-  	if (wnd.kbd.KeyIsPressed(65))
+	DirectX::XMFLOAT3 pos;
+	//cam.SetPos(0.2175, 0.1275, 25.0f);
+	
+  	if (wnd.kbd.KeyIsPressed('W'))
 	{
-		cam.SetPos((cam.GetPos().x+100.0f/400.0f -1.0f), cam.GetPos().y, cam.GetPos().z);
-
+		x -= 0.5f;
 	}
- 	if (wnd.kbd.KeyIsPressed(68))
+ 	if (wnd.kbd.KeyIsPressed('S'))
 	{
-		cam.SetPos((cam.GetPos().x + 100.0f / 400.0f + 1.0f), cam.GetPos().y, cam.GetPos().z);
-
+		
+		x += 0.5f;
 	}
-	if (wnd.kbd.KeyIsPressed(87))
+	if (wnd.kbd.KeyIsPressed('A'))
 	{
-		cam.SetPos(cam.GetPos().x, cam.GetPos().y, cam.GetPos().z + 1.0f);
-
+		
+		z += 0.5;
 	}
-	if (wnd.kbd.KeyIsPressed(83))
+	if (wnd.kbd.KeyIsPressed('D'))
 	{
-		cam.SetPos((cam.GetPos().x ),cam.GetPos().y, cam.GetPos().z - 1.0f);
 
+		z -= 0.5f;
 	}
-	//cam.SetRotation(wnd.mouse.GetPosX() / 400.0f - 1.0f, -wnd.mouse.GetPosY() / 300.0f + 1.0f, -4.0f);
+	if (wnd.kbd.KeyIsPressed('Q'))
+	{
+
+		y -= 0.5f;
+	}
+	if (wnd.kbd.KeyIsPressed('E'))
+	{
+
+		y += 0.5f;
+	}
+	
+	if (wnd.kbd.KeyIsPressed('Z'))
+	{
+
+		cam.SetRotation(dt,0.0f , 0.0f);
+	}
+	if (wnd.kbd.KeyIsPressed('X'))
+	{
+
+		cam.SetRotation(0.0f, dt, z);
+	}
+	cam.SetPos(x, y, z);
+	//cam.SetRotation(x, y, z);
+	//cam.Render();
+	auto m = cam.GetViewMatrix();
+	Box b1 = Box(wnd.gfx(), cam, 0.2175, 0.1275);
+	
+	b1.Update(1);
 	cam.Render();
-	Box b1 = Box(wnd.gfx(), 0.2175, 0.1275);
-	b1.Update(c*2);
 	b1.Draw(wnd.gfx());
 	
 	//wnd.gfx().DrawCube(timer.Peek(), 0.2175, 0.1275);

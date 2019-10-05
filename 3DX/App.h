@@ -14,4 +14,5 @@ private:
 	Window wnd;
 	Timer timer;
 	Camera cam;
+	float x, y, z,dt;
 };

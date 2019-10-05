@@ -1,7 +1,8 @@
 #include "Camera.h"
 
-Camera::Camera()
+Camera::Camera() 
 {
+	
 	pos_x = 0;
 	pos_y = 0;
 	pos_z = 0;
@@ -40,6 +41,7 @@ DirectX::XMMATRIX Camera::GetViewMatrix() const
 	return viewMatrix_;
 }
 
+
 void Camera::Render()
 {
 	DirectX::XMVECTOR up = { 0.0f,1.0f,0.0f,1.0f };
@@ -65,10 +67,10 @@ void Camera::Render()
 
 	pitch = rot_x * 0.0174532925f;
 	yaw = rot_y * 0.0174532925f;
-	roll = rot_z * 0.0174532925f;
+	//roll = rot_z * 0.0174532925f;
 
-	rotMatrix_ = DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
-	
+	rotMatrix_ = DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, 0.0f);
+
 	look = DirectX::XMVector3Transform(look, rotMatrix_);
 	up = DirectX::XMVector3Transform(up, rotMatrix_);
 
@@ -76,3 +78,4 @@ void Camera::Render()
 
 	viewMatrix_ = DirectX::XMMatrixLookAtLH(pos, look, up);
 }
+

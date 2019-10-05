@@ -4,6 +4,7 @@
 
 TransCB_::TransCB_(Graphics & gfx, const DrawableBase & parent) :
 	parent(parent)
+	
 {
 	if (!worldMatrix_)
 	{
@@ -19,21 +20,6 @@ TransCB_::TransCB_(Graphics & gfx, const DrawableBase & parent) :
 	}
 }
 
-//TransCB_::TransCB_(Graphics & gfx, const DrawableBase & parent) :parent(parent)
-//{
-//	if (!viewMatrix_)
-//	{
-//		viewMatrix_ = std::make_unique<VSConstBuff<DirectX::XMMATRIX>>(gfx);
-//	}
-//	if (!projMatrix_)
-//	{
-//		projMatrix_ = std::make_unique<VSConstBuff<DirectX::XMMATRIX>>(gfx);
-//	}
-//	if (!worldMatrix_)
-//	{
-//		projMatrix_ = std::make_unique<VSConstBuff<DirectX::XMMATRIX>>(gfx);
-//	}
-//}
 
 void TransCB_::Bind(Graphics & gfx)
 {
@@ -51,4 +37,3 @@ void TransCB_::Bind(Graphics & gfx)
 std::unique_ptr<VSConstBuff<DirectX::XMMATRIX>> TransCB_::worldMatrix_;
 std::unique_ptr<VSConstBuff<DirectX::XMMATRIX>> TransCB_::viewMatrix_;
 std::unique_ptr<VSConstBuff<DirectX::XMMATRIX>> TransCB_::projMatrix_;
-//::unique_ptr<VSConstBuff<DirectX::XMMATRIX>> TransCB_::pVcbuf;
