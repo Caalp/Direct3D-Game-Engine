@@ -99,6 +99,9 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TerrainClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinHeader.h">
@@ -176,7 +179,10 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GUtility.h">
+    <ClInclude Include="TerrainClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="additional_headers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

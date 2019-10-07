@@ -141,6 +141,7 @@
     <ClCompile Include="PrimitiveTopology.cpp" />
     <ClCompile Include="SamplerState.cpp" />
     <ClCompile Include="Surface.cpp" />
+    <ClCompile Include="TerrainClass.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Timer.h" />
@@ -151,6 +152,7 @@
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="additional_headers.h" />
     <ClInclude Include="Bindables.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="Camera.h" />
@@ -160,7 +162,6 @@
     <ClInclude Include="CustomException.h" />
     <ClInclude Include="DrawableBase.h" />
     <ClInclude Include="Graphics.h" />
-    <ClInclude Include="GUtility.h" />
     <ClInclude Include="IndexBuff.h" />
     <ClInclude Include="InputLayout.h" />
     <ClInclude Include="Keyboard.h" />
@@ -171,6 +172,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="SamplerState.h" />
     <ClInclude Include="Surface.h" />
+    <ClInclude Include="TerrainClass.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TransCB_.h" />
     <ClInclude Include="VertexBuffer.h" />

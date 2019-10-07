@@ -14,38 +14,35 @@ cbuffer cbChangeOnResize : register (b2)
 //{
 //	matrix transform;
 //};
-
-
-
-//struct VS_Input
-//{
-//	float4 pos : Position;
-//
-//};
-//float4 main(float3 pos : Position) : SV_POSITION
-//{
-//	
-//	
-//	return mul(float4(pos,1.0f),mul(worldMatrix,mul(viewMatrix,projMatrix)));
-//	
-//	
-//}
-
-
-//
 struct VSOut
 {
-	
-	float2 tex : TexCoord;
-	float4 pos : SV_POSITION;
+	float3 color : Color;
+	float4 pos  : SV_Position;
 	
 };
-VSOut main(float3 pos : Position,float2 tex : TexCoord)
+VSOut main(float3 pos : Position, float3 color : Color)
 {
-	VSOut vso;
-
-	vso.pos =  mul(float4(pos,1.0f),mul(worldMatrix,mul(viewMatrix,projMatrix)));
-	//vso.pos = mul(float4(pos, 1.0f), transform);
-	vso.tex = tex;
-	return vso;
+		VSOut vso;
+		vso.pos = mul(float4(pos, 1.0f), mul(worldMatrix, mul(viewMatrix, projMatrix)));
+		vso.color = color;
+		return vso;
 }
+
+
+//
+//struct VSOut
+//{
+//	
+//	float2 tex : TexCoord;
+//	float4 pos : SV_POSITION;
+//	
+//};
+//VSOut main(float3 pos : Position,float2 tex : TexCoord)
+//{
+//	VSOut vso;
+//
+//	vso.pos =  mul(float4(pos,1.0f),mul(worldMatrix,mul(viewMatrix,projMatrix)));
+//	//vso.pos = mul(float4(pos, 1.0f), transform);
+//	vso.tex = tex;
+//	return vso;
+//}

@@ -18,3 +18,4 @@ private:
 	float roll = 1.0f;
 	float x, y;
 };
+

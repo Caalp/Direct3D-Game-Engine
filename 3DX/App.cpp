@@ -1,6 +1,7 @@
 #include "App.h"
 #include <time.h>
 #include "Box.h"
+#include "TerrainClass.h"
 
 App::App() :
 	wnd(800, 600, "Hello") ,x(0.5f),y(0.5f),z(-2.0f)
@@ -31,7 +32,7 @@ void App::Update()
 	dt = 0.5f;
 	const float c = sin(timer.Peek()) / 2.0f + 0.5f;
 	wnd.gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 10.0f));
-	wnd.gfx().ClearFrame(c, 0.4f, 0.5f);
+	wnd.gfx().ClearFrame(0.0f, 0.0f, 0.0f);
 	DirectX::XMFLOAT3 pos;
 	//cam.SetPos(0.2175, 0.1275, 25.0f);
 	
@@ -79,11 +80,11 @@ void App::Update()
 	//cam.SetRotation(x, y, z);
 	//cam.Render();
 	auto m = cam.GetViewMatrix();
-	Box b1 = Box(wnd.gfx(), cam, 0.2175, 0.1275);
-	
-	b1.Update(1);
+	//Box b1 = Box(wnd.gfx(), cam, 0.2175, 0.1275);
+	TerrainClass t1 = TerrainClass(wnd.gfx(), cam, 10, 10);
+	//b1.Update(1);
 	cam.Render();
-	b1.Draw(wnd.gfx());
+	t1.Draw(wnd.gfx());
 	
 	//wnd.gfx().DrawCube(timer.Peek(), 0.2175, 0.1275);
 	

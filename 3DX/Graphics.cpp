@@ -66,7 +66,42 @@ Graphics::Graphics(HWND hWnd)
 	wrl::ComPtr<ID3D11Resource> pBackBuffer ;
 	pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer);
 	pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &pTarget);
-	pImmediateContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), nullptr);
+	
+	// depth stencil view creation
+	D3D11_DEPTH_STENCIL_DESC dsd = {};
+	dsd.DepthEnable = TRUE;
+	dsd.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	dsd.DepthFunc = D3D11_COMPARISON_LESS;
+	wrl::ComPtr<ID3D11DepthStencilState> pDSS;
+
+	pDevice->CreateDepthStencilState(&dsd, pDSS.GetAddressOf());
+	pImmediateContext->OMSetDepthStencilState(pDSS.Get(), 1u);
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pdsView;
+	wrl::ComPtr<ID3D11Texture2D> depthTex; 
+	D3D11_TEXTURE2D_DESC  depthTexDesc;
+	ZeroMemory(&depthTexDesc, sizeof(depthTexDesc));
+	depthTexDesc.Width = 800;
+	depthTexDesc.Height = 600;
+	depthTexDesc.MipLevels = 1;
+	depthTexDesc.ArraySize = 1;
+	depthTexDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	depthTexDesc.SampleDesc.Count = 1;
+	depthTexDesc.SampleDesc.Quality = 0;
+	depthTexDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthTexDesc.CPUAccessFlags = 0;
+	depthTexDesc.MiscFlags = 0;
+	pDevice->CreateTexture2D(&depthTexDesc, nullptr, depthTex.GetAddressOf());
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC dsv;
+	ZeroMemory(&dsv, sizeof(dsv));
+	dsv.Format = depthTexDesc.Format;
+	dsv.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	dsv.Texture2D.MipSlice = 0;
+
+	
+	
+	pImmediateContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), pdsView.Get());
 	D3D11_VIEWPORT vp;
 	vp.Width = 800.0f;
 	vp.Height = 600.0f;
