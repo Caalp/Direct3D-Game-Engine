@@ -1,6 +1,6 @@
 #include "IndexBuff.h"
 
-IndexBuff::IndexBuff(Graphics & gfx, std::vector<WORD>& v)
+IndexBuff::IndexBuff(Graphics & gfx, std::vector<WORD>& v): count((UINT)v.size())
 {
 	D3D11_BUFFER_DESC indexDesc;
 	ZeroMemory(&indexDesc, sizeof(indexDesc));
@@ -15,7 +15,14 @@ IndexBuff::IndexBuff(Graphics & gfx, std::vector<WORD>& v)
 	GetDevice(gfx)->CreateBuffer(&indexDesc, &sd, &indexBuffer_);
 }
 
+
+
 void IndexBuff::Bind(Graphics& gfx)
 {
 	GetContext(gfx)->IASetIndexBuffer(indexBuffer_.Get(), DXGI_FORMAT_R16_UINT, 0);
+}
+
+UINT IndexBuff::GetIndexCount() const
+{
+	return count;
 }

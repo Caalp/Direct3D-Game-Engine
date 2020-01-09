@@ -4,7 +4,7 @@
 class VertexShader : public Bindables
 {
 public:
-	VertexShader(Graphics& gfx, LPCWSTR filename, LPCSTR entryPoint, LPCSTR pModel);
+	VertexShader(Graphics& gfx, LPCWSTR filename);
 	void Bind(Graphics& gfx) override;
 	ID3DBlob* GetVBlob() const;
 

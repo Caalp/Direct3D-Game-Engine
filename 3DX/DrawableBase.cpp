@@ -1,4 +1,5 @@
 #include "DrawableBase.h"
+#include "IndexBuff.h"
 
 void DrawableBase::Draw(Graphics & gfx)
 {
@@ -6,15 +7,43 @@ void DrawableBase::Draw(Graphics & gfx)
 	{
 		b->Bind(gfx);
 	}
-	for (auto& b : GetStaticBindables())
+	for (auto& b : GetStaticBinds())
 	{
+		if (typeid(*b) == typeid(IndexBuff))
+		{
+			pIndexBuffer = dynamic_cast<IndexBuff*>(b.get());
+		}
 		b->Bind(gfx);
 	}
 	
-	gfx.DrawIndexed(36u);
+	gfx.DrawIndexed(pIndexBuffer->GetIndexCount());
 }
 
-void DrawableBase::AddBind(std::unique_ptr<Bindables> binds)
+void DrawableBase::AddIndexBuffer(std::shared_ptr<class IndexBuff> indexBuffer)
+{
+	pIndexBuffer = indexBuffer.get();
+	//staticBindables.push_back(std::move(indexBuffer));
+}
+
+void DrawableBase::SetIndexBufferFromStatic()
+{
+
+	for (auto& elem : GetStaticBinds())
+	{
+		if (typeid(*elem) == typeid(IndexBuff))
+		{
+			pIndexBuffer = dynamic_cast<IndexBuff*>(elem.get());
+			return;
+		}
+	}
+}
+
+
+void DrawableBase::AddBind(std::shared_ptr<Bindables> binds)
 {
 	bindables.push_back(std::move(binds));
 }
+
+
+ 
+ 

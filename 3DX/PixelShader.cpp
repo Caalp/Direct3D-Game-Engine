@@ -1,8 +1,10 @@
 #include "PixelShader.h"
 
-PixelShader::PixelShader(Graphics & gfx, LPCWSTR filename, LPCSTR entryPoint, LPCSTR pModel)
+PixelShader::PixelShader(Graphics & gfx, LPCWSTR filename)
 {
-	gfx.CompileShader(filename, entryPoint, pModel, &pBlob); // compile shader in runtime
+	
+	//gfx.CompileShader(filename, entryPoint, pModel, &pBlob); // compile shader in runtime
+	D3DReadFileToBlob(filename, &pBlob);
 
 	GetDevice(gfx)->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader);
 }

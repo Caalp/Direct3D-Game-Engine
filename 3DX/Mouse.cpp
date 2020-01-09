@@ -31,6 +31,7 @@ bool Mouse::RightIsPressed() const noexcept
 	return rightIsPressed;
 }
 
+// read the events from queue and pop it 
 std::optional<Mouse::Event> Mouse::Read() noexcept
 {
 	if (buffer.size() > 0u)
@@ -42,11 +43,12 @@ std::optional<Mouse::Event> Mouse::Read() noexcept
 	return {};
 }
 
+//flush all the elements in the queue 
 void Mouse::Flush() noexcept
 {
 	buffer = std::queue<Event>();
 }
-
+//trim the buffer after pushing event to the queue just in case it exceeds assigned size
 void Mouse::OnMouseMove(int x, int y) noexcept
 {
 	this->x = x;
@@ -114,6 +116,9 @@ void Mouse::OnWheelDown(int x, int y) noexcept
 	TrimBuffer();
 }
 
+///<summary>
+/// pop some events and trim the buffer back to its normal size
+///</summary>
 void Mouse::TrimBuffer() noexcept
 {
 	while (buffer.size() > bufferSize)

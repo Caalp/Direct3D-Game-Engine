@@ -1,12 +1,17 @@
 #pragma once
 #include "Graphics.h"
+#include "Camera.h"
+
+
 
 class Bindables
 {
+	
 	friend class DrawableBase;
 public:
 	virtual void Bind(Graphics& gfx) = 0;
 	virtual void Bind(Graphics& gfx, UINT, UINT) {};
+	
 	virtual ~Bindables() = default;
 
 protected:

@@ -10,3 +10,4 @@
 #include "InputLayout.h"
 #include "PrimitiveTopology.h"
 #include "TransCB_.h"
+#include "SamplerState.h"

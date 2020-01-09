@@ -58,6 +58,10 @@ public:
 	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
 	void SetWindowTitle(std::string& name);
+	HWND getMainWindow()
+	{
+		return hWnd;
+	}
 	static std::optional<int> ProcessMessages() noexcept;
 	Graphics& gfx();
 

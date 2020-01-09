@@ -10,10 +10,10 @@ public:
 	public:
 		enum class Type
 		{
-			LPress,
-			LRelease,
-			RPress,
-			RRelease,
+			LPress, // left button is clicked 
+			LRelease, // left button released 
+			RPress, // Right button clicked
+			RRelease,// Right button released
 			WheelUp,
 			WheelDown,
 			Move,
@@ -27,6 +27,8 @@ public:
 		int x;
 		int y;
 	public:
+		// initialize the event class with data from parent mouse class itself
+		
 		Event(Type type, const Mouse& parent) noexcept
 			:
 			type(type),
@@ -35,14 +37,17 @@ public:
 			x(parent.x),
 			y(parent.y)
 		{}
+		//Return type of the event 
 		Type GetType() const noexcept
 		{
 			return type;
 		}
+		// Get the pos as pair 
 		std::pair<int, int> GetPos() const noexcept
 		{
 			return{ x,y };
 		}
+		// Getter functions for pos x and y 
 		int GetPosX() const noexcept
 		{
 			return x;
@@ -51,6 +56,7 @@ public:
 		{
 			return y;
 		}
+		// Check pressed func for left and right button
 		bool LeftIsPressed() const noexcept
 		{
 			return leftIsPressed;
@@ -71,12 +77,16 @@ public:
 	bool LeftIsPressed() const noexcept;
 	bool RightIsPressed() const noexcept;
 	std::optional<Mouse::Event> Read() noexcept;
+	///<summary>
+	/// Return if true if the queue is empty
+	///</summary>
 	bool IsEmpty() const noexcept
 	{
 		return buffer.empty();
 	}
 	void Flush() noexcept;
 private:
+	// Private utility functions when assigned functions pushes the event to the queue
 	void OnMouseMove(int x, int y) noexcept;
 	void OnMouseLeave() noexcept;
 	void OnMouseEnter() noexcept;

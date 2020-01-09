@@ -18,6 +18,7 @@ public:
 		vbdesc.StructureByteStride = sizeof(V);
 		// data for initializing a subresource 
 		D3D11_SUBRESOURCE_DATA sd = {};
+		
 		sd.pSysMem = v.data(); // pointer to initialization data
 		GetDevice(gfx)->CreateBuffer(&vbdesc, &sd, &pVertexBuffer);
 		

@@ -18,21 +18,24 @@ public:
 		
 	}
 	
-	ConstBuffs(Graphics& gfx, const C& cb)
+	ConstBuffs(Graphics& gfx, const C& consts, UINT slot = 0u)
+		:
+		slot(slot)
 	{
-		D3D11_BUFFER_DESC bdsc{};
-		bdsc.ByteWidth = sizeof(cb);
-		bdsc.Usage = D3D11_USAGE_DYNAMIC;
-		bdsc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-		bdsc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		bdsc.MiscFlags = 0u;
-		bdsc.StructureByteStride = 0u;
+		D3D11_BUFFER_DESC cbd;
+		cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		cbd.Usage = D3D11_USAGE_DYNAMIC;
+		cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		cbd.MiscFlags = 0u;
+		cbd.ByteWidth = sizeof(consts);
+		cbd.StructureByteStride = 0u;
 
-		D3D11_SUBRESOURCE_DATA InitData = {};
-		InitData.pSysMem = &cb;
-		GetDevice(gfx)->CreateBuffer(&bdsc, &InitData, &pConstBuffer);
+		D3D11_SUBRESOURCE_DATA csd = {};
+		csd.pSysMem = &consts;
+		GetDevice(gfx)->CreateBuffer(&cbd, &csd, &pConstBuffer);
 	}
-	ConstBuffs(Graphics& gfx)
+	ConstBuffs(Graphics& gfx, UINT slot = 0u)
+		:slot(slot)
 	{
 		D3D11_BUFFER_DESC bdsc{};
 		bdsc.ByteWidth = sizeof(C);
@@ -46,6 +49,7 @@ public:
 	}
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pConstBuffer;
+	UINT slot;
 };
 
 template <typename C>
@@ -57,7 +61,7 @@ public:
 	
 	void Bind(Graphics& gfx) override
 	{
-		Bindables::GetContext(gfx)->VSSetConstantBuffers(1u, 1u,pConstBuffer.GetAddressOf());
+		Bindables::GetContext(gfx)->VSSetConstantBuffers(0u, 1u,pConstBuffer.GetAddressOf());
 	}
 	void Bind(Graphics& gfx, UINT startSlot,UINT numofBuff) override
 	{
@@ -69,12 +73,13 @@ template <typename C>
 class PSConstBuff : public ConstBuffs<C>
 {
 	using ConstBuffs<C>::pConstBuffer;
+	using ConstBuffs<C>::slot;
 public:
 	using ConstBuffs<C>::ConstBuffs;
 
 	void Bind(Graphics& gfx) override
 	{
-		Bindables::GetContext(gfx)->PSSetConstantBuffers(0u, 1u,pConstBuffer.GetAddressOf());
+		Bindables::GetContext(gfx)->PSSetConstantBuffers(slot, 1u,pConstBuffer.GetAddressOf());
 	}
 	/*void Bind(Graphics& gfx, UINT startSlot, UINT numofBuff override
 	{

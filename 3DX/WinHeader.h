@@ -7,7 +7,7 @@
 #ifndef FULL_WINTARD
 #define WIN32_LEAN_AND_MEAN
 #define NOGDICAPMASKS
-#define NOSYSMETRICS
+//#define NOSYSMETRICS
 #define NOMENUS
 #define NOICONS
 #define NOSYSCOMMANDS
@@ -26,19 +26,20 @@
 #define NOSCROLL
 #define NOSERVICE
 #define NOSOUND
-#define NOTEXTMETRIC
+//#define NOTEXTMETRIC
 #define NOWH
 #define NOCOMM
 #define NOKANJI
 #define NOHELP
 #define NOPROFILER
-#define NODEFERWINDOWPOS
+//#define NODEFERWINDOWPOS
 #define NOMCX
 #define NORPC
 #define NOPROXYSTUB
 #define NOIMAGE
 #define NOTAPE
 #endif
+
 
 #define NOMINMAX
 

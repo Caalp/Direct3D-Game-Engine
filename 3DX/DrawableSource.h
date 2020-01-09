@@ -1,35 +1,27 @@
 #pragma once
 #include "DrawableBase.h"
+#include "Model.h"
 
 template<class T>
 class DrawableSource : public DrawableBase
 {
-	
 protected:
-	bool isBindsEmpty() const;
-	void AddToBinds(std::unique_ptr<Bindables> ubind);
-	void AddToStaticBind(std::unique_ptr<Bindables> sBinds);
-	
-protected:
-	const std::vector<std::unique_ptr<Bindables>>& GetStaticBindables()
+	bool isStaticallyBinded() const;
+	void AddBind(std::unique_ptr<Bindables> ubind);
+	void AddStaticBind(std::unique_ptr<Bindables> sBinds);
+private:
+	const std::vector<std::unique_ptr<Bindables>>& GetStaticBinds() const noexcept override
 	{
-		
-			return staticBinds;
-		
-		
+		return staticBindables;
 	}
-protected:
-	
-	static std::vector<std::unique_ptr<Bindables>> staticBinds;
-
+private:
+	static std::vector<std::unique_ptr<Bindables>> staticBindables;
 };
-template<class T>
-std::vector < std::unique_ptr<Bindables>> DrawableSource<T>::staticBinds;
 
 template<class T>
-inline bool DrawableSource<T>::isBindsEmpty() const
+inline bool DrawableSource<T>::isStaticallyBinded() const
 {
-	if (staticBinds.empty())
+	if (staticBindables.empty())
 	{
 		return false;
 	}
@@ -37,13 +29,15 @@ inline bool DrawableSource<T>::isBindsEmpty() const
 }
 
 template<class T>
-inline void DrawableSource<T>::AddToBinds(std::unique_ptr<Bindables> ubind)
+inline void DrawableSource<T>::AddBind(std::unique_ptr<Bindables> ubind)
 {
-	staticBinds.push_back(std::move(ubind));
+	bindables.push_back(std::move(ubind));
 }
 
 template<class T>
-inline void DrawableSource<T>::AddToStaticBind(std::unique_ptr<Bindables> sBinds)
+inline void DrawableSource<T>::AddStaticBind(std::unique_ptr<Bindables> sBinds)
 {
-	staticBinds.push_back(std::move(sBinds));
+	staticBindables.push_back(std::move(sBinds));
 }
+template<typename T>
+std::vector<std::unique_ptr<Bindables>> DrawableSource<T>::staticBindables;

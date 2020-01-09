@@ -1,8 +1,11 @@
 #include "VertexShader.h"
 
-VertexShader::VertexShader(Graphics & gfx, LPCWSTR filename, LPCSTR entryPoint, LPCSTR pModel)
+VertexShader::VertexShader(Graphics & gfx, LPCWSTR filename)
 {
-	gfx.CompileShader(filename, entryPoint, pModel, &pBlob); // compile shader in runtime
+	//gfx.CompileShader(filename, entryPoint, pModel, &pBlob); // compile shader in runtime
+	//Microsoft::WRL::ComPtr<ID3DBlob> pBlob;
+	//gfx.CompileShader(filename, entryPoint, pModel, &pBlob); // compile shader in runtime
+	D3DReadFileToBlob(filename, &pBlob);
 	GetDevice(gfx)->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader);
 	
 }

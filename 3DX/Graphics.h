@@ -21,11 +21,21 @@ public:
 	void DrawIndexed(UINT count);
 	void EndFrame();
 	void ClearFrame(float red,float gren,float blue);
-	friend class Box;
+	//friend class Box;
+
+	DirectX::XMMATRIX GetView() const;
 	void SetProjection(DirectX::FXMMATRIX proj) noexcept;
+	void SetView(DirectX::FXMMATRIX view);
 	DirectX::XMMATRIX GetProjection() const noexcept;
+	void SetCamera(DirectX::FXMMATRIX camera);
+	DirectX::XMMATRIX GetCamera() const;
+	//void CameraPos(const DirectX::XMFLOAT3& pos);
+	//DirectX::XMFLOAT3 GetCameraPos() const;
 private:
 	DirectX::XMMATRIX projection;
+	DirectX::XMMATRIX view;
+	DirectX::XMMATRIX camera;
+	//DirectX::XMFLOAT3 cameraPos;
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> pSwapChain;

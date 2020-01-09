@@ -1,48 +1,69 @@
 #include "Box.h"
-#include "ConstBuffs.h"
-#include "IndexBuff.h"
-#include "InputLayout.h"
-#include "PixelShader.h"
-#include "PrimitiveTopology.h"
-#include "TransCB_.h"
-#include "VertexBuffer.h"
-#include "VertexShader.h"
-#include "SamplerState.h"
+#include "additional_headers.h"
 #include "Texture.h"
 #include "Surface.h"
-Box::Box(Graphics & gfx, Camera& cam, float x, float y) : cam(cam),
-	x(x), y(y)
+
+
+Box::Box(Graphics & gfx, float x, float y, float z) :
+	x(x), y(y), z(z)
 {
-	if (true)
+
+	if (!isStaticallyBinded())
 	{
 		struct Vertex
 		{
-			float x;
-			float y;
-			float z;
+
+			DirectX::XMFLOAT3 pos;
+			
+		};
+		struct PixelShaderConstants
+		{
 			struct
 			{
-				float u;
-				float v;
-			}tex;
+				float r;
+				float g;
+				float b;
+				float a;
+			} face_colors[8];
 		};
-		std::vector<Vertex> vertices =
+		const PixelShaderConstants cb2 =
 		{
-			{ -1.0f,-1.0f,-1.0,{0.0f,0.0f}},
-		{ 1.0f,-1.0f,-1.0f,{1.0f,0.0f}},
-		{ -1.0f,1.0f,-1.0f,{0.0f,1.0f}},
-		{ 1.0f,1.0f,-1.0f,{1.0f,1.0f} },
-		{ -1.0f,-1.0f,1.0f,{0.0f,0.0f}},
-		{ 1.0f,-1.0f,1.0f,{1.0f,0.0f}	},
-		{ -1.0f,1.0f,1.0f,{0.0f,1.0f}	},
-		{ 1.0f,1.0f,1.0f,{1.0f,1.0f}	},
+			{
+				{ 1.0f,1.0f,1.0f },
+				{ 1.0f,0.0f,0.0f },
+				{ 0.0f,1.0f,0.0f },
+				{ 1.0f,1.0f,0.0f },
+				{ 0.0f,0.0f,1.0f },
+				{ 1.0f,0.0f,1.0f },
+				{ 0.0f,1.0f,1.0f },
+				{ 0.0f,0.0f,0.0f },
+			}
 		};
-		AddToStaticBind(std::make_unique<VertexBuffer>(gfx,vertices));
-		AddToStaticBind(std::make_unique<PixelShader>(gfx, L"PixelShader.hlsl", "main", "ps_5_0"));
-		auto vs = std::make_unique<VertexShader>(gfx, L"VertexShader.hlsl", "main", "vs_5_0");
+		
+		std::vector<Vertex> vertices;
+		vertices.resize(8);
+		
+		vertices[0].pos = DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0);
+		vertices[1].pos = DirectX::XMFLOAT3(1.0f, -1.0f, -1.0f);
+		vertices[2].pos = DirectX::XMFLOAT3(-1.0f, 1.0f, -1.0f);
+		vertices[3].pos = DirectX::XMFLOAT3(1.0f, 1.0f, -1.0f);
+		vertices[4].pos = DirectX::XMFLOAT3(-1.0, -1.0f, 1.0f);
+		vertices[5].pos = DirectX::XMFLOAT3(1.0f, -1.0f, 1.0f);
+		vertices[6].pos = DirectX::XMFLOAT3(-1.0f, 1.0f, 1.0f);
+		vertices[7].pos = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+		
+		
+		
+		AddStaticBind(std::make_unique<VertexBuffer>(gfx, vertices));
+		AddStaticBind(std::make_unique< PSConstBuff <PixelShaderConstants>>(gfx, cb2,1u));
+		AddStaticBind(std::make_unique<PixelShader>(gfx, L"ColorBlenderPS.cso"));
+		
+		
+
+		auto vs = std::make_unique<VertexShader>(gfx, L"ColorBlenderVS.cso");
 		auto vsBlob = vs->GetVBlob();
-		AddToStaticBind(std::move(vs));
-		std::vector<WORD> indices=
+		AddStaticBind(std::move(vs));
+		std::vector<WORD> indices =
 		{
 			0,2,1, 2,3,1,
 			1,3,5, 3,7,5,
@@ -50,28 +71,35 @@ Box::Box(Graphics & gfx, Camera& cam, float x, float y) : cam(cam),
 			4,5,7, 4,7,6,
 			0,4,2, 2,4,6,
 			0,1,4, 1,5,4
-			
+
 		};
-		AddToStaticBind(std::make_unique<IndexBuff>(gfx, indices));
-		Surface wall = Surface("kappa50.bmp");
-		AddToStaticBind(std::make_unique<SamplerState>(gfx));
-		AddToStaticBind(std::make_unique<Texture>(gfx, wall));
+		
+		AddStaticBind(std::make_unique<IndexBuff>(gfx, indices));
+		
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
-			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{"TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0},
+			{ "POS",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 }	
 		};
-		AddToBinds(std::make_unique<InputLayout>(gfx, ied, vsBlob));
-		AddToStaticBind(std::make_unique<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
-		
+		AddStaticBind(std::make_unique<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+
 	}
-		/*auto transCB = std::make_unique<TransCB_>(gfx);
-		transCB->SetworldM_(gfx,DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll)*DirectX::XMMatrixTranslation(x, y, 4.0f)));
-		transCB->SetprojM_(gfx, (DirectX::XMMatrixTranspose(DirectX::XMMatrixIdentity())));
-		transCB->SetviewM_(gfx, (DirectX::XMMatrixTranspose(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 10.0f))));
-		AddBind(std::move(transCB));*/
-		AddBind(std::make_unique<TransCB_>(gfx, *this));
-		//AddBind(std::make_unique<TransCB_(gfx,))
+	else
+	{
+		SetIndexBufferFromStatic();
+	}
+	struct VSMaterialConstant
+	{
+		DirectX::XMMATRIX model;
+		DirectX::XMMATRIX worldviewProj;
+		DirectX::XMFLOAT3 eyePos;
+		//float padding;
+		
+	} VSConst;
+	VSConst.model = DirectX::XMMatrixTranspose(GetTransformation());
+	VSConst.worldviewProj = DirectX::XMMatrixTranspose(GetTransformation() * gfx.GetCamera());
+	VSConst.eyePos = DirectX::XMFLOAT3(1.0f,1.0f,1.0f);
+
+	AddBind(std::make_unique<VSConstBuff<VSMaterialConstant>>(gfx, VSConst));
 }
 
 void Box::Update(float ft)
@@ -79,38 +107,20 @@ void Box::Update(float ft)
 	pitch += ft;
 	yaw += ft;
 	roll += ft;
-
+	
 }
 
-
-
-
-//std::unique_ptr<DirectX::XMMATRIX> Box::GetViewXM() const
-//{
-//	 return ;
-//}
-
-DirectX::XMMATRIX Box::GetViewXM() const
+DirectX::XMMATRIX Box::GetTransformation() const
 {
-	return cam.GetViewMatrix();
+	return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(x, y,z);
+	//return DirectX::XMMatrixIdentity();
 }
 
-DirectX::XMMATRIX Box::GetWorldXM() const
-{
 
-	return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(x, y, 4.0f);
-}
 
-DirectX::XMMATRIX Box::GetProjXM() const
-{
-	return DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 10.0f);
-}
 
-//DirectX::XMMATRIX Box::GetTransformXM() const
-//{
-//	namespace dx = DirectX;
-//	return 
-//		dx::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
-//		
-//		dx::XMMatrixTranslation(x, y, 4.0f);
-//}
+
+
+
+
+

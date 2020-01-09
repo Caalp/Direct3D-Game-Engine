@@ -36,6 +36,14 @@ Window::WindowClass::WindowClass() noexcept : hInst(GetModuleHandle(nullptr))
 		GetInstance(), MAKEINTRESOURCE(IDI_ICON1),
 		IMAGE_ICON, 16, 16, 0));
 	RegisterClassEx(&wc);
+
+	/*int scrrenWidth = GetSystemMetrics(SM_CXSCREEN);
+	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+
+	if ()
+	{
+
+	}*/
 }
 
 Window::WindowClass::~WindowClass()
@@ -167,6 +175,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noe
 	case WM_CHAR:
 		kbd.OnChar(static_cast<unsigned char>(wparam));
 		break;
+		// Mouse move event in window message handling loop
 	case WM_MOUSEMOVE:
 	{
 	
