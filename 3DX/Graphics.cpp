@@ -563,15 +563,15 @@ DirectX::XMMATRIX Graphics::GetCamera() const
 	return camera;
 }
 
-//void Graphics::CameraPos(const DirectX::XMFLOAT3 & pos)
-//{
-//	cameraPos = pos;
-//}
-//
-//DirectX::XMFLOAT3 Graphics::GetCameraPos() const
-//{
-//	return cameraPos;
-//}
+void Graphics::SetCameraPos(const DirectX::XMFLOAT3 & pos)
+{
+	cameraPos = pos;
+}
+
+DirectX::XMFLOAT3 Graphics::GetCameraPos() const
+{
+	return cameraPos;
+}
 
 
 

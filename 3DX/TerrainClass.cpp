@@ -175,19 +175,19 @@ TerrainClass::TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos,UINT tW, UINT
 	{
 		SetIndexBufferFromStatic();
 	}
-	struct VSMaterialConstant
-	{
-		DirectX::XMMATRIX model;
-		DirectX::XMMATRIX worldviewProj;
-		DirectX::XMFLOAT3 eyePos;
-		//float padding;
-	} VSConst;
-	VSConst.model = DirectX::XMMatrixTranspose(GetTransformation());
-	VSConst.worldviewProj = DirectX::XMMatrixTranspose(GetTransformation() * gfx.GetCamera());
-	VSConst.eyePos = eyePos;
+	//struct VSMaterialConstant
+	//{
+	//	DirectX::XMMATRIX model;
+	//	DirectX::XMMATRIX worldviewProj;
+	//	DirectX::XMFLOAT3 eyePos;
+	//	//float padding;
+	//} VSConst;
+	//VSConst.model = DirectX::XMMatrixTranspose(GetTransformation());
+	//VSConst.worldviewProj = DirectX::XMMatrixTranspose(GetTransformation() * gfx.GetCamera());
+	//VSConst.eyePos = eyePos;
 
-	AddBind(std::make_unique<VSConstBuff<VSMaterialConstant>>(gfx, VSConst));
-	//AddBind(std::make_unique<TransCB_>(gfx, *this));
+	//AddBind(std::make_unique<VSConstBuff<VSMaterialConstant>>(gfx, VSConst));
+	 AddBind(std::make_unique<TransformationBuffer>(gfx, *this));
 }
 
 DirectX::XMMATRIX TerrainClass::GetTransformation() const

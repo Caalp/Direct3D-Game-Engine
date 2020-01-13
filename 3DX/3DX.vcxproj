@@ -200,7 +200,7 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Timer.h" />
-    <ClCompile Include="TransCB_.cpp" />
+    <ClCompile Include="TransformationBuffer.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -236,7 +236,7 @@
     <ClInclude Include="Surface.h" />
     <ClInclude Include="TerrainClass.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="TransCB_.h" />
+    <ClInclude Include="TransformationBuffer.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexShader.h" />
     <ClInclude Include="Waves.h" />

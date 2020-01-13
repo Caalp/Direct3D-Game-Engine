@@ -87,19 +87,20 @@ Box::Box(Graphics & gfx, float x, float y, float z) :
 	{
 		SetIndexBufferFromStatic();
 	}
-	struct VSMaterialConstant
-	{
-		DirectX::XMMATRIX model;
-		DirectX::XMMATRIX worldviewProj;
-		DirectX::XMFLOAT3 eyePos;
-		//float padding;
-		
-	} VSConst;
-	VSConst.model = DirectX::XMMatrixTranspose(GetTransformation());
-	VSConst.worldviewProj = DirectX::XMMatrixTranspose(GetTransformation() * gfx.GetCamera());
-	VSConst.eyePos = DirectX::XMFLOAT3(1.0f,1.0f,1.0f);
+	//struct VSMaterialConstant
+	//{
+	//	DirectX::XMMATRIX model;
+	//	DirectX::XMMATRIX worldviewProj;
+	//	DirectX::XMFLOAT3 eyePos;
+	//	//float padding;
+	//	
+	//} VSConst;
+	//VSConst.model = DirectX::XMMatrixTranspose(GetTransformation());
+	//VSConst.worldviewProj = DirectX::XMMatrixTranspose(GetTransformation() * gfx.GetCamera());
+	//VSConst.eyePos = DirectX::XMFLOAT3(1.0f,1.0f,1.0f);
 
-	AddBind(std::make_unique<VSConstBuff<VSMaterialConstant>>(gfx, VSConst));
+	//AddBind(std::make_unique<VSConstBuff<VSMaterialConstant>>(gfx, VSConst));
+	 AddBind(std::make_unique<TransformationBuffer>(gfx,*this));
 }
 
 void Box::Update(float ft)

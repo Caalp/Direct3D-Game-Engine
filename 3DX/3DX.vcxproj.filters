@@ -93,9 +93,6 @@
     <ClCompile Include="DrawableBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TransCB_.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Box.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -115,6 +112,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformationBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -170,9 +170,6 @@
     <ClInclude Include="Texture.h">
       <Filter>Header Files\Bindables</Filter>
     </ClInclude>
-    <ClInclude Include="TransCB_.h">
-      <Filter>Header Files\Bindables</Filter>
-    </ClInclude>
     <ClInclude Include="IndexBuff.h">
       <Filter>Header Files\Bindables</Filter>
     </ClInclude>
@@ -222,6 +219,9 @@
       <Filter>Header Files\Drawables</Filter>
     </ClInclude>
     <ClInclude Include="VertexShader.h">
+      <Filter>Header Files\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformationBuffer.h">
       <Filter>Header Files\Bindables</Filter>
     </ClInclude>
   </ItemGroup>

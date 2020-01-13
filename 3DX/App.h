@@ -25,7 +25,7 @@ private:
 	float mPhi, mTheta,mRadius;
 	//Model m;
 	TerrainClass b1{ wnd.gfx(), cam.GetPosition(), 50, 50, 160.0f, 160.0f };
-	Box d1{ wnd.gfx(),300.0f,400.0f,0.0f };
+	Box d1{ wnd.gfx(),10.0f,80.0f,-10.0f };
 	std::vector<Box*> vb;
 
 };

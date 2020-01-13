@@ -165,7 +165,7 @@
 //	{
 //		AddBind(std::move(elem));
 //	}
-//	AddBind(std::make_shared<TransCB_>(gfx, *this));*/
+//	AddBind(std::make_shared<TransformationBuffer>(gfx, *this));*/
 //}
 //
 //void Mesh::Draw(Graphics & gfx, DirectX::FXMMATRIX acumTrans)
