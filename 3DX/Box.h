@@ -1,9 +1,9 @@
 #pragma once
-#include "DrawableSource.h"
+#include "Drawable.h"
 #include <random>
 #include "Camera.h"
 
-class Box : public DrawableSource<Box>
+class Box : public Drawable<Box>
 {
 public:
 	Box(Graphics& gfx, float x, float y,float z);

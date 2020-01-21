@@ -1,12 +1,14 @@
 #pragma once
-#include "DrawableBase.h"
+#include "Drawable.h"
 #include "ConstBuffs.h"
 #include "Camera.h"
+
 class TransformationBuffer : public Bindables
 {
 	
 public:
-	TransformationBuffer(Graphics& gfx, const DrawableBase& parent);
+	template<class T>
+	TransformationBuffer(Graphics& gfx, const Drawable<T>& parent);
 	void UpdateBufferData(Graphics& gfx);
 	void Bind(Graphics& gfx) override;
 
@@ -22,6 +24,6 @@ private:
 protected:
 	TransformBuffer _TransformBuffer;
 	mutable std::unique_ptr<VSConstBuff<TransformBuffer>> m_TransformBuffer;
-	const DrawableBase& parent;
+	const Drawable& parent;
 	
 };
