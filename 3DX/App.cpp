@@ -8,7 +8,7 @@ App::App() :
 	//(wnd.gfx()),
 	dirLight(wnd.gfx()),spotLight(wnd.gfx()),
 	pointLight(wnd.gfx()),
-	mPhi(1.5f*3.1415926535f),mTheta(1.5f*3.1415926535f),mRadius(80.0f)//,m(wnd.gfx(),"suzanne.obj")
+	mPhi(1.5f*3.1415926535f),mTheta(1.5f*3.1415926535f),mRadius(80.0f),m(wnd.gfx(),"suzanne.obj")
 	
 {
 	
@@ -112,7 +112,7 @@ void App::Update()
 		vb[i] = new Box(wnd.gfx(), rnd(rng), rnd(rng), 10.0f);
 	}*/
 
-	//b1.Draw(wnd.gfx());
+	b1.Draw(wnd.gfx());
 	d1.Update(0.015f);
 	d1.Draw(wnd.gfx());
 
@@ -123,11 +123,11 @@ void App::Update()
 		elem->Draw(wnd.gfx());
 		elem->Update(0.015f);
 	}*/
-	
+	m.Draw(wnd.gfx());
 	dirLight.Bind(wnd.gfx());
 	pointLight.Bind(wnd.gfx());
 	spotLight.Bind(wnd.gfx());
-	//m.Draw(wnd.gfx());
+	
 	
 	
 	

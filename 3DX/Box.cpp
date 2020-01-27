@@ -100,6 +100,7 @@ Box::Box(Graphics & gfx, float x, float y, float z) :
 	//VSConst.eyePos = DirectX::XMFLOAT3(1.0f,1.0f,1.0f);
 
 	//AddBind(std::make_unique<VSConstBuff<VSMaterialConstant>>(gfx, VSConst));
+	 
 	 AddBind(std::make_unique<TransformationBuffer>(gfx,*this));
 }
 

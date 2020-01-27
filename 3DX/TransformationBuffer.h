@@ -1,14 +1,15 @@
 #pragma once
-#include "Drawable.h"
+
 #include "ConstBuffs.h"
 #include "Camera.h"
 
+class Drawable;
 class TransformationBuffer : public Bindables
 {
 	
 public:
-	template<class T>
-	TransformationBuffer(Graphics& gfx, const Drawable<T>& parent);
+	
+	TransformationBuffer(Graphics& gfx, const Drawable & parent);
 	void UpdateBufferData(Graphics& gfx);
 	void Bind(Graphics& gfx) override;
 

@@ -5,6 +5,7 @@ namespace dx = DirectX;
 
 class MatHelper
 {
+	
 public:
 	 
 	static float dot(const dx::XMFLOAT3& f1, const dx::XMFLOAT3& f2)

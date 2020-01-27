@@ -1,11 +1,11 @@
 #include "TransformationBuffer.h"
+#include "Drawable.h"
 
 
-
-TransformationBuffer::TransformationBuffer(Graphics & gfx, const DrawableBase & parent) :
-		parent(parent)
+TransformationBuffer::TransformationBuffer(Graphics & gfx, const Drawable & parent):
+	parent(parent)
 	
-	
+		
 {
 	if (!m_TransformBuffer)
 	{
@@ -19,6 +19,7 @@ void TransformationBuffer::UpdateBufferData(Graphics& gfx)
 {
 	_TransformBuffer =
 	{
+		
 		{DirectX::XMMatrixTranspose(parent.GetTransformation())},
 		{DirectX::XMMatrixTranspose(parent.GetTransformation()*gfx.GetCamera())},
 		{gfx.GetCameraPos()},
@@ -29,6 +30,7 @@ void TransformationBuffer::UpdateBufferData(Graphics& gfx)
 
 void TransformationBuffer::Bind(Graphics & gfx)
 {
+	
 	
 	UpdateBufferData(gfx);
 	m_TransformBuffer->Update(gfx,_TransformBuffer);
