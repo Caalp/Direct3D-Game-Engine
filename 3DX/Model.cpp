@@ -1,6 +1,9 @@
 #include "Model.h"
 #include "additional_headers.h"
 #include "MatHelper.h"
+#include <sstream>
+#include "Texture.h"
+#include "TextureLoader.h"
 
 Model::Model(Graphics& gfx,const std::string & filename, unsigned int flags)
 {
@@ -36,7 +39,8 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics & gfx, const aiMesh& mesh, const
 	std::vector<std::unique_ptr<Bindables>> bindablePtrs;
 	std::vector<V> vertices;
 	std::vector<WORD> indices;
-	std::vector<Texture2> textures;
+	std::vector<Texture> textures;
+	TextureInfo txInfo;
 	for (unsigned int i = 0; i < mesh.mNumVertices; i++)
 	{
 		V vertex;
@@ -65,10 +69,40 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics & gfx, const aiMesh& mesh, const
 			indices.push_back(face.mIndices[j]);
 
 	}
+	const unsigned int mIndex = mesh.mMaterialIndex;
+	using namespace std::string_literals;
+	const auto base = "Models\\nano_textured\\"s;
+	//matIndex at least can be zero otherwise not found
+
+	if (mIndex >= 0)
+	{
+		aiString texFileName;
+		
+		if (pMaterials[mIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &texFileName) == aiReturn_SUCCESS)
+		{
+			TextureLoader th((base + texFileName.C_Str()).c_str());
+			bindablePtrs.push_back(std::make_unique<Texture>(gfx, th));
+		}
+		/*if (pMaterials[mIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &texFileName) == aiReturn_SUCCESS)
+		{
+			th = TextureLoader((base + texFileName.C_Str()).c_str());
+			bindablePtrs.push_back(std::make_unique<Texture>(gfx, th));
+		}*/
+		 
+		
+		
+		
+		bindablePtrs.push_back(std::make_unique<SamplerState>(gfx));
+
+	}
+	
+	
+	
+	
 	bindablePtrs.push_back(std::make_unique<VertexBuffer>(gfx, vertices));
 	
 	bindablePtrs.push_back(std::make_unique<PixelShader>(gfx, L"PhongLightingPS.cso"));
-	auto vs = std::make_unique<VertexShader>(gfx, L"PhongLightingVS.cso");
+	auto vs = std::make_unique<VertexShader>(gfx, L"TexPhongVS.cso");
 	auto vsBlob = vs->GetVBlob();
 	bindablePtrs.push_back(std::move(vs));
 	
@@ -78,7 +112,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics & gfx, const aiMesh& mesh, const
 	{
 		{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
 		{"Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0},
-		//{"TexCoordinate",0,DXGI_FORMAT_R32G32B32_FLOAT,0,24u,D3D11_INPUT_PER_VERTEX_DATA,0}
+		{"TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,24u,D3D11_INPUT_PER_VERTEX_DATA,0}
 	};
 	bindablePtrs.push_back(std::make_unique<InputLayout>(gfx, ied,vsBlob));
 	struct MaterialConstantPS
@@ -90,9 +124,9 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics & gfx, const aiMesh& mesh, const
 
 	}matConst;
 
-	matConst.amb = DirectX::XMFLOAT4(0.48f, 0.77f, 0.46f, 1.0f);
-	matConst.diff = DirectX::XMFLOAT4(0.48f, 0.77f, 0.46f, 1.0f);
-	matConst.spec = DirectX::XMFLOAT4(0.02f, 0.02f, 0.2f, 16.0f);
+	matConst.amb = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	matConst.diff = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	matConst.spec = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 32.0f);
 
 	bindablePtrs.push_back(std::make_unique<PSConstBuff<MaterialConstantPS>>(gfx, matConst, 1u));
 	

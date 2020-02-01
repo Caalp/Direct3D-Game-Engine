@@ -14,7 +14,7 @@ struct V
 	DirectX::XMFLOAT3 normal;
 	DirectX::XMFLOAT2 texCoordinates;
 };
-struct Texture2
+struct TextureInfo
 {
 	unsigned int id;
 	std::string type;

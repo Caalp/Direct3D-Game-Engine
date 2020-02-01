@@ -3,12 +3,15 @@
 #include "Model.h"
 #include <random>
 
+
 App::App() :
 	wnd(800, 600, "Hello") ,x(0.5f),y(-4.5f),z(0.0f),last_x(0),last_y(0),
 	//(wnd.gfx()),
 	dirLight(wnd.gfx()),spotLight(wnd.gfx()),
 	pointLight(wnd.gfx()),
-	mPhi(1.5f*3.1415926535f),mTheta(1.5f*3.1415926535f),mRadius(80.0f),m(wnd.gfx(),"suzanne.obj")
+	mPhi(1.5f*3.1415926535f),mTheta(1.5f*3.1415926535f),mRadius(80.0f),
+	m(wnd.gfx(),"Models\\nano_textured\\nanosuit.obj"),
+	th("Models\\nano_textured\\glass_dif.png")
 	
 {
 	
@@ -18,7 +21,6 @@ App::App() :
 	
 	vb.resize(100);
 	
-
 	
 }
 
@@ -112,9 +114,9 @@ void App::Update()
 		vb[i] = new Box(wnd.gfx(), rnd(rng), rnd(rng), 10.0f);
 	}*/
 
-	b1.Draw(wnd.gfx());
-	d1.Update(0.015f);
-	d1.Draw(wnd.gfx());
+	//b1.Draw(wnd.gfx());
+	//d1.Update(0.015f);
+	//d1.Draw(wnd.gfx());
 
 	
 	/*for (auto& elem : vb)
