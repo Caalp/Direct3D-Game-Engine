@@ -15,7 +15,7 @@ App::App() :
 	
 {
 	
-	cam.SetCameraLens(0.25f*3.1415926535f, 800.0f / 600.0f, 1.0f, 1000.0f);
+	
 
 	//d1 = new Box(wnd.gfx(), wnd.mouse.GetPosX() / 400.0f - 1.0f, -wnd.mouse.GetPosY() / 300.0f + 1.0f, 1.0f);
 	
@@ -48,32 +48,33 @@ int App::Go()
 
 void App::Update()
 {
-	float dt = 20.0f;
-	float dtheta = 0.2f;
+	float dt = timer.Mark()*2.5f;
+	float dtheta = 0.5f;
+	float dtt = timer.Mark();
 	
 	wnd.gfx().ClearFrame(0.2f, 0.4f, 0.5f);
 	cam.UpdateViewXM();
 	wnd.gfx().SetCamera(cam.ViewProjXM());
 	wnd.gfx().SetView(cam.GetViewXM());
 	wnd.gfx().SetCameraPos(cam.GetPosition());
-		
+	
   	if (wnd.kbd.KeyIsPressed('W'))
 	{
-		cam.Walk((float)0.2f*dt);
+		cam.Walk(dt);
 	}
  	if (wnd.kbd.KeyIsPressed('S'))
 	{
 		
-		cam.Walk((float)-0.2f*dt);
+		cam.Walk(-dt);
 	}
 	if (wnd.kbd.KeyIsPressed('A'))
 	{
 		
-		cam.Strafe((float)-0.1f*dt);
+		cam.Strafe(-dt);
 	}
 	if (wnd.kbd.KeyIsPressed('D'))
 	{
-		cam.Strafe((float)0.1f*dt);
+		cam.Strafe(dt);
 	}
 	if (wnd.kbd.KeyIsPressed('Q'))
 	{
@@ -91,9 +92,13 @@ void App::Update()
 
 	if (wnd.kbd.KeyIsPressed('C'))
 	{
-		cam.RotateY((float)0.1*dtheta);
+		
+		//cam.RotateY((float)0.1*dtheta);
+		cam.RotateAroundOrigin(dt);
 	}
-	if (wnd.mouse.IsInWindow())
+	
+	
+	/*if (wnd.mouse.IsInWindow())
 	{
 		
 		float dx = DirectX::XMConvertToRadians(0.0305f*static_cast<float>(((float)(last_x-wnd.mouse.GetPosX()))));
@@ -103,12 +108,12 @@ void App::Update()
 		
 		cam.Pitch(dy);
 		cam.RotateY(dx);
-	}
-	
+	}*/
 	
 	std::mt19937 rng{ std::random_device{}() };
 	std::uniform_int_distribution<int> rnd(0, 800);
-
+	
+	
 	/*for (int i = 0; i < 100; i++)
 	{
 		vb[i] = new Box(wnd.gfx(), rnd(rng), rnd(rng), 10.0f);

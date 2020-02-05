@@ -1,12 +1,13 @@
 #include "Camera.h"
 
 Camera::Camera() :
-	cam_pos(0.0f,0.0f,0.0f),
+	cam_pos(0.0f,0.0f,-3.0f),
 	cam_right(1.0f,0.0f,0.0f),
-	cam_up(0.0f,0.0f,-1.0f),
-	cam_look(0.0f,-1.0f,0.0f)
+	cam_up(0.0f,1.0f,0.0f),
+	cam_look(0.0f,0.0f,1.0f)
 {
-	
+	SetCameraLens(0.25f*3.14f, 800 / 600.0f, 1.0f, 1000.0f);
+	theta = 0;
 }
 
 DirectX::XMVECTOR Camera::GetPositionXM() const
@@ -108,9 +109,11 @@ float Camera::GetFarPlaneHeight() const
 
 void Camera::SetCameraLens(float fY, float aspectRatio, float zn, float zf)
 {
+	//angle
 	FovY = fY;
 	AspectR = aspectRatio;
 
+	//distance of near and far Z's from camera 
 	NearZ = zn;
 	FarZ = zf;
 
@@ -160,13 +163,15 @@ DirectX::XMMATRIX Camera::ViewProjXM() const
 
 void Camera::Walk(float d)
 {
-	//cam_pos += d * cam_look;
+	
 
 	DirectX::XMVECTOR s = DirectX::XMVectorReplicate(d);
 	DirectX::XMVECTOR l = DirectX::XMLoadFloat3(&cam_look);
 	DirectX::XMVECTOR p = DirectX::XMLoadFloat3(&cam_pos);
 
 	DirectX::XMStoreFloat3(&cam_pos, DirectX::XMVectorMultiplyAdd(s, l, p));
+	
+	
 }
 
 void Camera::Strafe(float d)
@@ -176,6 +181,8 @@ void Camera::Strafe(float d)
 	DirectX::XMVECTOR p = DirectX::XMLoadFloat3(&cam_pos);
 
 	DirectX::XMStoreFloat3(&cam_pos, DirectX::XMVectorMultiplyAdd(s, r, p));
+
+	
 }
 
 void Camera::Pitch(float angle)
@@ -192,7 +199,36 @@ void Camera::RotateY(float angle)
 	DirectX::XMStoreFloat3(&cam_up, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&cam_up), r));
 	DirectX::XMStoreFloat3(&cam_look, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&cam_look), r));
 	DirectX::XMStoreFloat3(&cam_right, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&cam_right), r));
+	
+	
+	
+}
 
+void Camera::RotateAroundOrigin(float dt)
+{
+	theta += dt;
+	DirectX::XMFLOAT3 l;
+	 
+	DirectX::XMVECTOR target = { 0.0f,0.0f,0.0f };
+	DirectX::XMVECTOR worldUp = { 0.0f,1.0f,0.0f };
+	DirectX::XMVECTOR pos = { cam_pos.x,cam_pos.y,cam_pos.z };
+	DirectX::XMVECTOR right = { cam_right.x,cam_right.y,cam_right.z };
+	DirectX::XMVECTOR dir = DirectX::XMVectorSubtract(target, pos);
+	DirectX::XMVECTOR len = DirectX::XMVector3Length(dir);
+	dir = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(target, pos));
+	right = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(worldUp, dir));
+	
+	//DirectX::XMVector3Normalize(dir);
+	DirectX::XMStoreFloat3(&l, len);
+	float radius = l.x;
+	float x = sin(theta)*radius;
+	float z = cos(theta)*radius;
+	//sqrt(1.0f - powf(x, x))
+	cam_pos.x = x;
+	cam_pos.z = z;
+
+	DirectX::XMStoreFloat3(&cam_look, dir);
+	DirectX::XMStoreFloat3(&cam_right, right);
 }
 
 void Camera::UpdateViewXM()

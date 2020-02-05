@@ -53,7 +53,7 @@ public:
 	//Rotation
 	void Pitch(float angle);
 	void RotateY(float angle);
-
+	void RotateAroundOrigin(float dt);
 	void UpdateViewXM();
 	//void Render();
 	
@@ -75,6 +75,7 @@ private:
 	float FarPlaneWidth;
 	float FarPlaneHeight;
 	float NearPlaneWidth;
+	float theta;
 	// Matrices
 	DirectX::XMFLOAT4X4 ViewXM;
 	DirectX::XMFLOAT4X4 ProjXM;

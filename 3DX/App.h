@@ -7,6 +7,7 @@
 #include "TerrainClass.h"
 #include "Model.h"
 #include "TextureLoader.h"
+#include "Timer.h"
 class App
 {
 public:
@@ -26,6 +27,7 @@ private:
 	float last_y;
 	float mPhi, mTheta,mRadius;
 	Model m;
+	Timer timer;
 	TerrainClass b1{ wnd.gfx(), cam.GetPosition(), 50, 50, 160.0f, 160.0f };
 	Box d1{ wnd.gfx(),10.0f,80.0f,-10.0f };
 	std::vector<Box*> vb;

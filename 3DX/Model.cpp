@@ -69,11 +69,13 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics & gfx, const aiMesh& mesh, const
 			indices.push_back(face.mIndices[j]);
 
 	}
+	bool hasSpecularMap = false;
+	float shininess = 32.0f;
 	const unsigned int mIndex = mesh.mMaterialIndex;
 	using namespace std::string_literals;
 	const auto base = "Models\\nano_textured\\"s;
+	
 	//matIndex at least can be zero otherwise not found
-
 	if (mIndex >= 0)
 	{
 		aiString texFileName;
@@ -83,11 +85,18 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics & gfx, const aiMesh& mesh, const
 			TextureLoader th((base + texFileName.C_Str()).c_str());
 			bindablePtrs.push_back(std::make_unique<Texture>(gfx, th));
 		}
-		/*if (pMaterials[mIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &texFileName) == aiReturn_SUCCESS)
+		if (pMaterials[mIndex]->GetTexture(aiTextureType_DIFFUSE, 0, &texFileName) == aiReturn_SUCCESS)
 		{
-			th = TextureLoader((base + texFileName.C_Str()).c_str());
+
+			TextureLoader th((base + texFileName.C_Str()).c_str());
 			bindablePtrs.push_back(std::make_unique<Texture>(gfx, th));
-		}*/
+			hasSpecularMap = true;
+		}
+		else
+		{
+			pMaterials[mIndex]->Get(AI_MATKEY_SHININESS, shininess);
+				
+		}
 		 
 		
 		
@@ -100,8 +109,15 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics & gfx, const aiMesh& mesh, const
 	
 	
 	bindablePtrs.push_back(std::make_unique<VertexBuffer>(gfx, vertices));
+	if (hasSpecularMap)
+	{
+		bindablePtrs.push_back(std::make_unique<PixelShader>(gfx, L"SpecPhongPS.cso"));
+	}
+	else
+	{
+		bindablePtrs.push_back(std::make_unique<PixelShader>(gfx, L"PhongLightingPS.cso"));
+	}
 	
-	bindablePtrs.push_back(std::make_unique<PixelShader>(gfx, L"PhongLightingPS.cso"));
 	auto vs = std::make_unique<VertexShader>(gfx, L"TexPhongVS.cso");
 	auto vsBlob = vs->GetVBlob();
 	bindablePtrs.push_back(std::move(vs));
@@ -126,7 +142,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics & gfx, const aiMesh& mesh, const
 
 	matConst.amb = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	matConst.diff = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	matConst.spec = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 32.0f);
+	matConst.spec = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, shininess);
 
 	bindablePtrs.push_back(std::make_unique<PSConstBuff<MaterialConstantPS>>(gfx, matConst, 1u));
 	
