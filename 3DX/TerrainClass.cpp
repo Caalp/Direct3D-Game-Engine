@@ -1,6 +1,7 @@
 #include "TerrainClass.h"
 #include "MatHelper.h"
-
+#include "TextureLoader.h"
+#include "Texture.h"
 TerrainClass::TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos,UINT tW, UINT tH, float width, float height) 
 {
 	if (!isStaticallyBinded())
@@ -11,6 +12,7 @@ TerrainClass::TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos,UINT tW, UINT
 		{
 			DirectX::XMFLOAT3 pos;
 			DirectX::XMFLOAT3 normal;
+			DirectX::XMFLOAT2 texCoord;
 		};
 
 		UINT vertexCount = tW * tH;
@@ -24,9 +26,11 @@ TerrainClass::TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos,UINT tW, UINT
 		float du = 1.0f / (tH - 1);
 		float dv = 1.0f / (tW - 1);
 		std::vector<DirectX::XMFLOAT3> v;
+		std::vector<DirectX::XMFLOAT2> tex;
 		std::vector<Vertex> vertexData;
 		v.resize(vertexCount);
-
+		tex.resize(vertexCount);
+		TextureLoader ld("grass.dds");
 		std::vector<WORD> indexB;
 
 		for (int j = 0; j < tH; j++)
@@ -36,7 +40,7 @@ TerrainClass::TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos,UINT tW, UINT
 			{
 				float x = -halfWidth + i * dx;
 				v[j*tW + i] = DirectX::XMFLOAT3(x, 0.0f, z);
-
+				tex[j*tW + i] = DirectX::XMFLOAT2(i*du, j*dv);
 
 			}
 		}
@@ -87,6 +91,7 @@ TerrainClass::TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos,UINT tW, UINT
 			vertexData[i].pos = p;
 
 			vertexData[i].normal = getHillNormal(p.x, p.z);
+			vertexData[i].texCoord = tex[i];
 			// Color values
 			/*if (p.y < -10.f)
 			{
@@ -111,7 +116,7 @@ TerrainClass::TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos,UINT tW, UINT
 		}
 		AddStaticBind(std::make_unique<VertexBuffer>(gfx, vertexData));
 		AddStaticBind(std::make_unique<PixelShader>(gfx, L"PhongLightingPS.cso"));
-		auto vs = std::make_unique<VertexShader>(gfx, L"PhongLightingVS.cso");
+		auto vs = std::make_unique<VertexShader>(gfx, L"TexPhongVS.cso");
 		auto vsBlob = vs->GetVBlob();
 		AddStaticBind(std::move(vs));
 		AddStaticBind(std::make_unique<IndexBuff>(gfx, indexB));
@@ -130,11 +135,18 @@ TerrainClass::TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos,UINT tW, UINT
 
 		AddStaticBind(std::make_unique<PSConstBuff<MaterialConstantPS>>(gfx, matConst, 1u));
 
+		AddStaticBind(std::make_unique<Texture>(gfx, ld));
+
+		AddStaticBind(std::make_unique<SamplerState>(gfx));
+
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
 			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
 			{"Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0},
+			{"TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,24u,D3D11_INPUT_PER_VERTEX_DATA,0},
+			
 		};
+
 		/*dx::XMFLOAT4X4 mGridWorld;
 		dx::XMMATRIX I = dx::XMMatrixIdentity();
 		XMStoreFloat4x4(&mGridWorld, I);

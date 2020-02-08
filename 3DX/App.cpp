@@ -48,7 +48,7 @@ int App::Go()
 
 void App::Update()
 {
-	float dt = timer.Mark()*2.5f;
+	float dt = timer.Mark()*30.0f;
 	float dtheta = 0.5f;
 	float dtt = timer.Mark();
 	
@@ -93,8 +93,8 @@ void App::Update()
 	if (wnd.kbd.KeyIsPressed('C'))
 	{
 		
-		//cam.RotateY((float)0.1*dtheta);
-		cam.RotateAroundOrigin(dt);
+		cam.RotateY((float)0.1*dtheta);
+		
 	}
 	
 	
