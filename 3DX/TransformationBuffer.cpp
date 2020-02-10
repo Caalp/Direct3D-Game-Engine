@@ -17,6 +17,7 @@ TransformationBuffer::TransformationBuffer(Graphics & gfx, const Drawable & pare
 
 void TransformationBuffer::UpdateBufferData(Graphics& gfx)
 {
+	
 	_TransformBuffer =
 	{
 		

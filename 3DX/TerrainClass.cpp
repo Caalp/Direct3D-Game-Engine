@@ -40,7 +40,7 @@ TerrainClass::TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos,UINT tW, UINT
 			{
 				float x = -halfWidth + i * dx;
 				v[j*tW + i] = DirectX::XMFLOAT3(x, 0.0f, z);
-				tex[j*tW + i] = DirectX::XMFLOAT2(i*du, j*dv);
+				tex[j*tW + i] = DirectX::XMFLOAT2(5*i*du, 5*j*dv);
 
 			}
 		}
@@ -205,7 +205,7 @@ TerrainClass::TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos,UINT tW, UINT
 
 DirectX::XMMATRIX TerrainClass::GetTransformation() const
 {
-	return 2*DirectX::XMMatrixIdentity();
+	return DirectX::XMMatrixTranslation(0.0f,0.0f, 0.0f);
 }
 
 

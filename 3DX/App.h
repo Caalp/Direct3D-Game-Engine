@@ -8,6 +8,7 @@
 #include "Model.h"
 #include "TextureLoader.h"
 #include "Timer.h"
+#include "Water.h"
 class App
 {
 public:
@@ -28,8 +29,9 @@ private:
 	float mPhi, mTheta,mRadius;
 	Model m;
 	Timer timer;
-	TerrainClass b1{ wnd.gfx(), cam.GetPosition(), 50, 50, 160.0f, 160.0f };
+	TerrainClass b1{ wnd.gfx(), cam.GetPosition(), 50, 50, 120.0f, 120.0f };
 	Box d1{ wnd.gfx(),10.0f,80.0f,-10.0f };
 	std::vector<Box*> vb;
 	TextureLoader th;
+	Water water;
 };

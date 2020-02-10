@@ -16,7 +16,7 @@ App::App() :
 {
 	
 	
-
+	water.Init(wnd.gfx(), 160, 160, 1.0f);
 	//d1 = new Box(wnd.gfx(), wnd.mouse.GetPosX() / 400.0f - 1.0f, -wnd.mouse.GetPosY() / 300.0f + 1.0f, 1.0f);
 	
 	vb.resize(100);
@@ -96,8 +96,31 @@ void App::Update()
 		cam.RotateY((float)0.1*dtheta);
 		
 	}
-	
-	
+	//water movement Test!
+	if (wnd.kbd.KeyIsPressed('H'))
+	{
+		water.updatePosX(-dt);
+	}
+	if(wnd.kbd.KeyIsPressed('K'))
+	{
+		water.updatePosX(dt);
+	}
+	if(wnd.kbd.KeyIsPressed('U'))
+	{
+		water.updatePosY(dt);
+	}
+	if (wnd.kbd.KeyIsPressed('J'))
+	{
+		water.updatePosY(-dt);
+	}
+	if (wnd.kbd.KeyIsPressed('I'))
+	{
+		water.updatePosZ(dt);
+	}
+	if (wnd.kbd.KeyIsPressed('K'))
+	{
+		water.updatePosZ(-dt);
+	}
 	/*if (wnd.mouse.IsInWindow())
 	{
 		
@@ -119,7 +142,10 @@ void App::Update()
 		vb[i] = new Box(wnd.gfx(), rnd(rng), rnd(rng), 10.0f);
 	}*/
 
-	//b1.Draw(wnd.gfx());
+	b1.Draw(wnd.gfx());
+	water.Draw(wnd.gfx());
+	
+	
 	//d1.Update(0.015f);
 	//d1.Draw(wnd.gfx());
 
@@ -130,7 +156,7 @@ void App::Update()
 		elem->Draw(wnd.gfx());
 		elem->Update(0.015f);
 	}*/
-	m.Draw(wnd.gfx());
+	//m.Draw(wnd.gfx());
 	dirLight.Bind(wnd.gfx());
 	pointLight.Bind(wnd.gfx());
 	spotLight.Bind(wnd.gfx());

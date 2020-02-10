@@ -96,9 +96,9 @@ Graphics::Graphics(HWND hWnd)
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsv;
 	ZeroMemory(&dsv, sizeof(dsv));
-	dsv.Format = depthTexDesc.Format;
+	dsv.Format = DXGI_FORMAT_D32_FLOAT;
 	dsv.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	dsv.Texture2D.MipSlice = 0;
+	dsv.Texture2D.MipSlice = 0u;
 
 	
 	
