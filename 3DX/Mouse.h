@@ -19,6 +19,7 @@ public:
 			Move,
 			Enter,
 			Leave,
+
 		};
 	private:
 		Type type;
@@ -76,6 +77,11 @@ public:
 	bool IsInWindow() const noexcept;
 	bool LeftIsPressed() const noexcept;
 	bool RightIsPressed() const noexcept;
+	
+	/*void OnMouseDown(WPARAM btnState, int x, int y);
+	void OnMouseUp(WPARAM btnState, int x, int y);
+	void OnMouseUp(WPARAM btnState, int x, int y);*/
+
 	std::optional<Mouse::Event> Read() noexcept;
 	///<summary>
 	/// Return if true if the queue is empty

@@ -21,6 +21,7 @@ public:
 	void DrawIndexed(UINT count);
 	void EndFrame();
 	void ClearFrame(float red,float gren,float blue);
+	void ClearDepthStencilView();
 
 	//friend class Box;
 
@@ -42,5 +43,8 @@ protected:
 	Microsoft::WRL::ComPtr<IDXGISwapChain> pSwapChain;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pImmediateContext;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTarget;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pdsView;
+	D3D11_TEXTURE2D_DESC  depthTexDesc;
+
 	
 };

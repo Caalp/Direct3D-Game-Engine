@@ -53,6 +53,7 @@ void App::Update()
 	float dtt = timer.Mark();
 	
 	wnd.gfx().ClearFrame(0.2f, 0.4f, 0.5f);
+	
 	cam.UpdateViewXM();
 	wnd.gfx().SetCamera(cam.ViewProjXM());
 	wnd.gfx().SetView(cam.GetViewXM());
@@ -76,6 +77,54 @@ void App::Update()
 	{
 		cam.Strafe(dt);
 	}
+
+
+	if (wnd.mouse.IsInWindow())
+	{
+		
+		if (wnd.mouse.IsInWindow() && wnd.mouse.LeftIsPressed())
+		{
+
+			float dx = DirectX::XMConvertToRadians(0.25f*static_cast<float>(wnd.mouse.GetPosX() - last_x));
+			float dy = DirectX::XMConvertToRadians(0.25f*static_cast<float>(wnd.mouse.GetPosY() - last_y));
+
+			cam.Pitch(dy);
+			cam.Yaw(dx);
+		}
+		last_x = (float)wnd.mouse.GetPosX();
+		last_y = (float)wnd.mouse.GetPosY();
+		
+	}
+	
+	
+
+
+
+	/*lastMousePos.x = wnd.mouse.GetPosX();
+	lastMousePos.y = wnd.mouse.GetPosY();
+	*/
+	
+	//if (wnd.mouse.Read().has_value()&& (wnd.mouse.Read().value().GetType() == Mouse::Event::Type::LPress) && (wnd.mouse.Read().value().GetType() == Mouse::Event::Type::Enter) )
+	//{
+	//	lastMousePos.x = wnd.mouse.GetPosX();
+	//	lastMousePos.y = wnd.mouse.GetPosY();
+
+	//	//SetCapture(wnd.getMainWindow());
+	//}
+	//if (wnd.mouse.Read().has_value() && (wnd.mouse.Read().value().GetType() == Mouse::Event::Type::Move) && wnd.mouse.Read().value().GetType() == Mouse::Event::Type::Enter )
+	//{
+	//	
+	//	if (wnd.mouse.Read().has_value() && (wnd.mouse.Read().value().GetType() == Mouse::Event::Type::LPress) && wnd.mouse.Read().value().GetType() == Mouse::Event::Type::Enter )
+	//	{
+	//		float dx = DirectX::XMConvertToRadians(0.25f*static_cast<float>(x - lastMousePos.x));
+	//		float dy = DirectX::XMConvertToRadians(0.25f*static_cast<float>(y - lastMousePos.y));
+
+	//		cam.Pitch(dy);
+	//		cam.RotateY(dx);
+	//	}
+	//	lastMousePos.x = wnd.mouse.GetPosX();
+	//	lastMousePos.y = wnd.mouse.GetPosY();
+	//}
 	if (wnd.kbd.KeyIsPressed('Q'))
 	{
 		cam.Pitch((float)-0.1*dtheta);

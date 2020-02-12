@@ -6,7 +6,7 @@ Camera::Camera() :
 	cam_up(0.0f,1.0f,0.0f),
 	cam_look(0.0f,0.0f,1.0f)
 {
-	SetCameraLens(0.25f*3.14f, 800 / 600.0f, 1.0f, 1000.0f);
+	SetCameraLens(0.25f*3.1415926535f, 800.0f/600.0f, 1.0f, 1000.0f);
 	theta = 0;
 }
 

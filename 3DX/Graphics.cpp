@@ -77,9 +77,9 @@ Graphics::Graphics(HWND hWnd)
 
 	pDevice->CreateDepthStencilState(&dsd, pDSS.GetAddressOf());
 	pImmediateContext->OMSetDepthStencilState(pDSS.Get(), 1u);
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pdsView;
+	
 	wrl::ComPtr<ID3D11Texture2D> depthTex; 
-	D3D11_TEXTURE2D_DESC  depthTexDesc;
+	
 	ZeroMemory(&depthTexDesc, sizeof(depthTexDesc));
 	depthTexDesc.Width = 800;
 	depthTexDesc.Height = 600;
@@ -532,6 +532,12 @@ void Graphics::ClearFrame(float red, float green, float blue)
 	float color[] = { red,green,blue,1.0f };
 	pImmediateContext->ClearRenderTargetView(pTarget.Get(), color);
 }
+
+void Graphics::ClearDepthStencilView()
+{
+	pImmediateContext->ClearDepthStencilView(pdsView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
+}
+
 
 DirectX::XMMATRIX Graphics::GetView() const
 {

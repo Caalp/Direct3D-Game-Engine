@@ -132,6 +132,6 @@ void Water::updatePosZ(float z)
 
 DirectX::XMMATRIX Water::GetTransformation() const
 {
-	return DirectX::XMMatrixIdentity() * DirectX::XMMatrixTranslation(x, y, z);
+	return DirectX::XMMatrixIdentity() * DirectX::XMMatrixTranslation(0.0f,0.0f,0.0f);
 }
 

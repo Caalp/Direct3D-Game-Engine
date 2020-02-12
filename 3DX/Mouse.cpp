@@ -31,6 +31,10 @@ bool Mouse::RightIsPressed() const noexcept
 	return rightIsPressed;
 }
 
+
+
+
+
 // read the events from queue and pop it 
 std::optional<Mouse::Event> Mouse::Read() noexcept
 {

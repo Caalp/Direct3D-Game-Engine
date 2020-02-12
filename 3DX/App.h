@@ -34,4 +34,5 @@ private:
 	std::vector<Box*> vb;
 	TextureLoader th;
 	Water water;
+	POINT lastMousePos;
 };
