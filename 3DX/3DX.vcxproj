@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)assimp\include;$(IncludePath);$(ProjectDir)FreeImage\include</IncludePath>
-    <LibraryPath>$(ProjectDir)libs;$(ProjectDir)assimp\bin\x64;$(ProjectDir)libs;$(LibraryPath);$(ProjectDir)FreeImage\bin\lib;</LibraryPath>
+    <IncludePath>$(ProjectDir)assimp\include;$(IncludePath);$(ProjectDir)FreeImage\include;$(ProjectDir)DirectXTex\x86\include</IncludePath>
+    <LibraryPath>$(ProjectDir)libs;$(ProjectDir)assimp\bin\x64;$(ProjectDir)libs;$(LibraryPath);$(ProjectDir)FreeImage\bin\lib;$(ProjectDir)DirectXTex\x86\libs</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>C:\Users\calpy\source\repos\3DX\3DX\assimp\include;$(IncludePath)</IncludePath>
@@ -99,7 +99,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>assimp-vc140-mt.lib;FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DirectXTex.lib;assimp-vc140-mt.lib;FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)3DX\assimp\bin\x64</AdditionalLibraryDirectories>
     </Link>
     <FxCompile />
@@ -178,6 +178,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Bindables.cpp" />
+    <ClCompile Include="BlendState.cpp" />
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CustomException.cpp" />
@@ -203,7 +204,6 @@
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Timer.h" />
     <ClCompile Include="TransformationBuffer.cpp" />
-    <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="Water.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -212,6 +212,7 @@
   <ItemGroup>
     <ClInclude Include="additional_headers.h" />
     <ClInclude Include="Bindables.h" />
+    <ClInclude Include="BlendState.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DirectionalLight.h" />
@@ -234,6 +235,7 @@
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="PrimitiveTopology.h" />
+    <ClInclude Include="RasterizerState.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SamplerState.h" />
     <ClInclude Include="SpotLight.h" />
@@ -269,6 +271,26 @@
     </FxCompile>
     <FxCompile Include="SpecPhongPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="TexBlenderPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="TexBlenderVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>

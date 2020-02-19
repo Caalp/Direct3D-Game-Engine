@@ -31,7 +31,7 @@ FIBITMAP* TextureLoader::GetImage() const
 	return pImage;
 }
 
-BYTE* TextureLoader::GetImageData() const
+const BYTE* TextureLoader::GetImageData() const
 {
 	return bits;
 }
@@ -39,7 +39,7 @@ BYTE* TextureLoader::GetImageData() const
 bool TextureLoader::LoadTexture(const char * filePath)
 {
 	
-	
+	auto a = sizeof(FIBITMAP);
 	//Image format.
 	imgFormat = FreeImage_GetFileType(filePath, 0);
 

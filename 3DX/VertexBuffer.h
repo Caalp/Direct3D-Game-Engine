@@ -1,18 +1,18 @@
 #pragma once
 #include "Bindables.h"
 #include <vector>
+
 class VertexBuffer : public Bindables
 {
-
-
+	
 public:
 	template<typename V>
 	VertexBuffer(Graphics& gfx, const std::vector<V>& v) : stride(UINT(sizeof(V))),offset(UINT(0u))
 	{
 		D3D11_BUFFER_DESC vbdesc = {};
 		vbdesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		vbdesc.Usage = D3D11_USAGE_DEFAULT;
-		vbdesc.CPUAccessFlags = 0u;
+		vbdesc.Usage = D3D11_USAGE_DYNAMIC;
+		vbdesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		vbdesc.MiscFlags = 0u;
 		vbdesc.ByteWidth = sizeof(V)*v.size(); // size of the vertices array
 		vbdesc.StructureByteStride = sizeof(V);
@@ -21,13 +21,18 @@ public:
 		
 		sd.pSysMem = v.data(); // pointer to initialization data
 		GetDevice(gfx)->CreateBuffer(&vbdesc, &sd, &pVertexBuffer);
-		
-		
-	}
-	void Bind(Graphics& gfx);
 
+	}
+
+	
+	void Bind(Graphics& gfx)
+	{
+		GetContext(gfx)->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
+	}
+	
 protected:
 	UINT stride;
 	UINT offset;
-	Microsoft::WRL::ComPtr<ID3D11Buffer> pVertexBuffer;
+	
+	mutable Microsoft::WRL::ComPtr<ID3D11Buffer> pVertexBuffer;
 };

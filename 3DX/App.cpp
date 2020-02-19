@@ -2,6 +2,7 @@
 #include "Box.h"
 #include "Model.h"
 #include <random>
+#include "Surface.h"
 
 
 App::App() :
@@ -16,9 +17,9 @@ App::App() :
 {
 	
 	
-	water.Init(wnd.gfx(), 160, 160, 1.0f);
+	water.Init(wnd.gfx(), 160, 160, 1.0f,0.03f,3.25f,0.4f);
 	//d1 = new Box(wnd.gfx(), wnd.mouse.GetPosX() / 400.0f - 1.0f, -wnd.mouse.GetPosY() / 300.0f + 1.0f, 1.0f);
-	
+	Surface surf("");
 	vb.resize(100);
 	
 	
@@ -48,9 +49,9 @@ int App::Go()
 
 void App::Update()
 {
-	float dt = timer.Mark()*30.0f;
+	float dt = 0.190f;
 	float dtheta = 0.5f;
-	float dtt = timer.Mark();
+	//float dtt = timer.Mark();
 	
 	wnd.gfx().ClearFrame(0.2f, 0.4f, 0.5f);
 	
@@ -78,7 +79,7 @@ void App::Update()
 		cam.Strafe(dt);
 	}
 
-
+	float totalTime = 1.0f;
 	if (wnd.mouse.IsInWindow())
 	{
 		
@@ -96,10 +97,19 @@ void App::Update()
 		
 	}
 	
+	static float t_base = 0.0f;
+	if ((totalTime - t_base) >= 0.25f)
+	{
+		t_base += 0.25f;
+
+		DWORD i = 5 + rand() % (water.GetRowCount() - 10);
+		DWORD j = 5 + rand() % (water.GetColumnCount() - 10);
+		
+		float r = MatHelper::randF(1.0f, 2.0f);
+
+		water.Disturb(i, j, r);
+	}
 	
-
-
-
 	/*lastMousePos.x = wnd.mouse.GetPosX();
 	lastMousePos.y = wnd.mouse.GetPosY();
 	*/
@@ -190,13 +200,15 @@ void App::Update()
 	{
 		vb[i] = new Box(wnd.gfx(), rnd(rng), rnd(rng), 10.0f);
 	}*/
-
+	
+	water.Update(wnd.gfx(), 0.000648);
+	
 	b1.Draw(wnd.gfx());
-	water.Draw(wnd.gfx());
+	
 	
 	
 	//d1.Update(0.015f);
-	//d1.Draw(wnd.gfx());
+	d1.Draw(wnd.gfx());
 
 	
 	/*for (auto& elem : vb)
@@ -210,7 +222,7 @@ void App::Update()
 	pointLight.Bind(wnd.gfx());
 	spotLight.Bind(wnd.gfx());
 	
-	
+	water.Draw(wnd.gfx());
 	
 	
 	

@@ -11,7 +11,7 @@ class Graphics
 {
 	friend class Bindables;
 public:
-	Graphics(HWND hWnd);
+	Graphics(HWND hWnd,int width,int height);
 	~Graphics() = default;
 	Graphics(const Graphics&) = delete;
 	Graphics& operator=(const Graphics&) = delete;
@@ -21,7 +21,7 @@ public:
 	void DrawIndexed(UINT count);
 	void EndFrame();
 	void ClearFrame(float red,float gren,float blue);
-	void ClearDepthStencilView();
+	
 
 	//friend class Box;
 
@@ -44,7 +44,8 @@ protected:
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pImmediateContext;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTarget;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pdsView;
-	D3D11_TEXTURE2D_DESC  depthTexDesc;
+	//Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerState;
+	
 
 	
 };

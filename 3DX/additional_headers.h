@@ -11,3 +11,4 @@
 #include "PrimitiveTopology.h"
 #include "TransformationBuffer.h"
 #include "SamplerState.h"
+#include "BlendState.h"

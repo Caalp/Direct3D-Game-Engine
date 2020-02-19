@@ -65,7 +65,7 @@ TerrainClass::TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos,UINT tW, UINT
 
 		auto getHeight = [](float x, float z)  -> float
 		{
-			return 0.3f*(z*sinf(0.1f*x) + x * cosf(0.1f*z));
+			return 0.1f*(z*sinf(0.1f*x) + x * cosf(0.1f*z));
 		};
 		auto getHillNormal = [](float x, float z)
 		{
@@ -92,27 +92,7 @@ TerrainClass::TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos,UINT tW, UINT
 
 			vertexData[i].normal = getHillNormal(p.x, p.z);
 			vertexData[i].texCoord = tex[i];
-			// Color values
-			/*if (p.y < -10.f)
-			{
-				vertexData[i].color = DirectX::XMFLOAT3(1.0f, 0.96f, 0.62f);
-			}
-			else if (p.y < 5.0f)
-			{
-				vertexData[i].color = DirectX::XMFLOAT3(0.48f, 0.77f, 0.46f);
-			}
-			else if (p.y < 12.0f)
-			{
-				vertexData[i].color = DirectX::XMFLOAT3(0.1f, 0.48f, 0.19f);
-			}
-			else if (p.y < 20.0f)
-			{
-				vertexData[i].color = DirectX::XMFLOAT3(0.45f, 0.39f, 0.34f);
-			}
-			else
-			{
-				vertexData[i].color = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
-			}*/
+			
 		}
 		AddStaticBind(std::make_unique<VertexBuffer>(gfx, vertexData));
 		AddStaticBind(std::make_unique<PixelShader>(gfx, L"PhongLightingPS.cso"));
@@ -147,65 +127,23 @@ TerrainClass::TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos,UINT tW, UINT
 			
 		};
 
-		/*dx::XMFLOAT4X4 mGridWorld;
-		dx::XMMATRIX I = dx::XMMatrixIdentity();
-		XMStoreFloat4x4(&mGridWorld, I);
-		dx::XMMATRIX modelviewProj = GetTransformation() * gfx.GetCamera();
-
-		dx::XMMATRIX world= GetTransformation();
-
-		dx::XMMATRIX worldInvTranspose = MatHelper::inverseTranspose(world);
-
-
-
-		struct CameraConstBuff
-		{
-			DirectX::XMMATRIX modelView;
-			DirectX::XMMATRIX world;
-			DirectX::XMFLOAT3 eyePosition;
-		} camConst;
-
-		camConst.modelView = DirectX::XMMatrixTranspose(modelviewProj);
-		camConst.world = DirectX::XMMatrixTranspose(world);
-
-		camConst.eyePosition = eyePos;*/
+		
 		AddStaticBind(std::make_unique<InputLayout>(gfx, ied, vsBlob));
 		AddStaticBind(std::make_unique<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
-		//struct PSMaterialConstant
-		//{
-		//	/*float specularIntensitiy;
-		//	float specularPower;
-		//	float padding;*/
-		//	DirectX::XMFLOAT3 materialColor;
-		//} colorConst;
-		////colorConst.specularIntensitiy = 0.5;
-		////colorConst.specularPower = 32;
-		//colorConst.materialColor = DirectX::XMFLOAT3(0.1f, 0.7f, 0.1f);
-		//AddBind(std::make_unique<PSConstBuff<PSMaterialConstant>>(gfx, colorConst, 1u));
+		
 	}
 	else
 	{
 		SetIndexBufferFromStatic();
 	}
-	//struct VSMaterialConstant
-	//{
-	//	DirectX::XMMATRIX model;
-	//	DirectX::XMMATRIX worldviewProj;
-	//	DirectX::XMFLOAT3 eyePos;
-	//	//float padding;
-	//} VSConst;
-	//VSConst.model = DirectX::XMMatrixTranspose(GetTransformation());
-	//VSConst.worldviewProj = DirectX::XMMatrixTranspose(GetTransformation() * gfx.GetCamera());
-	//VSConst.eyePos = eyePos;
-
-	//AddBind(std::make_unique<VSConstBuff<VSMaterialConstant>>(gfx, VSConst));
+	
 	 AddBind(std::make_unique<TransformationBuffer>(gfx, *this));
 }
 
 DirectX::XMMATRIX TerrainClass::GetTransformation() const
 {
-	return DirectX::XMMatrixTranslation(0.0f,0.0f, 0.0f);
+	return DirectX::XMMatrixIdentity();
 }
 
 

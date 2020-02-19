@@ -12,7 +12,14 @@ public:
 	{
 		return ((f1.x*f2.x) + (f1.y*f2.y) + (f1.z*f2.z));
 	}
-	
+	static float randF()
+	{
+		return (float)(rand()) / (float)32767;
+	}
+	static float randF(float a, float b)
+	{
+		return a + randF()*(b - a);
+	}
 	///<summary>
 	/// Calculates reflection ray and loads into out
 	///</summary>

@@ -75,7 +75,7 @@ Window::Window(int width, int height,  const char* name) noexcept : width(width)
 						nullptr, 
 						WindowClass::GetInstance(), this);
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
-	p_gfx = std::make_unique<Graphics>(hWnd);
+	p_gfx = std::make_unique<Graphics>(hWnd,width,height);
 }
 
 

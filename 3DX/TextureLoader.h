@@ -11,7 +11,7 @@ public:
 	unsigned int GetWidth() const;
 	unsigned int GetHeight() const;
 	FIBITMAP* GetImage() const;
-	BYTE* GetImageData() const;
+	const BYTE* GetImageData() const;
 	
 private:
 

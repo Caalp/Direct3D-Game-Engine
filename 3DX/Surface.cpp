@@ -6,6 +6,11 @@
 
 Surface::Surface(const std::string& filename)
 {
+
+	auto scratch = DirectX::ScratchImage{};
+	DirectX::LoadFromWICFile(L"WoodCrate02.dds", DirectX::WIC_FLAGS_NONE, nullptr, scratch);
+	auto image = scratch.GetImage(0, 0, 0);
+	auto a = image->pixels[0];
 	std::ifstream file(filename, std::ios_base::binary);
 	assert(file);
 	BITMAPFILEHEADER bmpfile;
@@ -61,6 +66,7 @@ Surface::Surface(const std::string& filename)
 	}
 
 }
+
 
 Surface::Surface(int width, int height):
 	width(width),

@@ -31,11 +31,11 @@ HRESULT Graphics::CompileShader(LPCWSTR pScrData, LPCSTR entryPoint, LPCSTR shad
 	return S_OK;
 }
 
-Graphics::Graphics(HWND hWnd)
+Graphics::Graphics(HWND hWnd,int width,int height)
 {
 	DXGI_SWAP_CHAIN_DESC scd = {};
-	scd.BufferDesc.Width = 0;
-	scd.BufferDesc.Height = 0;
+	scd.BufferDesc.Width = width;
+	scd.BufferDesc.Height = height;
 	scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	scd.BufferDesc.RefreshRate.Numerator = 0;
 	scd.BufferDesc.RefreshRate.Denominator = 0;
@@ -76,13 +76,13 @@ Graphics::Graphics(HWND hWnd)
 	wrl::ComPtr<ID3D11DepthStencilState> pDSS;
 
 	pDevice->CreateDepthStencilState(&dsd, pDSS.GetAddressOf());
-	pImmediateContext->OMSetDepthStencilState(pDSS.Get(), 1u);
+	
 	
 	wrl::ComPtr<ID3D11Texture2D> depthTex; 
-	
+	D3D11_TEXTURE2D_DESC  depthTexDesc {};
 	ZeroMemory(&depthTexDesc, sizeof(depthTexDesc));
-	depthTexDesc.Width = 800;
-	depthTexDesc.Height = 600;
+	depthTexDesc.Width = width;
+	depthTexDesc.Height = height;
 	depthTexDesc.MipLevels = 1;
 	depthTexDesc.ArraySize = 1;
 	depthTexDesc.Format = DXGI_FORMAT_D32_FLOAT;
@@ -90,22 +90,40 @@ Graphics::Graphics(HWND hWnd)
 	depthTexDesc.SampleDesc.Quality = 0;
 	depthTexDesc.Usage = D3D11_USAGE_DEFAULT;
 	depthTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	depthTexDesc.CPUAccessFlags = 0;
-	depthTexDesc.MiscFlags = 0;
-	pDevice->CreateTexture2D(&depthTexDesc, nullptr, depthTex.GetAddressOf());
+	
 
-	D3D11_DEPTH_STENCIL_VIEW_DESC dsv;
-	ZeroMemory(&dsv, sizeof(dsv));
+	pDevice->CreateTexture2D(&depthTexDesc, nullptr, depthTex.GetAddressOf());
+	
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC dsv = {};
 	dsv.Format = DXGI_FORMAT_D32_FLOAT;
 	dsv.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsv.Texture2D.MipSlice = 0u;
+	pDevice->CreateDepthStencilView(depthTex.Get(), &dsv, pdsView.GetAddressOf());
+
+	/*D3D11_RASTERIZER_DESC rasterizerDesc;
+	ZeroMemory(&rasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
+
+	rasterizerDesc.AntialiasedLineEnable = FALSE;
+	rasterizerDesc.CullMode = D3D11_CULL_BACK;
+	rasterizerDesc.DepthBias = 0;
+	rasterizerDesc.DepthBiasClamp = 0.0f;
+	rasterizerDesc.DepthClipEnable = TRUE;
+	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+	rasterizerDesc.FrontCounterClockwise = FALSE;
+	rasterizerDesc.MultisampleEnable = FALSE;
+	rasterizerDesc.ScissorEnable = FALSE;
+	rasterizerDesc.SlopeScaledDepthBias = 0.0f;
+	pDevice->CreateRasterizerState(&rasterizerDesc, rasterizerState.GetAddressOf());*/
 
 	
-	
 	pImmediateContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), pdsView.Get());
+	pImmediateContext->OMSetDepthStencilState(pDSS.Get(), 1u);
+	//pImmediateContext->RSSetState(rasterizerState.Get());
+
 	D3D11_VIEWPORT vp;
-	vp.Width = 800.0f;
-	vp.Height = 600.0f;
+	vp.Width = (float)width;
+	vp.Height = (float)height;
 	vp.MinDepth = 0;
 	vp.MaxDepth = 1.0f;
 	vp.TopLeftX = 0.0f;
@@ -531,10 +549,6 @@ void Graphics::ClearFrame(float red, float green, float blue)
 {
 	float color[] = { red,green,blue,1.0f };
 	pImmediateContext->ClearRenderTargetView(pTarget.Get(), color);
-}
-
-void Graphics::ClearDepthStencilView()
-{
 	pImmediateContext->ClearDepthStencilView(pdsView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
 }
 

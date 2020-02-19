@@ -1,5 +1,10 @@
 #include "Drawable.h"
 
+void Drawable::SetBlendState(bool state)
+{
+	blendOn = state;
+}
+
 void Drawable::Draw(Graphics & gfx)
 {
 	for (auto& b : bindables)
@@ -9,6 +14,10 @@ void Drawable::Draw(Graphics & gfx)
 		{
 			pIndexBuffer = dynamic_cast<IndexBuff*>(b.get());
 		}
+		if (typeid(*b) == typeid(BlendState))
+		{
+			pBlendState = dynamic_cast<BlendState*>(b.get());
+		}
 		b->Bind(gfx);
 	}
 	for (auto& b : staticBindables)
@@ -17,10 +26,19 @@ void Drawable::Draw(Graphics & gfx)
 		{
 			pIndexBuffer = dynamic_cast<IndexBuff*>(b.get());
 		}
+		if (typeid(*b) == typeid(BlendState))
+		{
+			pBlendState = dynamic_cast<BlendState*>(b.get());
+		}
 		b->Bind(gfx);
 	}
-
+	
 	gfx.DrawIndexed(pIndexBuffer->GetIndexCount());
+	if (blendOn)
+	{
+		pBlendState->ResetBlendState(gfx);
+		blendOn = false;
+	}
 }
 
 void Drawable::AddIndexBuffer(std::shared_ptr<class IndexBuff> indexBuffer)
@@ -48,6 +66,7 @@ bool Drawable::isStaticallyBinded() const
 	}
 	return true;
 }
+
 
 void Drawable::AddBind(std::unique_ptr<Bindables> binds)
 {
