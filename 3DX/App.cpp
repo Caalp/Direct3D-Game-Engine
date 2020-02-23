@@ -12,15 +12,14 @@ App::App() :
 	pointLight(wnd.gfx()),
 	mPhi(1.5f*3.1415926535f),mTheta(1.5f*3.1415926535f),mRadius(80.0f),
 	m(wnd.gfx(),"Models\\nano_textured\\nanosuit.obj"),
-	th("Models\\nano_textured\\glass_dif.png")
+	b1(wnd.gfx(), cam.GetPosition(), 50, 50, 120.0f, 120.0f),
+	d1(wnd.gfx(), -2.5f, 0.0f, 0.0f)
+	
 	
 {
 	
 	
 	water.Init(wnd.gfx(), 160, 160, 1.0f,0.03f,3.25f,0.4f);
-	//d1 = new Box(wnd.gfx(), wnd.mouse.GetPosX() / 400.0f - 1.0f, -wnd.mouse.GetPosY() / 300.0f + 1.0f, 1.0f);
-	Surface surf("");
-	vb.resize(100);
 	
 	
 }
@@ -28,10 +27,6 @@ App::App() :
 App::~App()
 {
 	
-	for (auto& elem : vb)
-	{
-		delete elem;
-	}
 }
 
 int App::Go()
@@ -110,31 +105,6 @@ void App::Update()
 		water.Disturb(i, j, r);
 	}
 	
-	/*lastMousePos.x = wnd.mouse.GetPosX();
-	lastMousePos.y = wnd.mouse.GetPosY();
-	*/
-	
-	//if (wnd.mouse.Read().has_value()&& (wnd.mouse.Read().value().GetType() == Mouse::Event::Type::LPress) && (wnd.mouse.Read().value().GetType() == Mouse::Event::Type::Enter) )
-	//{
-	//	lastMousePos.x = wnd.mouse.GetPosX();
-	//	lastMousePos.y = wnd.mouse.GetPosY();
-
-	//	//SetCapture(wnd.getMainWindow());
-	//}
-	//if (wnd.mouse.Read().has_value() && (wnd.mouse.Read().value().GetType() == Mouse::Event::Type::Move) && wnd.mouse.Read().value().GetType() == Mouse::Event::Type::Enter )
-	//{
-	//	
-	//	if (wnd.mouse.Read().has_value() && (wnd.mouse.Read().value().GetType() == Mouse::Event::Type::LPress) && wnd.mouse.Read().value().GetType() == Mouse::Event::Type::Enter )
-	//	{
-	//		float dx = DirectX::XMConvertToRadians(0.25f*static_cast<float>(x - lastMousePos.x));
-	//		float dy = DirectX::XMConvertToRadians(0.25f*static_cast<float>(y - lastMousePos.y));
-
-	//		cam.Pitch(dy);
-	//		cam.RotateY(dx);
-	//	}
-	//	lastMousePos.x = wnd.mouse.GetPosX();
-	//	lastMousePos.y = wnd.mouse.GetPosY();
-	//}
 	if (wnd.kbd.KeyIsPressed('Q'))
 	{
 		cam.Pitch((float)-0.1*dtheta);
@@ -155,79 +125,26 @@ void App::Update()
 		cam.RotateY((float)0.1*dtheta);
 		
 	}
-	//water movement Test!
-	if (wnd.kbd.KeyIsPressed('H'))
-	{
-		water.updatePosX(-dt);
-	}
-	if(wnd.kbd.KeyIsPressed('K'))
-	{
-		water.updatePosX(dt);
-	}
-	if(wnd.kbd.KeyIsPressed('U'))
-	{
-		water.updatePosY(dt);
-	}
-	if (wnd.kbd.KeyIsPressed('J'))
-	{
-		water.updatePosY(-dt);
-	}
-	if (wnd.kbd.KeyIsPressed('I'))
-	{
-		water.updatePosZ(dt);
-	}
-	if (wnd.kbd.KeyIsPressed('K'))
-	{
-		water.updatePosZ(-dt);
-	}
-	/*if (wnd.mouse.IsInWindow())
-	{
-		
-		float dx = DirectX::XMConvertToRadians(0.0305f*static_cast<float>(((float)(last_x-wnd.mouse.GetPosX()))));
-		float dy = DirectX::XMConvertToRadians(0.0305f*static_cast<float>(((float)(last_y-wnd.mouse.GetPosY()))));
-		last_x =(float) wnd.mouse.GetPosX();
-		last_y = (float)wnd.mouse.GetPosY();
-		
-		cam.Pitch(dy);
-		cam.RotateY(dx);
-	}*/
 	
-	std::mt19937 rng{ std::random_device{}() };
-	std::uniform_int_distribution<int> rnd(0, 800);
-	
-	
-	/*for (int i = 0; i < 100; i++)
-	{
-		vb[i] = new Box(wnd.gfx(), rnd(rng), rnd(rng), 10.0f);
-	}*/
-	
-	water.Update(wnd.gfx(), 0.000648);
 	
 	b1.Draw(wnd.gfx());
-	
-	
 	
 	//d1.Update(0.015f);
 	d1.Draw(wnd.gfx());
 
 	
-	/*for (auto& elem : vb)
-	{
-		
-		elem->Draw(wnd.gfx());
-		elem->Update(0.015f);
-	}*/
-	//m.Draw(wnd.gfx());
 	dirLight.Bind(wnd.gfx());
 	pointLight.Bind(wnd.gfx());
 	spotLight.Bind(wnd.gfx());
-	
+
+	water.Update(wnd.gfx(), 0.000648);
 	water.Draw(wnd.gfx());
 	
 	
 	
+	
 
-	//wnd.gfx().DrawCube(45.0f, wnd.mouse.GetPosX() / 400.0f - 1.0f, -wnd.mouse.GetPosY() / 300.0f + 1.0f);
+	
 	
 	wnd.gfx().EndFrame();
 }

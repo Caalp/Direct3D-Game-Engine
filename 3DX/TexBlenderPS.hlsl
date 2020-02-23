@@ -1,12 +1,8 @@
 Texture2D tex;
 SamplerState samplerState;
 
-//cbuffer CBuf : register(b1)
-//{
-//    float4 color;
-//};
 
-float4 main(float2 tc : TexCoord) : SV_Target
+float4 main(float3 PosW : Pos, float3 NormalW : n, float3 eyePos : EyePosition,float2 tc : TexCoord) : SV_Target
 {
-    return tex.Sample(samplerState,tc);
+    return float4(tex.Sample(samplerState,tc).rgb,1.0f);
 }

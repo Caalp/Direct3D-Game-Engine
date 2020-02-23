@@ -2,7 +2,10 @@
 #include "MatHelper.h"
 #include "TextureLoader.h"
 #include "Texture.h"
-TerrainClass::TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos,UINT tW, UINT tH, float width, float height) 
+TerrainClass::TerrainClass()
+{
+}
+TerrainClass::TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos,UINT tW, UINT tH, float width, float height)
 {
 	if (!isStaticallyBinded())
 	{
@@ -96,6 +99,7 @@ TerrainClass::TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos,UINT tW, UINT
 		}
 		AddStaticBind(std::make_unique<VertexBuffer>(gfx, vertexData));
 		AddStaticBind(std::make_unique<PixelShader>(gfx, L"PhongLightingPS.cso"));
+		//AddStaticBind(std::make_unique<BlendState>(gfx));
 		auto vs = std::make_unique<VertexShader>(gfx, L"TexPhongVS.cso");
 		auto vsBlob = vs->GetVBlob();
 		AddStaticBind(std::move(vs));

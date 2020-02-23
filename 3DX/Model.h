@@ -25,7 +25,7 @@ class Mesh : public Drawable
 {
 public:
 	
-	Mesh(Graphics& gfx,std::vector<std::unique_ptr<Bindables>> bindables);
+	Mesh(Graphics& gfx,std::vector<std::unique_ptr<Bindable>> Bindables);
 	void Draw(Graphics& gfx,DirectX::FXMMATRIX acumTrans);
 	void Update(float dt) override;
 	DirectX::XMMATRIX GetTransformation() const override;

@@ -1,13 +1,13 @@
 #pragma once
-#include "Bindables.h"
+#include "Bindable.h"
 
-class Texture : public Bindables
+class Texture : public Bindable
 {
 public:
 	Texture(Graphics& gfx, const class Surface& s);
 	Texture(Graphics& gfx, const class TextureLoader& s);
 	void Bind(Graphics& gfx) override;
 protected:
-	Microsoft::WRL::ComPtr<ID3D11Texture2D> ptex;
+
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
 };

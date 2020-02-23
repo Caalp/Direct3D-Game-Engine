@@ -9,7 +9,7 @@
 
 class Graphics
 {
-	friend class Bindables;
+	friend class Bindable;
 public:
 	Graphics(HWND hWnd,int width,int height);
 	~Graphics() = default;

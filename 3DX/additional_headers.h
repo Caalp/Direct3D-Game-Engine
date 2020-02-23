@@ -1,5 +1,5 @@
 #pragma once
-#include "Bindables.h"
+#include "Bindable.h"
 #include "ConstBuffs.h"
 #include "DrawableBase.h"
 #include "DrawableSource.h"
@@ -12,3 +12,5 @@
 #include "TransformationBuffer.h"
 #include "SamplerState.h"
 #include "BlendState.h"
+#include "RasterizerState.h"
+#include "Texture.h"

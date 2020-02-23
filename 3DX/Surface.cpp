@@ -4,66 +4,75 @@
 #include <windows.h>
 
 
-Surface::Surface(const std::string& filename)
+Surface::Surface(const std::wstring& filename)
 {
-
+	
 	auto scratch = DirectX::ScratchImage{};
-	DirectX::LoadFromWICFile(L"WoodCrate02.dds", DirectX::WIC_FLAGS_NONE, nullptr, scratch);
+	DirectX::LoadFromWICFile(filename.c_str(), DirectX::WIC_FLAGS_NONE, nullptr, scratch);
 	auto image = scratch.GetImage(0, 0, 0);
-	auto a = image->pixels[0];
-	std::ifstream file(filename, std::ios_base::binary);
-	assert(file);
-	BITMAPFILEHEADER bmpfile;
-	file.read(reinterpret_cast<char*>(&bmpfile),sizeof(bmpfile));
+	width = image->width;
+	height = image->height;
+	
+	if (image->format != format)
+	{
+		format = image->format;
+	}
+	auto a = reinterpret_cast<Color*>(image->pixels);
+	auto b = sizeof(a);
+	auto pitch = image->rowPitch;
+	//std::ifstream file(filename, std::ios_base::binary);
+	//assert(file);
+	//BITMAPFILEHEADER bmpfile;
+	//file.read(reinterpret_cast<char*>(&bmpfile),sizeof(bmpfile));
 
-	BITMAPINFOHEADER bmpinfo;
-	file.read(reinterpret_cast<char*>(&bmpinfo), sizeof(bmpinfo));
-	width = bmpinfo.biWidth;
-	
-	assert(bmpinfo.biBitCount == 24 || bmpinfo.biBitCount == 32);
-	assert(bmpinfo.biCompression == BI_RGB);
-	bool bi32 = bmpinfo.biBitCount == 32;
-	//const int size = bmpinfo.biSize;
-	
-	const int padding = (4 - (width * 3) % 4) % 4;
-	file.seekg(bmpfile.bfOffBits);
-	int pstart;
-	int pend;
-	int dy;
+	//BITMAPINFOHEADER bmpinfo;
+	//file.read(reinterpret_cast<char*>(&bmpinfo), sizeof(bmpinfo));
+	//width = bmpinfo.biWidth;
+	//
+	//assert(bmpinfo.biBitCount == 24 || bmpinfo.biBitCount == 32);
+	//assert(bmpinfo.biCompression == BI_RGB);
+	//bool bi32 = bmpinfo.biBitCount == 32;
+	////const int size = bmpinfo.biSize;
+	//
+	//const int padding = (4 - (width * 3) % 4) % 4;
+	//file.seekg(bmpfile.bfOffBits);
+	//int pstart;
+	//int pend;
+	//int dy;
 
-	if (bmpinfo.biHeight < 0)
-	{
-		height = -bmpinfo.biHeight;
-		pstart = 0;
-		pend = height;
-		dy = 1;
-	}
-	else
-	{
-		height = bmpinfo.biHeight;
-		pstart = height - 1;
-		pend = -1;
-		dy = -1;
-	}
-	
-	pPixel = std::make_unique<Color[]> (height*width);
-	
-	for (int y = pstart; y != pend; y += dy)
-	{
-		for (int x = 0; x < width; x++)
-		{
-			PutPixel(x, y, Color(file.get(), file.get(), file.get()));
-			
-		}
-		if (!bi32)
-		{
-			file.seekg(padding, std::ios_base::cur);
-		}
-		 else if (bi32)
-		{
-			file.seekg(0, std::ios_base::cur);
-		}
-	}
+	//if (bmpinfo.biHeight < 0)
+	//{
+	//	height = -bmpinfo.biHeight;
+	//	pstart = 0;
+	//	pend = height;
+	//	dy = 1;
+	//}
+	//else
+	//{
+	//	height = bmpinfo.biHeight;
+	//	pstart = height - 1;
+	//	pend = -1;
+	//	dy = -1;
+	//}
+	//
+	//pPixel = std::make_unique<Color[]> (height*width);
+	//
+	//for (int y = pstart; y != pend; y += dy)
+	//{
+	//	for (int x = 0; x < width; x++)
+	//	{
+	//		PutPixel(x, y, Color(file.get(), file.get(), file.get()));
+	//		
+	//	}
+	//	if (!bi32)
+	//	{
+	//		file.seekg(padding, std::ios_base::cur);
+	//	}
+	//	 else if (bi32)
+	//	{
+	//		file.seekg(0, std::ios_base::cur);
+	//	}
+	//}
 
 }
 

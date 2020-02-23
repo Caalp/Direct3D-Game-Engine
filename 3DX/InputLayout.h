@@ -1,8 +1,8 @@
 #pragma once
-#include "Bindables.h"
+#include "Bindable.h"
 #include <vector>
 
-class InputLayout : public Bindables
+class InputLayout : public Bindable
 {
 public:
 	InputLayout(Graphics& gfx, const std::vector< D3D11_INPUT_ELEMENT_DESC>& v,ID3DBlob* pBlob);

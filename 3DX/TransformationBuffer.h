@@ -3,7 +3,7 @@
 #include "ConstBuffs.h"
 #include "Camera.h"
 class Drawable;
-class TransformationBuffer : public Bindables
+class TransformationBuffer : public Bindable
 {
 	
 public:

@@ -177,7 +177,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Bindables.cpp" />
+    <ClCompile Include="Bindable.cpp" />
     <ClCompile Include="BlendState.cpp" />
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -195,6 +195,7 @@
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PrimitiveTopology.cpp" />
+    <ClCompile Include="RasterizerState.cpp" />
     <ClCompile Include="SamplerState.cpp" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="Surface.cpp" />
@@ -211,7 +212,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="additional_headers.h" />
-    <ClInclude Include="Bindables.h" />
+    <ClInclude Include="Bindable.h" />
     <ClInclude Include="BlendState.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="Camera.h" />

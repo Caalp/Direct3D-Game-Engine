@@ -28,11 +28,8 @@ private:
 	float last_y;
 	float mPhi, mTheta,mRadius;
 	Model m;
-	//Timer timer;
-	TerrainClass b1{ wnd.gfx(), cam.GetPosition(), 50, 50, 120.0f, 120.0f };
-	Box d1{ wnd.gfx(),0.0f,10.0f,0.0f };
-	std::vector<Box*> vb;
-	TextureLoader th;
+	TerrainClass b1;
+	Box d1;
 	Water water;
 	POINT lastMousePos;
 };

@@ -1,7 +1,7 @@
 #pragma once
-#include "Bindables.h"
+#include "Bindable.h"
 
-class VertexShader : public Bindables
+class VertexShader : public Bindable
 {
 public:
 	VertexShader(Graphics& gfx, LPCWSTR filename);

@@ -5,6 +5,7 @@
 class TerrainClass : public Drawable
 {
 public:
+	TerrainClass();
 	TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos, UINT tW, UINT tH, float width, float height);
 	void Update(float dt) { return; };
 	DirectX::XMMATRIX GetTransformation() const;

@@ -1,6 +1,6 @@
 #include "IndexBuff.h"
 
-IndexBuff::IndexBuff(Graphics & gfx, std::vector<WORD>& v): count((UINT)v.size())
+IndexBuff::IndexBuff(Graphics & gfx, std::vector<unsigned short>& v): count((UINT)v.size())
 {
 	D3D11_BUFFER_DESC indexDesc;
 	ZeroMemory(&indexDesc, sizeof(indexDesc));

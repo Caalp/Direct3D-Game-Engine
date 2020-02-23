@@ -3,7 +3,7 @@
 //
 //void DrawableBase::Draw(Graphics & gfx)
 //{
-//	for (auto& b : bindables)
+//	for (auto& b : Bindable)
 //	{
 //		b->Bind(gfx);
 //	}
@@ -22,7 +22,7 @@
 //void DrawableBase::AddIndexBuffer(std::shared_ptr<class IndexBuff> indexBuffer)
 //{
 //	pIndexBuffer = indexBuffer.get();
-//	//staticBindables.push_back(std::move(indexBuffer));
+//	//staticBindable.push_back(std::move(indexBuffer));
 //}
 //
 //void DrawableBase::SetIndexBufferFromStatic()
@@ -39,9 +39,9 @@
 //}
 //
 //
-//void DrawableBase::AddBind(std::shared_ptr<Bindables> binds)
+//void DrawableBase::AddBind(std::shared_ptr<Bindable> binds)
 //{
-//	bindables.push_back(std::move(binds));
+//	Bindable.push_back(std::move(binds));
 //}
 
 

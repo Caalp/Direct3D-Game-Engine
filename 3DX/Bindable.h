@@ -4,7 +4,7 @@
 
 
 
-class Bindables
+class Bindable
 {
 	
 	friend class DrawableBase;
@@ -12,7 +12,7 @@ public:
 	virtual void Bind(Graphics& gfx) = 0;
 	virtual void Bind(Graphics& gfx, UINT, UINT) {};
 	
-	virtual ~Bindables() = default;
+	virtual ~Bindable() = default;
 
 protected:
 	static ID3D11Device* GetDevice(Graphics& gfx);

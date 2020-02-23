@@ -1,7 +1,7 @@
 //#pragma once
 //#include <memory>
 //#include <vector>
-//#include "Bindables.h"
+//#include "Bindable.h"
 //#include "Camera.h"
 //class DrawableBase
 //{	
@@ -16,14 +16,14 @@
 //	
 //		
 //protected:
-//	void AddBind(std::shared_ptr<Bindables> binds);
-//	void AddStaticBind(std::shared_ptr<Bindables> sbinds);
+//	void AddBind(std::shared_ptr<Bindable> binds);
+//	void AddStaticBind(std::shared_ptr<Bindable> sbinds);
 //	
 //private:
-//	 virtual const std::vector<std::unique_ptr<Bindables>>& GetStaticBinds() const noexcept = 0;
+//	 virtual const std::vector<std::unique_ptr<Bindable>>& GetStaticBinds() const noexcept = 0;
 //protected:
 //	const IndexBuff*  pIndexBuffer;
-//	std::vector<std::shared_ptr<Bindables>> bindables;
+//	std::vector<std::shared_ptr<Bindable>> Bindable;
 //	
 //	
 //};

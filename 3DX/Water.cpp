@@ -176,7 +176,7 @@ void Water::Disturb(UINT i, UINT j, float magnitude)
 void Water::UpdateVBuff(Graphics& gfx)
 {
 	//D3D11_MAPPED_SUBRESOURCE MappedSource;
-	//Bindables::GetContext(gfx)->Map(, 0u,D3D11_MAP_WRITE_DISCARD, 0u,&MappedSource);
+	//Bindable::GetContext(gfx)->Map(, 0u,D3D11_MAP_WRITE_DISCARD, 0u,&MappedSource);
 	////memcpy(MappedSource.pData, &cb, sizeof(cb));
 	//
 
@@ -189,7 +189,7 @@ void Water::UpdateVBuff(Graphics& gfx)
 	//	vertexData[i].Tex.x = 0.5f + currSolution[i].x / width;
 	//	vertexData[i].Tex.y = 0.5f - currSolution[i].z / depth;
 	//}
-	//Bindables::GetContext(gfx)->Unmap(vertexData, 0u);
+	//Bindable::GetContext(gfx)->Unmap(vertexData, 0u);
 	////UpdateVertexBuffer(gfx, vertexData);
 }
 
@@ -211,7 +211,7 @@ void Water::Bind(Graphics & gfx)
 	if (!isStaticallyBinded())
 	{
 	SetBlendState(true);
-	AddStaticBind(std::make_unique<BlendState>(gfx));
+	AddStaticBind(std::make_unique<BlendState>(gfx,true));
 	AddBind(std::make_unique<VertexBuffer>(gfx,vertexData));
 	AddStaticBind(std::make_unique<PixelShader>(gfx, L"PhongLightingPS.cso"));
 	auto vs = std::make_unique<VertexShader>(gfx, L"TexPhongVS.cso");

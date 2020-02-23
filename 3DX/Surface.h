@@ -7,7 +7,7 @@ class Surface
 {
 public:
 
-	Surface(const std::string& filename);
+	Surface(const std::wstring& filename);
 	Surface(int width, int height);
 	Surface(const Surface&);
 	Surface& operator=(const Surface& rhs);
@@ -20,5 +20,6 @@ public:
 public:
 	int height;
 	int width;
+	DXGI_FORMAT format = DXGI_FORMAT_B8G8R8A8_UNORM;
 	std::unique_ptr<Color[]> pPixel;
 };

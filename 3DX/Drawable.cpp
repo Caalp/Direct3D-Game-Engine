@@ -7,7 +7,10 @@ void Drawable::SetBlendState(bool state)
 
 void Drawable::Draw(Graphics & gfx)
 {
-	for (auto& b : bindables)
+	
+	
+
+	for (auto& b : Bindables)
 	{
 		
 		if (typeid(*b) == typeid(IndexBuff))
@@ -17,10 +20,11 @@ void Drawable::Draw(Graphics & gfx)
 		if (typeid(*b) == typeid(BlendState))
 		{
 			pBlendState = dynamic_cast<BlendState*>(b.get());
+			
 		}
 		b->Bind(gfx);
 	}
-	for (auto& b : staticBindables)
+	for (auto& b : staticBindable)
 	{
 		if (typeid(*b) == typeid(IndexBuff))
 		{
@@ -29,16 +33,20 @@ void Drawable::Draw(Graphics & gfx)
 		if (typeid(*b) == typeid(BlendState))
 		{
 			pBlendState = dynamic_cast<BlendState*>(b.get());
+			
 		}
 		b->Bind(gfx);
 	}
 	
+	
+	//
+	//if (blendOn)
+	//{
+	//	//pBlendState->ResetBlendState(gfx);
+	//	pBlendState->Bind(gfx);
+	//	blendOn = false;
+	//}
 	gfx.DrawIndexed(pIndexBuffer->GetIndexCount());
-	if (blendOn)
-	{
-		pBlendState->ResetBlendState(gfx);
-		blendOn = false;
-	}
 }
 
 void Drawable::AddIndexBuffer(std::shared_ptr<class IndexBuff> indexBuffer)
@@ -48,7 +56,7 @@ void Drawable::AddIndexBuffer(std::shared_ptr<class IndexBuff> indexBuffer)
 
 void Drawable::SetIndexBufferFromStatic()
 {
-	for (auto& elem : staticBindables)
+	for (auto& elem : staticBindable)
 	{
 		if (typeid(*elem) == typeid(IndexBuff))
 		{
@@ -60,7 +68,7 @@ void Drawable::SetIndexBufferFromStatic()
 
 bool Drawable::isStaticallyBinded() const
 {
-	if (staticBindables.empty())
+	if (staticBindable.empty())
 	{
 		return false;
 	}
@@ -68,14 +76,14 @@ bool Drawable::isStaticallyBinded() const
 }
 
 
-void Drawable::AddBind(std::unique_ptr<Bindables> binds)
+void Drawable::AddBind(std::unique_ptr<Bindable> binds)
 {
-	bindables.push_back(std::move(binds));
+	Bindables.push_back(std::move(binds));
 }
 
-void Drawable::AddStaticBind(std::unique_ptr<Bindables> sBinds)
+void Drawable::AddStaticBind(std::unique_ptr<Bindable> sBinds)
 {
-	staticBindables.push_back(std::move(sBinds));
+	staticBindable.push_back(std::move(sBinds));
 }
 
-//std::vector<std::unique_ptr<Bindables>> Drawable::staticBindables;
+//std::vector<std::unique_ptr<Bindable>> Drawable::staticBindable;

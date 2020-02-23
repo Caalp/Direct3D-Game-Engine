@@ -101,6 +101,14 @@ Graphics::Graphics(HWND hWnd,int width,int height)
 	dsv.Texture2D.MipSlice = 0u;
 	pDevice->CreateDepthStencilView(depthTex.Get(), &dsv, pdsView.GetAddressOf());
 
+	Microsoft::WRL::ComPtr<ID3D11BlendState> blendState;
+	D3D11_BLEND_DESC blendDesc = {};
+	blendDesc.AlphaToCoverageEnable = false;
+	blendDesc.IndependentBlendEnable = false;
+
+	blendDesc.RenderTarget[1].BlendEnable = false;
+	pDevice->CreateBlendState(&blendDesc, blendState.GetAddressOf());
+	pImmediateContext->OMSetBlendState(blendState.Get(), 0, 0xffffffff);
 	/*D3D11_RASTERIZER_DESC rasterizerDesc;
 	ZeroMemory(&rasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
 
@@ -389,7 +397,7 @@ void Graphics::DrawCube(float angle, float x, float y)
 	ID3D11Texture2D* ptex;
 
 	D3D11_TEXTURE2D_DESC tex2desc;
-	Surface wall = Surface("kappa50.bmp");
+	Surface wall = Surface(L"kappa50.bmp");
 	const int h = wall.GetHeight();
 	const int w = wall.GetWidth();
 

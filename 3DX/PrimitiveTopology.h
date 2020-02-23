@@ -1,7 +1,7 @@
 #pragma once
-#include "Bindables.h"
+#include "Bindable.h"
 
-class PrimitiveTopology : public Bindables
+class PrimitiveTopology : public Bindable
 {
 public:
 	PrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY P_topology);

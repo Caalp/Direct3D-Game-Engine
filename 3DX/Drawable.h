@@ -18,7 +18,7 @@ public:
 	template<typename T> 
 	void UpdateVertexBuffer(Graphics& gfx, const T& v)
 	{
-		for (auto& b : bindables)
+		for (auto& b : Bindables)
 		{
 			if (typeid(*b) == typeid(VertexBuffer))
 			{
@@ -31,17 +31,17 @@ public:
 
 
 protected:
-	void AddBind(std::unique_ptr<Bindables> binds);
-	void AddStaticBind(std::unique_ptr<Bindables> sbinds);
+	void AddBind(std::unique_ptr<Bindable> binds);
+	void AddStaticBind(std::unique_ptr<Bindable> sbinds);
 
 private:
-	//virtual const std::vector<std::unique_ptr<Bindables>>& GetStaticBinds() const noexcept = 0;
+	//virtual const std::vector<std::unique_ptr<Bindable>>& GetStaticBinds() const noexcept = 0;
 protected:
 	bool blendOn = false;
 	const IndexBuff*  pIndexBuffer;
 	BlendState* pBlendState;
-	std::vector<std::unique_ptr<Bindables>> bindables;
-	std::vector<std::unique_ptr<Bindables>> staticBindables;
+	std::vector<std::unique_ptr<Bindable>> Bindables;
+	std::vector<std::unique_ptr<Bindable>> staticBindable;
 };
 
 

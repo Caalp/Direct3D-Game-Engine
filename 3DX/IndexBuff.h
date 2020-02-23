@@ -1,8 +1,8 @@
 #pragma once
-#include "Bindables.h"
+#include "Bindable.h"
 #include <vector>
 
-	class IndexBuff : public Bindables
+	class IndexBuff : public Bindable
 	{
 		//friend class DrawbleBase;
 	public:

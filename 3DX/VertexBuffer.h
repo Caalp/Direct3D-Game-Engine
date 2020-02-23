@@ -1,8 +1,8 @@
 #pragma once
-#include "Bindables.h"
+#include "Bindable.h"
 #include <vector>
 
-class VertexBuffer : public Bindables
+class VertexBuffer : public Bindable
 {
 	
 public:
