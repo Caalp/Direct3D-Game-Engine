@@ -3,8 +3,8 @@
 #include "TextureLoader.h"
 
 
-Box::Box(Graphics & gfx, float x, float y, float z) :
-	x(x), y(y), z(z)
+Box::Box(Graphics & gfx, float x, float y, float z, bool reflaction) :
+	x(x), y(y), z(z),isReflaction(reflaction)
 {
 
 	if (!isStaticallyBinded())
@@ -20,46 +20,7 @@ Box::Box(Graphics & gfx, float x, float y, float z) :
 		
 		std::vector<Vertex> vertices;
 		vertices.resize(24);
-		//float w = 1.0f;
-		//float h = 1.0f;
-		//float d = 1.0f;
-		//constexpr float side = 1.0f / 2.0f;
-		//
-		//vertices[0] = { {-w,-h,-d}, {0,1} };
-		//vertices[1] = { {-w,h,-d}, {0,0} };
-		//vertices[2] = { {w,h,-d}, {1,0} };
-		//vertices[3] = { {w,-h,-d}, {1,1} };
-		//
-		////Back Face
-		//vertices[4] = { {-w,-h,d}, {1,1} };
-		//vertices[5] = { {w,-h,d}, {0,1} };
-		//vertices[6] = { {w,h,d}, {0,0} };
-		//vertices[7] = { {-w,h,d}, {1,0} };
-
-		////top Face
-		//vertices[8] = { {-w,h,-d}, {0,1} };
-		//vertices[9] = { {-w,h,d}, {0,0} };
-		//vertices[10] = { {w,h,d}, {1,0} };
-		//vertices[11] = { {w,h,-d}, {1,1} };
-
-		////Bottom Face
-		//vertices[12] = { {-w,-h,-d}, {1,1} };
-		//vertices[13] = { {w,-h,-d}, {0,1} };
-		//vertices[14] = { {w,-h,d}, {0,0} };
-		//vertices[15] = { {-w,-h,d}, {1,0} };
-
-		////Left Face
-		//vertices[16] = { {-w,-h,d}, {0,1} };
-		//vertices[17] = { {-w,h,d}, {0,0} };
-		//vertices[18] = { {-w,h,-d}, {1,0} };
-		//vertices[19] = { {-w,-h,-d}, {1,1} };
-
-		////Right Face
-
-		//vertices[20] = { {w,-h,-d}, {0,1} };
-		//vertices[21] = { {w,h,-d}, {0,0} };
-		//vertices[22] = { {w,h,d}, {1,0} };
-		//vertices[23] = { {w,-h,d}, {1,1} };
+		
 
 		constexpr float side = 1.0f / 2.0f;
 
@@ -132,10 +93,20 @@ Box::Box(Graphics & gfx, float x, float y, float z) :
 				20,23,21, 20,22,23
 
 		};
-		TextureLoader texLoader("WireFence.dds");
-		AddStaticBind(std::make_unique<RasterizerState>(gfx));
+		struct PSConst
+		{
+			
+			alignas(16) bool alphaClip;
+			
+		}psConst;
+		psConst.alphaClip = true;
+		
+		AddStaticBind(std::make_unique<PSConstBuff<PSConst>>(gfx, psConst));
+		TextureLoader texLoader("Textures\\WoodCrate01.dds");
+		//AddStaticBind(std::make_unique<RasterizerState>(gfx));
+	
 		AddStaticBind(std::make_unique<IndexBuff>(gfx, indices));
-		//AddStaticBind(std::make_unique<BlendState>(gfx));
+		//AddStaticBind(std::make_unique<BlendState>(gfx,));
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
 			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
@@ -164,15 +135,29 @@ void Box::Update(float ft)
 
 DirectX::XMMATRIX Box::GetTransformation() const
 {
-	return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(x, y,z);
+	if (!isReflaction)
+	{
+		return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(x, y, z);
+	}
+	else
+	{
+		DirectX::XMVECTOR mirrorPlane = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+		DirectX::XMMATRIX R = DirectX::XMMatrixReflect(mirrorPlane);
+
+		return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(x, y, z)*R;
+	}
 	//return DirectX::XMMatrixIdentity();
 }
 
+void Box::ReflactionOn(bool reflationStatus)
+{
+	isReflaction = reflationStatus;
+}
 
-
-
-
-
-
-
+void Box::MoveBox(float fx, float fy, float fz)
+{
+	x += fx;
+	y += fy;
+	z += fz;
+}
 

@@ -37,6 +37,11 @@ void Drawable::Draw(Graphics & gfx)
 		}
 		b->Bind(gfx);
 	}
+	while (!renderStates.empty())
+	{
+		renderStates.top()->Bind(gfx);
+		renderStates.pop();
+	}
 	
 	
 	//
@@ -47,6 +52,7 @@ void Drawable::Draw(Graphics & gfx)
 	//	blendOn = false;
 	//}
 	gfx.DrawIndexed(pIndexBuffer->GetIndexCount());
+
 }
 
 void Drawable::AddIndexBuffer(std::shared_ptr<class IndexBuff> indexBuffer)
@@ -73,6 +79,21 @@ bool Drawable::isStaticallyBinded() const
 		return false;
 	}
 	return true;
+}
+
+void Drawable::SetRS(Graphics & gfx, RasterizerState::RasterizerType rType)
+{
+	renderStates.push(std::make_unique<RasterizerState>(gfx,rType));
+}
+
+void Drawable::SetBS(Graphics & gfx, BlendState::BlendType bType)
+{
+	renderStates.push(std::make_unique<BlendState>(gfx, true, bType));
+}
+
+void Drawable::SetDSS(Graphics & gfx, DSS::DSSType dType)
+{
+	renderStates.push(std::make_unique<DSS>(gfx, dType));
 }
 
 

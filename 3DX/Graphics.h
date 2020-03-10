@@ -21,7 +21,9 @@ public:
 	void DrawIndexed(UINT count);
 	void EndFrame();
 	void ClearFrame(float red,float gren,float blue);
-	
+	void ResetRS();
+	void ResetDSS();
+	void ResetBlendState();
 
 	//friend class Box;
 

@@ -70,8 +70,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)assimp\include;$(IncludePath);$(ProjectDir)FreeImage\include;$(ProjectDir)DirectXTex\x86\include</IncludePath>
-    <LibraryPath>$(ProjectDir)libs;$(ProjectDir)assimp\bin\x64;$(ProjectDir)libs;$(LibraryPath);$(ProjectDir)FreeImage\bin\lib;$(ProjectDir)DirectXTex\x86\libs</LibraryPath>
+    <IncludePath>$(ProjectDir)assimp\include;$(IncludePath);$(ProjectDir)FreeImage\include</IncludePath>
+    <LibraryPath>$(ProjectDir)libs;$(ProjectDir)assimp\bin\x64;$(ProjectDir)libs;$(LibraryPath);$(ProjectDir)FreeImage\bin\lib;</LibraryPath>
+    <SourcePath>$(SourcePath)</SourcePath>
+    <ReferencePath>$(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>C:\Users\calpy\source\repos\3DX\3DX\assimp\include;$(IncludePath)</IncludePath>
@@ -93,14 +95,14 @@
       <ConformanceMode>true</ConformanceMode>
       <FloatingPointModel>Fast</FloatingPointModel>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(ProjectDir)DirectXTex\x86\include</AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>
       </AdditionalUsingDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>DirectXTex.lib;assimp-vc140-mt.lib;FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)3DX\assimp\bin\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)3DX\assimp\bin\x64;$(ProjectDir)DirectXTex\x86\libs</AdditionalLibraryDirectories>
     </Link>
     <FxCompile />
     <FxCompile>
@@ -185,6 +187,8 @@
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="DrawableBase.cpp" />
+    <ClCompile Include="DSS.cpp" />
+    <ClCompile Include="GeometryGenerator.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="IndexBuff.cpp" />
     <ClCompile Include="InputLayout.cpp" />
@@ -216,6 +220,7 @@
     <ClInclude Include="BlendState.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="DSS.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="Drawable.h" />
     <ClInclude Include="DrawableSource.h" />
@@ -223,6 +228,7 @@
     <ClInclude Include="ConstBuffs.h" />
     <ClInclude Include="CustomException.h" />
     <ClInclude Include="DrawableBase.h" />
+    <ClInclude Include="GeometryGenerator.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="IndexBuff.h" />
     <ClInclude Include="InputLayout.h" />
@@ -248,7 +254,6 @@
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexShader.h" />
     <ClInclude Include="Water.h" />
-    <ClInclude Include="Waves.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="WinHeader.h" />
   </ItemGroup>

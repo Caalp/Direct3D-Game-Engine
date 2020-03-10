@@ -1,6 +1,7 @@
 #pragma once
 
 #include "additional_headers.h"
+#include <stack>
 
 class Drawable
 {
@@ -12,6 +13,9 @@ public:
 	void AddIndexBuffer(std::shared_ptr<class IndexBuff> indexBuffer);
 	void SetIndexBufferFromStatic();
 	bool isStaticallyBinded() const;
+	void SetRS(Graphics& gfx, RasterizerState::RasterizerType rType);
+	void SetBS(Graphics& gfx, BlendState::BlendType bType);
+	void SetDSS(Graphics& gfx, DSS::DSSType dType);
 	virtual void Update(float ft) = 0;
 	virtual DirectX::XMMATRIX GetTransformation() const = 0;
 	virtual DirectX::XMMATRIX GetTexTransformXM() const { return DirectX::XMMatrixIdentity(); }
@@ -42,6 +46,7 @@ protected:
 	BlendState* pBlendState;
 	std::vector<std::unique_ptr<Bindable>> Bindables;
 	std::vector<std::unique_ptr<Bindable>> staticBindable;
+	std::stack< std::unique_ptr<Bindable>> renderStates;
 };
 
 

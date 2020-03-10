@@ -73,7 +73,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics & gfx, const aiMesh& mesh, const
 	float shininess = 32.0f;
 	const unsigned int mIndex = mesh.mMaterialIndex;
 	using namespace std::string_literals;
-	const auto base = "Models\\nano_textured\\"s;
+	const auto base = "\\Models\\nano_textured\\"s;
 	
 	//matIndex at least can be zero otherwise not found
 	if (mIndex >= 0)

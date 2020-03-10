@@ -129,6 +129,12 @@
     <ClCompile Include="RasterizerState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GeometryGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DSS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinHeader.h">
@@ -197,9 +203,6 @@
     <ClInclude Include="LightSource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Waves.h">
-      <Filter>Header Files\Drawables\Effects</Filter>
-    </ClInclude>
     <ClInclude Include="Light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -249,6 +252,12 @@
       <Filter>Header Files\Bindables</Filter>
     </ClInclude>
     <ClInclude Include="Bindable.h">
+      <Filter>Header Files\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryGenerator.h">
+      <Filter>Header Files\Drawables\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="DSS.h">
       <Filter>Header Files\Bindables</Filter>
     </ClInclude>
   </ItemGroup>

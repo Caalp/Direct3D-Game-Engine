@@ -33,7 +33,7 @@ TerrainClass::TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos,UINT tW, UINT
 		std::vector<Vertex> vertexData;
 		v.resize(vertexCount);
 		tex.resize(vertexCount);
-		TextureLoader ld("grass.dds");
+		TextureLoader ld("Textures\\grass.dds");
 		std::vector<WORD> indexB;
 
 		for (int j = 0; j < tH; j++)
@@ -131,7 +131,7 @@ TerrainClass::TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos,UINT tW, UINT
 			
 		};
 
-		
+		//AddStaticBind(std::make_unique<RasterizerState>(gfx));
 		AddStaticBind(std::make_unique<InputLayout>(gfx, ied, vsBlob));
 		AddStaticBind(std::make_unique<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 

@@ -3,11 +3,18 @@
 class RasterizerState : public Bindable
 {
 public:
-	RasterizerState(Graphics& gfx);
+	enum RasterizerType
+	{
+		Default,
+		NoCull,
+		CullClockwise
+
+	};
+	RasterizerState(Graphics& gfx,RasterizerType Rs = Default);
 	void Bind(Graphics& gfx);
 private:
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasState;
-
+	RasterizerType rsType;
 
 
 

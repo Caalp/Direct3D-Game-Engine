@@ -101,7 +101,7 @@ Graphics::Graphics(HWND hWnd,int width,int height)
 	dsv.Texture2D.MipSlice = 0u;
 	pDevice->CreateDepthStencilView(depthTex.Get(), &dsv, pdsView.GetAddressOf());
 
-	Microsoft::WRL::ComPtr<ID3D11BlendState> blendState;
+	/*Microsoft::WRL::ComPtr<ID3D11BlendState> blendState;
 	D3D11_BLEND_DESC blendDesc = {};
 	blendDesc.AlphaToCoverageEnable = false;
 	blendDesc.IndependentBlendEnable = false;
@@ -109,25 +109,11 @@ Graphics::Graphics(HWND hWnd,int width,int height)
 	blendDesc.RenderTarget[1].BlendEnable = false;
 	pDevice->CreateBlendState(&blendDesc, blendState.GetAddressOf());
 	pImmediateContext->OMSetBlendState(blendState.Get(), 0, 0xffffffff);
-	/*D3D11_RASTERIZER_DESC rasterizerDesc;
-	ZeroMemory(&rasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
-
-	rasterizerDesc.AntialiasedLineEnable = FALSE;
-	rasterizerDesc.CullMode = D3D11_CULL_BACK;
-	rasterizerDesc.DepthBias = 0;
-	rasterizerDesc.DepthBiasClamp = 0.0f;
-	rasterizerDesc.DepthClipEnable = TRUE;
-	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
-	rasterizerDesc.FrontCounterClockwise = FALSE;
-	rasterizerDesc.MultisampleEnable = FALSE;
-	rasterizerDesc.ScissorEnable = FALSE;
-	rasterizerDesc.SlopeScaledDepthBias = 0.0f;
-	pDevice->CreateRasterizerState(&rasterizerDesc, rasterizerState.GetAddressOf());*/
-
+	*/
 	
 	pImmediateContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), pdsView.Get());
 	pImmediateContext->OMSetDepthStencilState(pDSS.Get(), 1u);
-	//pImmediateContext->RSSetState(rasterizerState.Get());
+	
 
 	D3D11_VIEWPORT vp;
 	vp.Width = (float)width;
@@ -558,6 +544,22 @@ void Graphics::ClearFrame(float red, float green, float blue)
 	float color[] = { red,green,blue,1.0f };
 	pImmediateContext->ClearRenderTargetView(pTarget.Get(), color);
 	pImmediateContext->ClearDepthStencilView(pdsView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
+}
+
+void Graphics::ResetRS()
+{
+	pImmediateContext->RSSetState(0);
+}
+
+void Graphics::ResetDSS()
+{
+	pImmediateContext->OMSetDepthStencilState(0, 0);
+}
+
+void Graphics::ResetBlendState()
+{
+	float blendFactor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	pImmediateContext->OMSetBlendState(0, blendFactor, 0xffffffff);
 }
 
 

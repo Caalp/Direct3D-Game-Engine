@@ -3,7 +3,14 @@
 class BlendState : public Bindable
 {
 public:
-	BlendState(Graphics& gfx, bool bState = false);
+	enum BlendType
+	{
+		Default,
+		Transparent,
+		AlphaToCoverage,
+		NoRenderTargetWrite,
+	};
+	BlendState(Graphics& gfx, bool bState = false,BlendType bType = Default);
 	//void ResetBlendState(Graphics& gfx);
 	void Bind(Graphics& gfx);
 private:

@@ -4,5 +4,6 @@ cbuffer CBuf
     matrix worldViewProj;
     matrix texTransform;
     float3 eyePos;
+	float padding;
    
 };

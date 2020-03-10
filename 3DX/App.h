@@ -7,6 +7,7 @@
 #include "TerrainClass.h"
 #include "Model.h"
 #include "TextureLoader.h"
+#include "GeometryGenerator.h"
 //#include "Timer.h"
 #include "Water.h"
 class App
@@ -32,4 +33,8 @@ private:
 	Box d1;
 	Water water;
 	POINT lastMousePos;
+	GeometryGenerator wall;
+	GeometryGenerator floor;
+	GeometryGenerator mirror;
+	Box crate;
 };

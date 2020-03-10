@@ -211,14 +211,14 @@ void Water::Bind(Graphics & gfx)
 	if (!isStaticallyBinded())
 	{
 	SetBlendState(true);
-	AddStaticBind(std::make_unique<BlendState>(gfx,true));
+	AddStaticBind(std::make_unique<BlendState>(gfx,true, BlendState::BlendType::Transparent));
 	AddBind(std::make_unique<VertexBuffer>(gfx,vertexData));
 	AddStaticBind(std::make_unique<PixelShader>(gfx, L"PhongLightingPS.cso"));
 	auto vs = std::make_unique<VertexShader>(gfx, L"TexPhongVS.cso");
 	auto vsBlob = vs->GetVBlob();
 	AddStaticBind(std::move(vs));
 	AddStaticBind(std::make_unique<IndexBuff>(gfx, waterIndices));
-	TextureLoader texLoader("water2.dds");
+	TextureLoader texLoader("Textures\\water2.dds");
 	struct MaterialConstantPS
 	{
 
@@ -247,7 +247,7 @@ void Water::Bind(Graphics & gfx)
 
 	};
 
-
+	AddStaticBind(std::make_unique<RasterizerState>(gfx));
 	AddStaticBind(std::make_unique<InputLayout>(gfx, ied, vsBlob));
 	AddStaticBind(std::make_unique<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 	}

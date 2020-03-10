@@ -9,6 +9,7 @@ float4 main(float3 PosW : Pos, float3 NormalW : n, float3 eyePos : EyePosition,f
     NormalW = normalize(NormalW);
 
     float3 toEyeW = normalize(eyePos - PosW);
+    float distToEye = length(eyePos - PosW);
     float4 texColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
     //texColor = tex.Sample
 	// Start with a sum of zero. 
@@ -33,7 +34,13 @@ float4 main(float3 PosW : Pos, float3 NormalW : n, float3 eyePos : EyePosition,f
     diffuse += D;
     spec += S;
 	//Final color of the pixel
+    
     float4 litColor = (ambient + diffuse) * tex.Sample(samplerState, tc) + spec;
+    
+    float fogLerp = saturate((distToEye - 15.0f) / 175.0f);
+    float4 fogColor = float4(0.75f, 0.75f, 0.75f, 1.0f);
+    
+    litColor = lerp(litColor, fogColor, fogLerp);
     litColor.a = tex.Sample(samplerState, tc).a*m_diffuse.a;
 
     return litColor;

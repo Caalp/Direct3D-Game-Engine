@@ -11,17 +11,24 @@ App::App() :
 	dirLight(wnd.gfx()),spotLight(wnd.gfx()),
 	pointLight(wnd.gfx()),
 	mPhi(1.5f*3.1415926535f),mTheta(1.5f*3.1415926535f),mRadius(80.0f),
-	m(wnd.gfx(),"Models\\nano_textured\\nanosuit.obj"),
+	m(wnd.gfx(),"\\Models\\nano_textured\\nanosuit.obj"),
 	b1(wnd.gfx(), cam.GetPosition(), 50, 50, 120.0f, 120.0f),
-	d1(wnd.gfx(), -2.5f, 0.0f, 0.0f)
+	d1(wnd.gfx(), -2.5f, 0.0f, 0.0f),
+	crate(wnd.gfx(),0.0f,1.0f,-5.0f)
 	
 	
 {
 	
-	
+	//Initializations 
 	water.Init(wnd.gfx(), 160, 160, 1.0f,0.03f,3.25f,0.4f);
-	
-	
+	wall.GenerateGrid(wnd.gfx(), "Textures\\brick01.dds", 20, 20, 1.0f, 0.03f, 0,3.0f);
+	floor.GenerateGrid(wnd.gfx(), "Textures\\checkboard.dds", 30.0f, 30.0f, 1.0f, 0.03f,0, 4.0f);
+	mirror.GenerateGrid(wnd.gfx(), "Textures\\ice.dds", 10.0f, 10.0f, 1.0f, 0.03f, 0.0f, 1.0f);
+
+	//Init Rotations
+	wall.RotateGeometry(0.0f, 0.0f, 1.5708f);
+	mirror.RotateGeometry(0.0f, -1.5708f, 1.5708f);
+	mirror.TranslateGeometry(-0.05f, 4.0f, 0.0f);
 }
 
 App::~App()
@@ -48,7 +55,7 @@ void App::Update()
 	float dtheta = 0.5f;
 	//float dtt = timer.Mark();
 	
-	wnd.gfx().ClearFrame(0.2f, 0.4f, 0.5f);
+	wnd.gfx().ClearFrame(0.75f, 0.75f, 0.75f);
 	
 	cam.UpdateViewXM();
 	wnd.gfx().SetCamera(cam.ViewProjXM());
@@ -125,23 +132,60 @@ void App::Update()
 		cam.RotateY((float)0.1*dtheta);
 		
 	}
+	if (wnd.kbd.KeyIsPressed('O'))
+	{
+
+		crate.MoveBox(dt, 0.0f, 0.0f);
+
+	}
 	
 	
-	b1.Draw(wnd.gfx());
+	//b1.Draw(wnd.gfx());
+	floor.Draw(wnd.gfx());
+	//wall.Draw(wnd.gfx());
+
+	
+	crate.Draw(wnd.gfx());
+	wnd.gfx().ResetRS();
+	
+	wnd.gfx().ResetBlendState();
+
 	
 	//d1.Update(0.015f);
-	d1.Draw(wnd.gfx());
+	//d1.Draw(wnd.gfx());
+	
 
+	mirror.SetBS(wnd.gfx(), BlendState::BlendType::NoRenderTargetWrite);
+	mirror.SetDSS(wnd.gfx(), DSS::DSSType::Mirror);
+	mirror.Draw(wnd.gfx());
+	wnd.gfx().ResetDSS();
+	wnd.gfx().ResetBlendState();
+
+	
+
+	crate.ReflactionOn(true);
+	crate.SetRS(wnd.gfx(), RasterizerState::RasterizerType::CullClockwise);
+	crate.SetDSS(wnd.gfx(), DSS::DSSType::DrawReflaction);
+	crate.Draw(wnd.gfx());
+	wnd.gfx().ResetRS();
+	wnd.gfx().ResetDSS();
+	crate.ReflactionOn(false);
+
+	
+
+	
+
+	//water.Update(wnd.gfx(), 0.000648);
+	//water.Draw(wnd.gfx());
 	
 	dirLight.Bind(wnd.gfx());
 	pointLight.Bind(wnd.gfx());
 	spotLight.Bind(wnd.gfx());
-
-	water.Update(wnd.gfx(), 0.000648);
-	water.Draw(wnd.gfx());
 	
-	
-	
+	mirror.SetBS(wnd.gfx(), BlendState::BlendType::Transparent);
+	mirror.Draw(wnd.gfx());
+	wnd.gfx().ResetDSS();
+	wnd.gfx().ResetBlendState();
 	
 
 	

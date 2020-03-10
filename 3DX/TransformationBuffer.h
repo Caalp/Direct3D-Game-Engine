@@ -20,7 +20,6 @@ private:
 		DirectX::XMMATRIX worldviewProj;
 		DirectX::XMMATRIX texTransform;
 		DirectX::XMFLOAT3 eyePos;
-		float padding;
 	};
 	
 protected:
