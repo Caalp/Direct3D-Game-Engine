@@ -3,8 +3,8 @@
 #include "TextureLoader.h"
 
 
-Box::Box(Graphics & gfx, float x, float y, float z, bool reflaction) :
-	x(x), y(y), z(z),isReflaction(reflaction)
+Box::Box(Graphics & gfx, float x, float y, float z, bool reflaction, bool isShadowOn) :
+	x(x), y(y), z(z),isReflaction(reflaction),isShadow(isShadowOn)
 {
 
 	if (!isStaticallyBinded())
@@ -139,12 +139,22 @@ DirectX::XMMATRIX Box::GetTransformation() const
 	{
 		return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(x, y, z);
 	}
-	else
+	else if (isReflaction)
 	{
 		DirectX::XMVECTOR mirrorPlane = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 		DirectX::XMMATRIX R = DirectX::XMMatrixReflect(mirrorPlane);
 
 		return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(x, y, z)*R;
+	}
+	else if (isShadow)
+	{
+		DirectX::XMFLOAT3 lightDir = DirectX::XMFLOAT3( -0.57735f, 0.57735f, -0.57735f);
+		DirectX::XMVECTOR shadowPlane = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+		DirectX::XMVECTOR toLight = DirectX::XMLoadFloat3(&lightDir);
+		DirectX::XMMATRIX s = DirectX::XMMatrixShadow(shadowPlane, toLight);
+		DirectX::XMMATRIX shadowOffsetY = DirectX::XMMatrixTranslation(0.0f, 0.001f, 0.0f);
+		return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(x, y, z)*s*shadowOffsetY;
+
 	}
 	//return DirectX::XMMatrixIdentity();
 }
@@ -152,6 +162,11 @@ DirectX::XMMATRIX Box::GetTransformation() const
 void Box::ReflactionOn(bool reflationStatus)
 {
 	isReflaction = reflationStatus;
+}
+
+void Box::ShadowOn(bool shadowStatus)
+{
+	isShadow = shadowStatus;
 }
 
 void Box::MoveBox(float fx, float fy, float fz)

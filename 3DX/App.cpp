@@ -139,7 +139,9 @@ void App::Update()
 
 	}
 	
-	
+	dirLight.Bind(wnd.gfx());
+	pointLight.Bind(wnd.gfx());
+	spotLight.Bind(wnd.gfx());
 	//b1.Draw(wnd.gfx());
 	floor.Draw(wnd.gfx());
 	//wall.Draw(wnd.gfx());
@@ -178,17 +180,21 @@ void App::Update()
 	//water.Update(wnd.gfx(), 0.000648);
 	//water.Draw(wnd.gfx());
 	
-	/*dirLight.Bind(wnd.gfx());
+	dirLight.Bind(wnd.gfx());
 	pointLight.Bind(wnd.gfx());
-	spotLight.Bind(wnd.gfx());*/
+	spotLight.Bind(wnd.gfx());
 	
 	mirror.SetBS(wnd.gfx(), BlendState::BlendType::Transparent);
 	mirror.Draw(wnd.gfx());
 	wnd.gfx().ResetDSS();
+	
+	
+	crate.ShadowOn(true);
+	crate.SetDSS(wnd.gfx(), DSS::DSSType::NoDoubleBlend);
+	crate.Draw(wnd.gfx());
+	wnd.gfx().ResetDSS();
 	wnd.gfx().ResetBlendState();
-	
+	crate.ShadowOn(false);
 
-	
-	
 	wnd.gfx().EndFrame();
 }
