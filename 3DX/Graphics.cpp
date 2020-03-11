@@ -85,7 +85,7 @@ Graphics::Graphics(HWND hWnd,int width,int height)
 	depthTexDesc.Height = height;
 	depthTexDesc.MipLevels = 1;
 	depthTexDesc.ArraySize = 1;
-	depthTexDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	depthTexDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	depthTexDesc.SampleDesc.Count = 1;
 	depthTexDesc.SampleDesc.Quality = 0;
 	depthTexDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -96,7 +96,7 @@ Graphics::Graphics(HWND hWnd,int width,int height)
 	
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsv = {};
-	dsv.Format = DXGI_FORMAT_D32_FLOAT;
+	dsv.Format =DXGI_FORMAT_D24_UNORM_S8_UINT;
 	dsv.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsv.Texture2D.MipSlice = 0u;
 	pDevice->CreateDepthStencilView(depthTex.Get(), &dsv, pdsView.GetAddressOf());

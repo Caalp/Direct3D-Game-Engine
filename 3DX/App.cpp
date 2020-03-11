@@ -19,7 +19,7 @@ App::App() :
 	
 {
 	
-	//Initializations 
+	//  bbInitializations 
 	water.Init(wnd.gfx(), 160, 160, 1.0f,0.03f,3.25f,0.4f);
 	wall.GenerateGrid(wnd.gfx(), "Textures\\brick01.dds", 20, 20, 1.0f, 0.03f, 0,3.0f);
 	floor.GenerateGrid(wnd.gfx(), "Textures\\checkboard.dds", 30.0f, 30.0f, 1.0f, 0.03f,0, 4.0f);
@@ -178,9 +178,9 @@ void App::Update()
 	//water.Update(wnd.gfx(), 0.000648);
 	//water.Draw(wnd.gfx());
 	
-	dirLight.Bind(wnd.gfx());
+	/*dirLight.Bind(wnd.gfx());
 	pointLight.Bind(wnd.gfx());
-	spotLight.Bind(wnd.gfx());
+	spotLight.Bind(wnd.gfx());*/
 	
 	mirror.SetBS(wnd.gfx(), BlendState::BlendType::Transparent);
 	mirror.Draw(wnd.gfx());
