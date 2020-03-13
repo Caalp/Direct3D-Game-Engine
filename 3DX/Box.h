@@ -13,6 +13,7 @@ public:
 	void ReflactionOn(bool reflationStatus);
 	void ShadowOn(bool shadowStatus);
 	void MoveBox(float fx, float fy, float fz);
+	void BindTestShadow(Graphics& gfx, bool refStat);
 private:
 	bool isReflaction = false;
 	bool isShadow = false;
