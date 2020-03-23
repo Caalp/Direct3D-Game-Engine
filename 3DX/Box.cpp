@@ -75,7 +75,7 @@ Box::Box(Graphics & gfx, float x, float y, float z, bool reflaction, bool isShad
 		vertices[22].texCoord = { 0.0f,1.0f };
 		vertices[23].texCoord = { 1.0f,1.0f };
 		
-		vertices[0].Normal = {1.0f,0.0f,0.0f };
+		/*vertices[0].Normal = {1.0f,0.0f,0.0f };
 		vertices[1].Normal = { 1.0f,0.0f,0.0f };
 		vertices[2].Normal = { 1.0f,0.0f,0.0f };
 		vertices[3].Normal = { 1.0f,0.0f,0.0f };
@@ -105,7 +105,7 @@ Box::Box(Graphics & gfx, float x, float y, float z, bool reflaction, bool isShad
 		vertices[21].Normal = { 1.0f,0.0f,0.0f };
 		vertices[22].Normal = { 1.0f,0.0f,0.0f };
 		vertices[23].Normal = { 1.0f,0.0f,0.0f };
-
+*/
 		AddStaticBind(std::make_unique<VertexBuffer>(gfx, vertices));
 		AddStaticBind(std::make_unique<PixelShader>(gfx, L"PhongLightingPS.cso"));
 		
@@ -183,11 +183,11 @@ void Box::Update(float ft)
 
 DirectX::XMMATRIX Box::GetTransformation() const
 {
-	if (!isReflaction)
+	if (!isReflaction && !isShadow)
 	{
 		return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(x, y, z);
 	}
-	else if (isReflaction)
+	else if (isReflaction && !isShadow)
 	{
 		DirectX::XMVECTOR mirrorPlane = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 		DirectX::XMMATRIX R = DirectX::XMMatrixReflect(mirrorPlane);
@@ -201,7 +201,7 @@ DirectX::XMMATRIX Box::GetTransformation() const
 		DirectX::XMVECTOR toLight = DirectX::XMLoadFloat3(&lightDir);
 		DirectX::XMMATRIX s = DirectX::XMMatrixShadow(shadowPlane, toLight);
 		DirectX::XMMATRIX shadowOffsetY = DirectX::XMMatrixTranslation(0.0f, 0.001f, 0.0f);
-		return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(x, y, z)*s*shadowOffsetY;
+		return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(x, y, z)* s*shadowOffsetY;
 
 	}
 	//return DirectX::XMMatrixIdentity();

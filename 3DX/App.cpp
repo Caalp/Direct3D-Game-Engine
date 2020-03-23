@@ -24,11 +24,14 @@ App::App() :
 	wall.GenerateGrid(wnd.gfx(), "Textures\\brick01.dds", 20, 20, 1.0f, 0.03f, 0,3.0f);
 	floor.GenerateGrid(wnd.gfx(), "Textures\\checkboard.dds", 30.0f, 30.0f, 1.0f, 0.03f,0, 4.0f);
 	mirror.GenerateGrid(wnd.gfx(), "Textures\\ice.dds", 10.0f, 10.0f, 1.0f, 0.03f, 0.0f, 1.0f);
+	cylinder.GenerateCylinder(wnd.gfx(), "Textures\\brick01.dds", 1, 1, 1, 30, 30,2.0f);
 
 	//Init Rotations
-	wall.RotateGeometry(0.0f, 0.0f, 1.5708f);
+	wall.RotateGeometry(0.0f, -1.5708f, 1.5708f);
 	mirror.RotateGeometry(0.0f, -1.5708f, 1.5708f);
-	mirror.TranslateGeometry(-0.05f, 4.0f, 0.0f);
+	mirror.TranslateGeometry(-0.05f, 4.0f, -0.05f);
+	floor.TranslateGeometry(0.0f, 0.0f, -14.5f);
+	cylinder.TranslateGeometry(0.0f, 5.0f, -5.0f);
 }
 
 App::~App()
@@ -145,7 +148,10 @@ void App::Update()
 	//b1.Draw(wnd.gfx());
 	floor.Draw(wnd.gfx());
 	//wall.Draw(wnd.gfx());
+	//cylinder.SetRS(wnd.gfx(), RasterizerState::RasterizerType::Default);
 
+	cylinder.Draw(wnd.gfx());
+	//wnd.gfx().ResetRS();
 	
 	crate.Draw(wnd.gfx());
 	wnd.gfx().ResetRS();
@@ -163,11 +169,16 @@ void App::Update()
 	wnd.gfx().ResetDSS();
 	wnd.gfx().ResetBlendState();
 
-	
+	floor.ReflactionOn(true);
+	floor.SetRS(wnd.gfx(), RasterizerState::RasterizerType::CullClockwise);
+	floor.SetDSS(wnd.gfx(), DSS::DSSType::DrawReflaction);
+	floor.Draw(wnd.gfx());
+
+	floor.ReflactionOn(false);
 
 	crate.ReflactionOn(true);
-	crate.SetRS(wnd.gfx(), RasterizerState::RasterizerType::CullClockwise);
-	crate.SetDSS(wnd.gfx(), DSS::DSSType::DrawReflaction);
+	//crate.SetRS(wnd.gfx(), RasterizerState::RasterizerType::CullClockwise);
+	//crate.SetDSS(wnd.gfx(), DSS::DSSType::DrawReflaction);
 	crate.Draw(wnd.gfx());
 	wnd.gfx().ResetRS();
 	wnd.gfx().ResetDSS();
@@ -196,5 +207,6 @@ void App::Update()
 	wnd.gfx().ResetBlendState();
 	crate.ShadowOn(false);
 
+	
 	wnd.gfx().EndFrame();
 }

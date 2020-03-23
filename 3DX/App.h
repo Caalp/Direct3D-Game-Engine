@@ -36,5 +36,6 @@ private:
 	GeometryGenerator wall;
 	GeometryGenerator floor;
 	GeometryGenerator mirror;
+	GeometryGenerator cylinder;
 	Box crate;
 };
