@@ -24,7 +24,7 @@ App::App() :
 	wall.GenerateGrid(wnd.gfx(), "Textures\\brick01.dds", 20, 20, 1.0f, 0.03f, 0,3.0f);
 	floor.GenerateGrid(wnd.gfx(), "Textures\\checkboard.dds", 30.0f, 30.0f, 1.0f, 0.03f,0, 4.0f);
 	mirror.GenerateGrid(wnd.gfx(), "Textures\\ice.dds", 10.0f, 10.0f, 1.0f, 0.03f, 0.0f, 1.0f);
-	cylinder.GenerateCylinder(wnd.gfx(), "Textures\\brick01.dds", 1, 1, 1, 30, 30,2.0f);
+	cylinder.GenerateCylinder(wnd.gfx(), "Textures\\BoltAnim2", 1, 1, 1, 30, 30,2.0f);
 
 	//Init Rotations
 	wall.RotateGeometry(0.0f, -1.5708f, 1.5708f);
@@ -54,6 +54,8 @@ int App::Go()
 
 void App::Update()
 {
+	
+	
 	float dt = 0.190f;
 	float dtheta = 0.5f;
 	//float dtt = timer.Mark();
@@ -148,15 +150,9 @@ void App::Update()
 	//b1.Draw(wnd.gfx());
 	floor.Draw(wnd.gfx());
 	//wall.Draw(wnd.gfx());
-	//cylinder.SetRS(wnd.gfx(), RasterizerState::RasterizerType::Default);
-
-	cylinder.Draw(wnd.gfx());
-	//wnd.gfx().ResetRS();
 	
 	crate.Draw(wnd.gfx());
-	wnd.gfx().ResetRS();
 	
-	wnd.gfx().ResetBlendState();
 
 	
 	//d1.Update(0.015f);
@@ -165,9 +161,18 @@ void App::Update()
 
 	mirror.SetBS(wnd.gfx(), BlendState::BlendType::NoRenderTargetWrite);
 	mirror.SetDSS(wnd.gfx(), DSS::DSSType::Mirror);
-	mirror.Draw(wnd.gfx());
+	//mirror.Draw(wnd.gfx());
 	wnd.gfx().ResetDSS();
 	wnd.gfx().ResetBlendState();
+
+	cylinder.SetDSS(wnd.gfx(), DSS::DSSType::NoDepthWrite);
+	cylinder.SetRS(wnd.gfx(), RasterizerState::RasterizerType::NoCull);
+	cylinder.SetBS(wnd.gfx(), BlendState::BlendType::Additive);
+	cylinder.UpdateTex(0.0f);
+	cylinder.Draw(wnd.gfx());
+	wnd.gfx().ResetBlendState();
+	wnd.gfx().ResetRS();
+	wnd.gfx().ResetDSS();
 
 	floor.ReflactionOn(true);
 	floor.SetRS(wnd.gfx(), RasterizerState::RasterizerType::CullClockwise);

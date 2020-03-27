@@ -8,7 +8,8 @@ public:
 	{
 		Mirror,
 		DrawReflaction,
-		NoDoubleBlend
+		NoDoubleBlend,
+		NoDepthWrite
 	};
 	DSS(Graphics& gfx, DSSType dType);
 	void Bind(Graphics& gfx);

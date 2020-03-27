@@ -22,7 +22,7 @@ VertexOut main(VertexIn vin)
     vout.PosW = mul(float4(vin.PosL, 1.0f), model);
     vout.NormalW = mul(vin.NormalL, (float3x3) model);
     vout.PosH = mul(float4(vin.PosL, 1.0f), worldViewProj);
-    vout.txCoord = mul(float4(vin.texCoordinate, 1.0f, 1.0f), texTransform);
+    vout.txCoord = mul(float4(vin.texCoordinate, 0.0f, 1.0f), texTransform).xy;
     vout.eyePos = eyePos;
   
     return vout;

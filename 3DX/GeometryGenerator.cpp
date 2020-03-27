@@ -7,6 +7,9 @@ GeometryGenerator::GeometryGenerator():pitch(0.0f),yaw(0.0f),roll(0.0f),
 
 void GeometryGenerator::GenerateGrid(Graphics& gfx, const char* filePath, UINT numRows, UINT numCols, float dx, float dt, float damping, float texScale)
 {
+	
+	//texLoader =filePath);
+	
 	//this->dt = dt;
 	//numRows = numRow;
 	//numCols = numCol;
@@ -47,8 +50,6 @@ void GeometryGenerator::GenerateGrid(Graphics& gfx, const char* filePath, UINT n
 			//prevSolution[i*numCols + j] = DirectX::XMFLOAT3(x, 0.0f, z);
 			//currSolution[i*numCols + j] = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
 			//currSolution[i*numCols + j].texCoord = DirectX::XMFLOAT2(0.05f*i*dx,0.05f*j*dx);
-
-
 
 
 			vertexData[i*numCols + j].Normal = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
@@ -128,7 +129,6 @@ void GeometryGenerator::GenerateCylinder(Graphics & gfx, const char * filePath, 
 			DirectX::XMStoreFloat3(&v.Normal, N);
 			vertexData.push_back(v);
 
-
 		}
 	}
 	float ringVertexCount = sliceCount + 1;
@@ -170,6 +170,11 @@ DirectX::XMMATRIX GeometryGenerator::GetTransformation() const
 	}
 }
 
+DirectX::XMMATRIX GeometryGenerator::GetTexTransformXM() const
+{
+	return DirectX::XMMatrixScaling(3.0f, 1.5f, 1.0f)*DirectX::XMMatrixTranslation(0.0076f * 0.02f, 0.0f, 0.0f);
+}
+
 void GeometryGenerator::RotateGeometry(float pitch, float yaw, float roll)
 {
 	this->pitch = pitch;
@@ -196,7 +201,9 @@ void GeometryGenerator::Bind(Graphics & gfx)
 		auto vsBlob = vs->GetVBlob();
 		AddStaticBind(std::move(vs));
 		AddStaticBind(std::make_unique<IndexBuff>(gfx, indices));
-		TextureLoader texLoader(filePath.c_str());
+		//TextureLoader texLoader(filePath.c_str());
+		
+		
 		struct MaterialConstantPS
 		{
 
@@ -207,13 +214,14 @@ void GeometryGenerator::Bind(Graphics & gfx)
 		}matConst;
 
 		matConst.amb = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-		matConst.diff = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 0.5f);
+		matConst.diff = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		matConst.spec = DirectX::XMFLOAT4(0.8f, 0.8f, 0.8f, 32.0f);
-
+		
 		AddStaticBind(std::make_unique<PSConstBuff<MaterialConstantPS>>(gfx, matConst, 1u));
+	
+		
 
-		AddStaticBind(std::make_unique<Texture>(gfx, texLoader));
-
+		
 		AddStaticBind(std::make_unique<SamplerState>(gfx));
 
 
@@ -233,11 +241,30 @@ void GeometryGenerator::Bind(Graphics & gfx)
 	{
 		SetIndexBufferFromStatic();
 	}
-
+	AddStaticBind(std::make_unique<Texture>(gfx, TextureLoader(filePath.c_str()),index));
 	AddBind(std::make_unique<TransformationBuffer>(gfx, *this, true));
 }
 
 void GeometryGenerator::ReflactionOn(bool reflactionStatus)
 {
 	isReflaction = reflactionStatus;
+}
+
+void GeometryGenerator::UpdateTex(float dt)
+{
+	static float t = 0.0f;
+	t += 0.01130006f;
+
+	if (t >= 0.033333f)
+	{
+		index++;
+		t = 0.0f;
+
+		if (index == 5)
+			index = 0;
+	}
+	if (std::filesystem::is_directory(filePath))
+	{
+		//tx.GetImageByIndex(index);
+	}
 }

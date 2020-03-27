@@ -44,6 +44,7 @@ protected:
 	bool blendOn = false;
 	const IndexBuff*  pIndexBuffer;
 	BlendState* pBlendState;
+	
 	std::vector<std::unique_ptr<Bindable>> Bindables;
 	std::vector<std::unique_ptr<Bindable>> staticBindable;
 	std::stack< std::unique_ptr<Bindable>> renderStates;

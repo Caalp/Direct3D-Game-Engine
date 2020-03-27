@@ -61,6 +61,12 @@ DSS::DSS(Graphics & gfx, DSSType dType):dss(dType)
 		DSSDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_INCR;
 		DSSDesc.BackFace.StencilFunc = D3D11_COMPARISON_EQUAL;
 	}
+	else if (dType == NoDepthWrite)
+	{
+		DSSDesc.DepthEnable = true;
+		DSSDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+		DSSDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	}
 	
 	GetDevice(gfx)->CreateDepthStencilState(&DSSDesc, pDSS.GetAddressOf());
 }

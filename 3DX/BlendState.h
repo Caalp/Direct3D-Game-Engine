@@ -9,6 +9,7 @@ public:
 		Transparent,
 		AlphaToCoverage,
 		NoRenderTargetWrite,
+		Additive
 	};
 	BlendState(Graphics& gfx, bool bState = false,BlendType bType = Default);
 	//void ResetBlendState(Graphics& gfx);

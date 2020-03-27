@@ -1,13 +1,55 @@
 #include "TextureLoader.h"
 #include <assert.h>
 
+
 TextureLoader::TextureLoader(const char * filePath):
+	index(0u),
 	width(0),height(0),
 	imgFormat(FIF_UNKNOWN),
-	pImage(nullptr),
-	bits(nullptr)
+	pImage(nullptr)
+
 {
-	assert(LoadTexture(filePath) == true,"Image Loading in FreeImage is Failed");
+	
+	if (std::filesystem::is_directory(filePath))
+	{
+		
+		for (const auto& elem : std::filesystem::directory_iterator(filePath))
+		{
+			
+			assert(LoadTexture(elem.path().generic_string().c_str()) == true, "Image Loading in FreeImage is Failed");
+		}
+	}
+	else
+	{
+		assert(LoadTexture(filePath) == true, "Image Loading in FreeImage is Failed");
+	}
+	
+}
+
+TextureLoader::TextureLoader(const TextureLoader & rhs)
+{	
+	*this = rhs;
+	
+}
+
+TextureLoader & TextureLoader::operator=(const TextureLoader & rhs)
+{
+	index = rhs.index;
+	width = rhs.width;
+	height = rhs.height;
+	imgFormat = rhs.imgFormat;
+	pImage = rhs.pImage;
+	bits.clear();
+	for (const auto& elem : rhs.bits)
+	{
+		bits.push_back(elem);
+	}
+	return *this;
+}
+
+TextureLoader::TextureLoader(const TextureLoader&& rhs)
+{
+	*this = std::move(rhs);
 }
 
 TextureLoader::~TextureLoader()
@@ -30,10 +72,15 @@ FIBITMAP* TextureLoader::GetImage() const
 {
 	return pImage;
 }
-
-const BYTE* TextureLoader::GetImageData() const
+void TextureLoader::GetImageByIndex(unsigned int i)
 {
-	return bits;
+	index = i;
+}
+const BYTE* TextureLoader::GetImageData(unsigned int index) const
+{
+	
+	return bits[index];
+	
 }
 
 bool TextureLoader::LoadTexture(const char * filePath)
@@ -56,12 +103,13 @@ bool TextureLoader::LoadTexture(const char * filePath)
 	if (!pImage)
 		return false;
 	//Get the image data
-	bits = FreeImage_GetBits(pImage);
+	bits.emplace_back(FreeImage_GetBits(pImage));
 	//width and height of image
 	width = FreeImage_GetWidth(pImage);
 	height = FreeImage_GetHeight(pImage);
 	//If one of them is zero something is wrong return false
-	if ((bits == 0 || width == 0 || height == 0))
+	// add checking for bits too
+	if (( width == 0 || height == 0))
 		return false;
 	// else true successfully loaded
 	return true;
