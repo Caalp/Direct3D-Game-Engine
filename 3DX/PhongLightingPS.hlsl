@@ -16,8 +16,7 @@ float4 main(float3 PosW : Pos, float3 NormalW : n, float3 eyePos : EyePosition,f
     float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
     float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
     float4 spec = float4(0.0f, 0.0f, 0.0f, 0.0f);
-
-	
+   
     float4 A, D, S;
 	//Contribution from Directional Light
     ComputeDirectionalLight(toEyeW, NormalW, A, D, S);
@@ -37,10 +36,10 @@ float4 main(float3 PosW : Pos, float3 NormalW : n, float3 eyePos : EyePosition,f
     
     float4 litColor = (ambient + diffuse) * tex.Sample(samplerState, tc) + spec;
     
-    float fogLerp = saturate((distToEye - 15.0f) / 175.0f);
-    float4 fogColor = float4(0.75f, 0.75f, 0.75f, 1.0f);
+    //float fogLerp = saturate((distToEye - 15.0f) / 175.0f);
+    //float4 fogColor = float4(0.75f, 0.75f, 0.75f, 1.0f);
     
-    litColor = lerp(litColor, fogColor, fogLerp);
+    //litColor = lerp(litColor, fogColor, fogLerp);
     litColor.a = tex.Sample(samplerState, tc).a*m_diffuse.a;
 
     return litColor;

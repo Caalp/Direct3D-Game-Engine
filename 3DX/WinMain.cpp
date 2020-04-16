@@ -1,6 +1,7 @@
+#include "App.h"
 #include <Windows.h>
 #include "Window.h"
-#include "App.h"
+
 
 int CALLBACK WinMain(
 					HINSTANCE hInstance,

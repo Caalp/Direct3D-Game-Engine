@@ -15,15 +15,43 @@ TextureLoader::TextureLoader(const char * filePath):
 		
 		for (const auto& elem : std::filesystem::directory_iterator(filePath))
 		{
-			
+			sfilePath.push_back(elem.path().generic_string());
 			assert(LoadTexture(elem.path().generic_string().c_str()) == true, "Image Loading in FreeImage is Failed");
 		}
 	}
 	else
 	{
+		sfilePath.push_back(filePath);
 		assert(LoadTexture(filePath) == true, "Image Loading in FreeImage is Failed");
 	}
 	
+}
+
+TextureLoader::TextureLoader(std::vector<const char*> filePaths):
+	index(0u),
+	width(0), height(0),
+	imgFormat(FIF_UNKNOWN),
+	pImage(nullptr)
+{
+	
+	for (int i = 0; i < filePaths.size(); i++)
+	{
+		if (std::filesystem::is_directory(filePaths[i]))
+		{
+
+			for (const auto& elem : std::filesystem::directory_iterator(filePaths[i]))
+			{
+				sfilePath.push_back(elem.path().generic_string());
+				assert(LoadTexture(elem.path().generic_string().c_str()) == true, "Image Loading in FreeImage is Failed");
+			}
+		}
+		else
+		{
+			sfilePath.push_back(filePaths[i]);
+			assert(LoadTexture(filePaths[i]) == true, "Image Loading in FreeImage is Failed");
+		}
+
+	}
 }
 
 TextureLoader::TextureLoader(const TextureLoader & rhs)
@@ -55,7 +83,10 @@ TextureLoader::TextureLoader(const TextureLoader&& rhs)
 TextureLoader::~TextureLoader()
 {
 	// Free the image data
-	FreeImage_Unload(pImage);
+	if (pImage)
+	{
+		FreeImage_Unload(pImage);
+	}
 }
 
 unsigned int TextureLoader::GetWidth() const
@@ -66,6 +97,13 @@ unsigned int TextureLoader::GetWidth() const
 unsigned int TextureLoader::GetHeight() const
 {
 	return height;
+}
+
+
+
+unsigned int TextureLoader::GetImageCount() const
+{
+	return bits.size();
 }
 
 FIBITMAP* TextureLoader::GetImage() const
@@ -83,13 +121,18 @@ const BYTE* TextureLoader::GetImageData(unsigned int index) const
 	
 }
 
+std::vector<std::string> TextureLoader::filePath() const
+{
+	return this->sfilePath;
+}
+
 bool TextureLoader::LoadTexture(const char * filePath)
 {
 	
 	auto a = sizeof(FIBITMAP);
 	//Image format.
 	imgFormat = FreeImage_GetFileType(filePath, 0);
-
+	
 	//If format is still unknown get it from filename
 	if (imgFormat == FIF_UNKNOWN)
 		imgFormat = FreeImage_GetFIFFromFilename(filePath);
@@ -103,6 +146,7 @@ bool TextureLoader::LoadTexture(const char * filePath)
 	if (!pImage)
 		return false;
 	//Get the image data
+	
 	bits.emplace_back(FreeImage_GetBits(pImage));
 	//width and height of image
 	width = FreeImage_GetWidth(pImage);

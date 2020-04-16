@@ -42,7 +42,7 @@ private:
 	//virtual const std::vector<std::unique_ptr<Bindable>>& GetStaticBinds() const noexcept = 0;
 protected:
 	bool blendOn = false;
-	const IndexBuff*  pIndexBuffer;
+	const IndexBuff*  pIndexBuffer = nullptr;
 	BlendState* pBlendState;
 	
 	std::vector<std::unique_ptr<Bindable>> Bindables;

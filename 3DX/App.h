@@ -1,4 +1,7 @@
 #pragma once
+
+#include "WindowsIncludes.h"
+#include "Server.h"
 #include "Window.h"
 #include "Camera.h"
 #include "DirectionalLight.h"
@@ -8,6 +11,7 @@
 #include "Model.h"
 #include "TextureLoader.h"
 #include "GeometryGenerator.h"
+#include "Tree.h"
 //#include "Timer.h"
 #include "Water.h"
 class App
@@ -38,4 +42,7 @@ private:
 	GeometryGenerator mirror;
 	GeometryGenerator cylinder;
 	Box crate;
+	//Server* server;
+	Tree tree;
+	GeometryGenerator icosahedron;
 };

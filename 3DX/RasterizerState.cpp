@@ -14,7 +14,7 @@ RasterizerState::RasterizerState(Graphics & gfx, RasterizerType Rs):rsType(Rs)
 	}
 	else if (rsType == Default)
 	{
-		rsDesc.FillMode = D3D11_FILL_SOLID;
+		rsDesc.FillMode = D3D11_FILL_WIREFRAME;
 		rsDesc.CullMode = D3D11_CULL_BACK;
 	}
 	else if (rsType == CullClockwise)

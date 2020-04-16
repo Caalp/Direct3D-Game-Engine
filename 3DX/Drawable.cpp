@@ -51,8 +51,15 @@ void Drawable::Draw(Graphics & gfx)
 	//	pBlendState->Bind(gfx);
 	//	blendOn = false;
 	//}
-	gfx.DrawIndexed(pIndexBuffer->GetIndexCount());
-
+	// Temporary work around for tree drawing
+	if ( pIndexBuffer == nullptr)
+	{
+		gfx.DrawVertexed(3, 0);
+	}
+	else
+	{
+		gfx.DrawIndexed(pIndexBuffer->GetIndexCount());
+	}
 }
 
 void Drawable::AddIndexBuffer(std::shared_ptr<class IndexBuff> indexBuffer)

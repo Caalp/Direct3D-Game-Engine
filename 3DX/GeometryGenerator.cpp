@@ -1,5 +1,6 @@
 #include "GeometryGenerator.h"
-
+#define XM_PI               3.141592654f
+#define XM_2PI              6.283185307f
 GeometryGenerator::GeometryGenerator():pitch(0.0f),yaw(0.0f),roll(0.0f),
 										x(0.0f),y(0.0f),z(0.0f)
 {
@@ -149,6 +150,49 @@ void GeometryGenerator::GenerateCylinder(Graphics & gfx, const char * filePath, 
 	Bind(gfx);
 }
 
+void GeometryGenerator::GenerateIcosahedron(Graphics & gfx, const char * filePath)
+{
+	this->filePath = static_cast<std::string>(filePath);
+	
+	vertexData2.resize(12);
+	static const float  t1 = 0.505731f;
+	static const float  t2 = 0.800651f;
+	
+	vertexData2[0].Pos = DirectX::XMFLOAT3(-t1, 0.0f,t2);
+	vertexData2[1].Pos = DirectX::XMFLOAT3(t1, 0.0f, t2);
+	vertexData2[2].Pos = DirectX::XMFLOAT3(-t1, 0.0f, -t2);
+	vertexData2[3].Pos = DirectX::XMFLOAT3(t1, 0.0f, -t2);
+	vertexData2[4].Pos = DirectX::XMFLOAT3(0.0f, t2, t1);
+	vertexData2[5].Pos = DirectX::XMFLOAT3(0.0f, t2, -t1);
+	vertexData2[6].Pos = DirectX::XMFLOAT3(0.0f, -t2, t1);
+	vertexData2[7].Pos = DirectX::XMFLOAT3(0.0f, -t2, -t1);
+	vertexData2[8].Pos = DirectX::XMFLOAT3(t2, t1,0.0f);
+	vertexData2[9].Pos = DirectX::XMFLOAT3(-t2, t1,0.0f);
+	vertexData2[10].Pos = DirectX::XMFLOAT3(t2, -t1,0.0f);
+	vertexData2[11].Pos = DirectX::XMFLOAT3(-t2, -t1,0.0f);
+
+		
+	indices =
+	{
+		1,4,0,  4,9,0,  4,5,9,  8,5,4,  1,8,4,    
+		1,10,8, 10,3,8, 8,3,5,  3,2,5,  3,7,2,
+		3,10,7, 10,6,7, 6,11,7, 6,0,11, 6,1,0,
+		10,1,6, 11,0,9, 2,11,9, 5,2,9,  11,2,7 
+	};
+	for (UINT i = 0; i < vertexData2.size(); i++)
+	{
+		DirectX::XMVECTOR n = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&vertexData2[i].Pos));
+		DirectX::XMStoreFloat3(&vertexData2[i].Normal, n);
+
+		float theta = MatHelper::AngleFromXY(vertexData2[i].Pos.x, vertexData2[i].Pos.z);
+		float phi = acosf(vertexData2[i].Pos.y / t2);
+		vertexData2[i].texCoord.x = theta / XM_2PI;
+		vertexData2[i].texCoord.y = phi / XM_PI;
+	}
+	
+	Bind(gfx);
+}
+
 
 
 void GeometryGenerator::Update(float ft)
@@ -195,9 +239,11 @@ void GeometryGenerator::Bind(Graphics & gfx)
 	{
 		//SetBlendState(true);
 		//AddStaticBind(std::make_unique<BlendState>(gfx));
-		AddBind(std::make_unique<VertexBuffer>(gfx, vertexData));
-		AddStaticBind(std::make_unique<PixelShader>(gfx, L"PhongLightingPS.cso"));
-		auto vs = std::make_unique<VertexShader>(gfx, L"TexPhongVS.cso");
+		AddBind(std::make_unique<VertexBuffer>(gfx, vertexData2));
+		//AddStaticBind(std::make_unique<PixelShader>(gfx, L"PhongLightingPS.cso"));
+		AddStaticBind(std::make_unique<PixelShader>(gfx, L"PS_BillBoarding.cso"));
+		AddStaticBind(std::make_unique<GeometryShader>(gfx, L"GS_BillBoarding.cso"));
+		auto vs = std::make_unique<VertexShader>(gfx, L"VS_BillBoarding.cso");
 		auto vsBlob = vs->GetVBlob();
 		AddStaticBind(std::move(vs));
 		AddStaticBind(std::make_unique<IndexBuff>(gfx, indices));

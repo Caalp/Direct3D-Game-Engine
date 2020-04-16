@@ -15,3 +15,4 @@
 #include "RasterizerState.h"
 #include "Texture.h"
 #include "DSS.h"
+#include "GeometryShader.h"

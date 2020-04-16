@@ -2,7 +2,7 @@
 #include <DirectXMath.h>
 
 namespace dx = DirectX;
-
+const float Pi = 3.1415926535f;
 class MatHelper
 {
 	
@@ -20,6 +20,29 @@ public:
 	{
 		return a + randF()*(b - a);
 	}
+	
+
+	static float AngleFromXY(float x, float y)
+	{
+		float theta = 0.0f;
+
+		// Quadrant I or IV
+		if (x >= 0.0f)
+		{
+			// If x = 0, then atanf(y/x) = +pi/2 if y > 0
+			//                atanf(y/x) = -pi/2 if y < 0
+			theta = atanf(y / x); // in [-pi/2, +pi/2]
+
+			if (theta < 0.0f)
+				theta += 2.0f*Pi; // in [0, 2*pi).
+		}
+
+		// Quadrant II or III
+		else
+			theta = atanf(y / x) + Pi; // in [0, 2*pi).
+
+		return theta;
+	}
 	///<summary>
 	/// Calculates reflection ray and loads into out
 	///</summary>
@@ -33,6 +56,15 @@ public:
 		dx::XMVector4Normalize(t2);
 		n = dx::XMVectorAdd(t1,dx::XMVectorMultiply({ -2,-2,-2 }, dx::XMVectorMultiply(dx::XMVector3Dot(t1, t2), t2)));
 		dx::XMStoreFloat3(&out, n);
+	}
+	static DirectX::XMFLOAT3 CrossXMFloat3(const DirectX::XMFLOAT3& v1, const DirectX::XMFLOAT3& v2)
+	{
+		DirectX::XMFLOAT3 result;
+		result.x = (v1.y*v2.z) - (v1.z * v2.y);
+		result.y = (v1.z* v2.x) - (v1.x*v2.z);
+		result.z = (v1.x * v2.y) - (v1.y * v2.x);
+
+		return result;
 	}
 	template<typename T>
 	static T Clamp(const T& x, const T& low, const T& high)

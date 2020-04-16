@@ -11,19 +11,21 @@ class Graphics
 {
 	friend class Bindable;
 public:
-	Graphics(HWND hWnd,int width,int height);
+	Graphics(HWND hWnd,int width,int height, bool Enable4xMsaa = true);
 	~Graphics() = default;
 	Graphics(const Graphics&) = delete;
 	Graphics& operator=(const Graphics&) = delete;
 	HRESULT CompileShader(LPCWSTR pScrData,LPCSTR szentryPoint, LPCSTR shaderModel, ID3DBlob** ppBlobOut);
-	void DrawTestTriangle();
-	void DrawCube(float angle, float x, float y);
+	/*void DrawTestTriangle();
+	void DrawCube(float angle, float x, float y);*/
 	void DrawIndexed(UINT count);
+	void DrawVertexed(UINT vertexCount, UINT startVertexLocation);
 	void EndFrame();
 	void ClearFrame(float red,float gren,float blue);
 	void ResetRS();
 	void ResetDSS();
 	void ResetBlendState();
+	void ResetGS();
 
 	//friend class Box;
 
@@ -40,6 +42,9 @@ private:
 	DirectX::XMMATRIX view;
 	DirectX::XMMATRIX camera;
 	DirectX::XMFLOAT3 cameraPos;
+
+	//---------------------------//
+	UINT m4xMsaaQuality;
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> pSwapChain;

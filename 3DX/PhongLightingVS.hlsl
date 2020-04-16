@@ -9,7 +9,7 @@ struct VertexIn
 
 struct VertexOut
 {
-   
+
     float3 PosW : Pos;
     float3 NormalW : n;
     float3 eyePos : EyePosition;
