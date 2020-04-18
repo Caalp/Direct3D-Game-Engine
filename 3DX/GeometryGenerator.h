@@ -15,16 +15,14 @@ class GeometryGenerator : public Drawable
 		DirectX::XMFLOAT2 texCoord;
 
 	};
-	struct Vertex2
+	struct MeshData
 	{
-		DirectX::XMFLOAT3 Pos;
-		//DirectX::XMFLOAT3 Normal;
-		//DirectX::XMFLOAT2 texCoord;
-
+		std::vector<Vertex> vertexData;
+		std::vector<WORD> indices;
 	};
-	std::vector<Vertex> vertexData;
+	
 	std::vector<Vertex> vertexData2;
-	std::vector<WORD> indices;
+	
 public:
 	GeometryGenerator();
 	void GenerateGrid(Graphics& gfx, const char* filePath, UINT numRow, UINT numCol, float dx, float dt, float damping, float texScale=1.0f );
@@ -35,9 +33,10 @@ public:
 	DirectX::XMMATRIX GetTexTransformXM() const override;
 	void RotateGeometry(float pitch, float yaw, float roll);
 	void TranslateGeometry(float x, float y, float z);
-	void Bind(Graphics& gfx);
+	void Bind(Graphics& gfx,const MeshData& meshData);
 	void ReflactionOn(bool reflactionStatus);
 	void UpdateTex(float dt);
+	void SubDivide(unsigned int numTimesDivide, MeshData& md);
 private:
 	
 	//TextureLoader tx;

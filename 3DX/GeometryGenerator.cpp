@@ -14,7 +14,8 @@ void GeometryGenerator::GenerateGrid(Graphics& gfx, const char* filePath, UINT n
 	//this->dt = dt;
 	//numRows = numRow;
 	//numCols = numCol;
-	vertexData.resize(numRows*numCols);
+	MeshData md;
+	md.vertexData.resize(numRows*numCols);
 	int vertexCount = numRows * numCols;
 	int triangleCount = (numRows - 1)*(numCols - 1) * 2;
 	this->filePath = static_cast<std::string>(filePath);
@@ -38,7 +39,7 @@ void GeometryGenerator::GenerateGrid(Graphics& gfx, const char* filePath, UINT n
 	float halfWidth = 0.5f *dx*(numCols - 1);
 	float halfHeight = 0.5f *dx*(numRows - 1);
 
-	vertexData.resize(numCols*numRows);
+	md.vertexData.resize(numCols*numRows);
 	//Generate grid vertices
 	for (UINT i = 0; i < numRows; i++)
 	{
@@ -47,13 +48,13 @@ void GeometryGenerator::GenerateGrid(Graphics& gfx, const char* filePath, UINT n
 		{
 			float x = -halfWidth + j * dx;
 
-			vertexData[i*numCols + j].Pos = DirectX::XMFLOAT3(x, 0.0f, z);
+			md.vertexData[i*numCols + j].Pos = DirectX::XMFLOAT3(x, 0.0f, z);
 			//prevSolution[i*numCols + j] = DirectX::XMFLOAT3(x, 0.0f, z);
 			//currSolution[i*numCols + j] = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
 			//currSolution[i*numCols + j].texCoord = DirectX::XMFLOAT2(0.05f*i*dx,0.05f*j*dx);
 
 
-			vertexData[i*numCols + j].Normal = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+			md.vertexData[i*numCols + j].Normal = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
 			
 			//vertexData[i*numCols + j].texCoord = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
 
@@ -64,20 +65,20 @@ void GeometryGenerator::GenerateGrid(Graphics& gfx, const char* filePath, UINT n
 
 	
 	//reserve space for indices
-	indices.resize(3 * triangleCount);
+	md.indices.resize(3 * triangleCount);
 	//Create indices
 	int k = 0;
 	for (UINT i = 0; i < numRows - 1; i++)
 	{
 		for (UINT j = 0; j < numCols - 1; j++)
 		{
-			indices[k] = i * numCols + j;
-			indices[k + 1] = i * numCols + j + 1;
-			indices[k + 2] = (i + 1) * numCols + j;
+			md.indices[k] = i * numCols + j;
+			md.indices[k + 1] = i * numCols + j + 1;
+			md.indices[k + 2] = (i + 1) * numCols + j;
 
-			indices[k + 3] = (i + 1) * numCols + j;
-			indices[k + 4] = i * numCols + j + 1;
-			indices[k + 5] = (i + 1) * numCols + j + 1;
+			md.indices[k + 3] = (i + 1) * numCols + j;
+			md.indices[k + 4] = i * numCols + j + 1;
+			md.indices[k + 5] = (i + 1) * numCols + j + 1;
 
 			k += 6;
 		}
@@ -86,14 +87,15 @@ void GeometryGenerator::GenerateGrid(Graphics& gfx, const char* filePath, UINT n
 	{
 		
 		//Derive tex-coords in [0,1] from position.
-		vertexData[i].texCoord.x = texScale*(0.5f + vertexData[i].Pos.x / width);
-		vertexData[i].texCoord.y = texScale*(0.5f - vertexData[i].Pos.z / depth);
+		md.vertexData[i].texCoord.x = texScale*(0.5f + md.vertexData[i].Pos.x / width);
+		md.vertexData[i].texCoord.y = texScale*(0.5f - md.vertexData[i].Pos.z / depth);
 	}
-	Bind(gfx);
+	Bind(gfx,md);
 }
 
 void GeometryGenerator::GenerateCylinder(Graphics & gfx, const char * filePath, float bottomRadius, float topRadius, float height, UINT sliceCount, UINT stackCount, float texScale)
 {
+	MeshData md;
 	this->filePath = static_cast<std::string>(filePath);
 	float dTheta = (2 * 3.141592653589793238) / sliceCount;
 
@@ -128,7 +130,7 @@ void GeometryGenerator::GenerateCylinder(Graphics & gfx, const char * filePath, 
 			DirectX::XMVECTOR N = DirectX::XMVector3Normalize(DirectX::XMVector3AngleBetweenNormals(tangent, biTangent));
 
 			DirectX::XMStoreFloat3(&v.Normal, N);
-			vertexData.push_back(v);
+			md.vertexData.push_back(v);
 
 		}
 	}
@@ -137,60 +139,61 @@ void GeometryGenerator::GenerateCylinder(Graphics & gfx, const char * filePath, 
 	{
 		for (int j = 0; j < sliceCount; j++)
 		{
-			indices.push_back(i*ringVertexCount + j);
-			indices.push_back((i + 1)*ringVertexCount + j);
-			indices.push_back((i+1)*ringVertexCount + (j + 1));
+			md.indices.push_back(i*ringVertexCount + j);
+			md.indices.push_back((i + 1)*ringVertexCount + j);
+			md.indices.push_back((i+1)*ringVertexCount + (j + 1));
 			
 
-			indices.push_back(i*ringVertexCount + j);
-			indices.push_back((i+1)*ringVertexCount + (j+1));
-			indices.push_back((i)*ringVertexCount + (j+1));
+			md.indices.push_back(i*ringVertexCount + j);
+			md.indices.push_back((i+1)*ringVertexCount + (j+1));
+			md.indices.push_back((i)*ringVertexCount + (j+1));
 		}
 	}
-	Bind(gfx);
+	Bind(gfx,md);
 }
 
 void GeometryGenerator::GenerateIcosahedron(Graphics & gfx, const char * filePath)
 {
+	MeshData md;
 	this->filePath = static_cast<std::string>(filePath);
 	
-	vertexData2.resize(12);
-	static const float  t1 = 0.505731f;
-	static const float  t2 = 0.800651f;
+	md.vertexData.resize(12);
+	static const float  t1 = 0.525731f;
+	static const float  t2 = 0.850651f;
 	
-	vertexData2[0].Pos = DirectX::XMFLOAT3(-t1, 0.0f,t2);
-	vertexData2[1].Pos = DirectX::XMFLOAT3(t1, 0.0f, t2);
-	vertexData2[2].Pos = DirectX::XMFLOAT3(-t1, 0.0f, -t2);
-	vertexData2[3].Pos = DirectX::XMFLOAT3(t1, 0.0f, -t2);
-	vertexData2[4].Pos = DirectX::XMFLOAT3(0.0f, t2, t1);
-	vertexData2[5].Pos = DirectX::XMFLOAT3(0.0f, t2, -t1);
-	vertexData2[6].Pos = DirectX::XMFLOAT3(0.0f, -t2, t1);
-	vertexData2[7].Pos = DirectX::XMFLOAT3(0.0f, -t2, -t1);
-	vertexData2[8].Pos = DirectX::XMFLOAT3(t2, t1,0.0f);
-	vertexData2[9].Pos = DirectX::XMFLOAT3(-t2, t1,0.0f);
-	vertexData2[10].Pos = DirectX::XMFLOAT3(t2, -t1,0.0f);
-	vertexData2[11].Pos = DirectX::XMFLOAT3(-t2, -t1,0.0f);
+	md.vertexData[0].Pos = DirectX::XMFLOAT3(-t1, 0.0f,t2);
+	md.vertexData[1].Pos = DirectX::XMFLOAT3(t1, 0.0f, t2);
+	md.vertexData[2].Pos = DirectX::XMFLOAT3(-t1, 0.0f, -t2);
+	md.vertexData[3].Pos = DirectX::XMFLOAT3(t1, 0.0f, -t2);
+	md.vertexData[4].Pos = DirectX::XMFLOAT3(0.0f, t2, t1);
+	md.vertexData[5].Pos = DirectX::XMFLOAT3(0.0f, t2, -t1);
+	md.vertexData[6].Pos = DirectX::XMFLOAT3(0.0f, -t2, t1);
+	md.vertexData[7].Pos = DirectX::XMFLOAT3(0.0f, -t2, -t1);
+	md.vertexData[8].Pos = DirectX::XMFLOAT3(t2, t1,0.0f);
+	md.vertexData[9].Pos = DirectX::XMFLOAT3(-t2, t1,0.0f);
+	md.vertexData[10].Pos = DirectX::XMFLOAT3(t2, -t1,0.0f);
+	md.vertexData[11].Pos = DirectX::XMFLOAT3(-t2, -t1,0.0f);
 
 		
-	indices =
+	md.indices =
 	{
 		1,4,0,  4,9,0,  4,5,9,  8,5,4,  1,8,4,    
 		1,10,8, 10,3,8, 8,3,5,  3,2,5,  3,7,2,
 		3,10,7, 10,6,7, 6,11,7, 6,0,11, 6,1,0,
 		10,1,6, 11,0,9, 2,11,9, 5,2,9,  11,2,7 
 	};
-	for (UINT i = 0; i < vertexData2.size(); i++)
+	for (UINT i = 0; i < md.vertexData.size(); i++)
 	{
-		DirectX::XMVECTOR n = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&vertexData2[i].Pos));
-		DirectX::XMStoreFloat3(&vertexData2[i].Normal, n);
+		DirectX::XMVECTOR n = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&md.vertexData[i].Pos));
+		DirectX::XMStoreFloat3(&md.vertexData[i].Normal, n);
 
-		float theta = MatHelper::AngleFromXY(vertexData2[i].Pos.x, vertexData2[i].Pos.z);
-		float phi = acosf(vertexData2[i].Pos.y / t2);
-		vertexData2[i].texCoord.x = theta / XM_2PI;
-		vertexData2[i].texCoord.y = phi / XM_PI;
+		float theta = MatHelper::AngleFromXY(md.vertexData[i].Pos.x, md.vertexData[i].Pos.z);
+		float phi = acosf(md.vertexData[i].Pos.y / t2);
+		md.vertexData[i].texCoord.x = theta / XM_2PI;
+		md.vertexData[i].texCoord.y = phi / XM_PI;
 	}
-	
-	Bind(gfx);
+	SubDivide(1u,md);
+	Bind(gfx,md);
 }
 
 
@@ -233,20 +236,22 @@ void GeometryGenerator::TranslateGeometry(float x, float y, float z)
 	this->z = z;
 }
 
-void GeometryGenerator::Bind(Graphics & gfx)
+void GeometryGenerator::Bind(Graphics & gfx, const MeshData& meshData)
 {
+	
+	
 	if (!isStaticallyBinded())
 	{
 		//SetBlendState(true);
 		//AddStaticBind(std::make_unique<BlendState>(gfx));
-		AddBind(std::make_unique<VertexBuffer>(gfx, vertexData2));
+		AddBind(std::make_unique<VertexBuffer>(gfx, meshData.vertexData));
 		//AddStaticBind(std::make_unique<PixelShader>(gfx, L"PhongLightingPS.cso"));
-		AddStaticBind(std::make_unique<PixelShader>(gfx, L"PS_BillBoarding.cso"));
-		AddStaticBind(std::make_unique<GeometryShader>(gfx, L"GS_BillBoarding.cso"));
-		auto vs = std::make_unique<VertexShader>(gfx, L"VS_BillBoarding.cso");
+		AddStaticBind(std::make_unique<PixelShader>(gfx, L"PhongLightingPS.cso"));
+		AddStaticBind(std::make_unique<GeometryShader>(gfx, L"GS_Subdivide.cso"));
+		auto vs = std::make_unique<VertexShader>(gfx, L"VS_Subdivision.cso");
 		auto vsBlob = vs->GetVBlob();
 		AddStaticBind(std::move(vs));
-		AddStaticBind(std::make_unique<IndexBuff>(gfx, indices));
+		AddStaticBind(std::make_unique<IndexBuff>(gfx, const_cast<std::vector<WORD>&>(meshData.indices)));
 		//TextureLoader texLoader(filePath.c_str());
 		
 		
@@ -312,5 +317,78 @@ void GeometryGenerator::UpdateTex(float dt)
 	if (std::filesystem::is_directory(filePath))
 	{
 		//tx.GetImageByIndex(index);
+	}
+}
+
+void GeometryGenerator::SubDivide(unsigned int numTimesDivide, MeshData& md)
+{
+	for (int i = 0; i < numTimesDivide; i++)
+	{
+		MeshData mdTemp = md;
+		int triangleCount = mdTemp.indices.size() / 3;
+		Vertex v[6];
+
+		// Clear md data and store new vertices and indices inside it
+		md.indices.clear();
+		md.vertexData.clear();
+
+		for (int i = 0; i < triangleCount; i++)
+		{
+			// Normalize the Pos XMFLOAT3 types in order to avoid distortions 
+			// v[0] , v[3], v[5] is main triangle vertices and has the order of 1st, 2nd, 3rd
+			// respect to the clockwise winding. Calculate mid points v[1], v[2] and v[4]
+
+			v[0] = mdTemp.vertexData[mdTemp.indices[3 * i]];
+			v[0].Pos = MatHelper::normalize(v[0].Pos);
+
+			v[1].Pos = MatHelper::normalize(0.5f*(mdTemp.vertexData[mdTemp.indices[3 * i]].Pos + mdTemp.vertexData[mdTemp.indices[3 * i + 1]].Pos));
+			v[1].texCoord = 0.5f*(mdTemp.vertexData[mdTemp.indices[3 * i]].texCoord + mdTemp.vertexData[mdTemp.indices[3 * i + 1]].texCoord);
+			v[1].Normal = MatHelper::normalize(v[1].Pos);
+
+			v[2].Pos = MatHelper::normalize(0.5f* (mdTemp.vertexData[mdTemp.indices[3 * i]].Pos + mdTemp.vertexData[mdTemp.indices[3 * i + 2]].Pos));
+			v[2].texCoord = 0.5 * (mdTemp.vertexData[mdTemp.indices[3 * i]].texCoord + mdTemp.vertexData[mdTemp.indices[3 * i + 2]].texCoord);
+			v[2].Normal = MatHelper::normalize(v[2].Pos);
+
+			v[3] = mdTemp.vertexData[mdTemp.indices[3 * i + 2]];
+			v[3].Pos = MatHelper::normalize(v[3].Pos);
+
+			v[4].Pos = MatHelper::normalize(0.5f* (mdTemp.vertexData[mdTemp.indices[3 * i + 1]].Pos + mdTemp.vertexData[mdTemp.indices[3 * i + 2]].Pos));
+			v[4].texCoord = 0.5 * (mdTemp.vertexData[mdTemp.indices[3 * i + 1]].texCoord + mdTemp.vertexData[mdTemp.indices[3 * i + 2]].texCoord);
+			v[4].Normal = MatHelper::normalize(v[3].Pos);
+
+			v[5] = mdTemp.vertexData[mdTemp.indices[3 * i + 1]];
+			v[5].Pos = MatHelper::normalize(v[5].Pos);
+
+			//-------- triangle vertices------//
+			// push vertices into vertexData inside the MeshData struct
+
+			md.vertexData.push_back(v[0]);
+			md.vertexData.push_back(v[1]);
+			md.vertexData.push_back(v[2]);
+			md.vertexData.push_back(v[3]);
+			md.vertexData.push_back(v[4]);
+			md.vertexData.push_back(v[5]);
+
+			// according to position of the vertices inside the vector create triangles
+			// respect to the clockwise winding order (front-face)
+			//-------- 1st triangle indices------//
+			md.indices.push_back(6 * i);
+			md.indices.push_back(6 * i + 1);
+			md.indices.push_back(6 * i + 2);
+			//-------- 2nd triangle indices------//
+			md.indices.push_back(6 * i + 1);
+			md.indices.push_back(6 * i + 4);
+			md.indices.push_back(6 * i + 2);
+			//-------- 3rd triangle indices------//
+			md.indices.push_back(6 * i + 2);
+			md.indices.push_back(6 * i + 4);
+			md.indices.push_back(6 * i + 3);
+			//-------- 4th triangle indices------//
+			md.indices.push_back(6 * i + 1);
+			md.indices.push_back(6 * i + 5);
+			md.indices.push_back(6 * i + 4);
+
+
+		}
 	}
 }

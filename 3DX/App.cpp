@@ -218,7 +218,7 @@ void App::Update()
 	//wnd.gfx().ResetBlendState();
 	//crate.ShadowOn(false);
 	//tree.SetBS(wnd.gfx(), BlendState::BlendType::AlphaToCoverage);
-	if (wnd.kbd.KeyIsPressed('R'))
+	/*if (wnd.kbd.KeyIsPressed('R'))
 	{
 		wnd.gfx().ResetBlendState();
 	}
@@ -226,9 +226,9 @@ void App::Update()
 	{
 		tree.SetBS(wnd.gfx(), BlendState::BlendType::AlphaToCoverage);
 	}
-	tree.Draw(wnd.gfx());
-	//icosahedron.SetRS(wnd.gfx(), RasterizerState::RasterizerType::Default);
-	//icosahedron.Draw(wnd.gfx());
+	tree.Draw(wnd.gfx());*/
+	icosahedron.SetRS(wnd.gfx(), RasterizerState::RasterizerType::Default);
+	icosahedron.Draw(wnd.gfx());
 	
 	wnd.gfx().ResetGS();
 	wnd.gfx().EndFrame();

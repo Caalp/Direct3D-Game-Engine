@@ -3,6 +3,55 @@
 
 namespace dx = DirectX;
 const float Pi = 3.1415926535f;
+
+
+inline DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& r, const DirectX::XMFLOAT3& l)
+{
+	DirectX::XMVECTOR v1 = DirectX::XMLoadFloat3(&r);
+	DirectX::XMVECTOR v2 = DirectX::XMLoadFloat3(&l);
+	DirectX::XMVECTOR result = DirectX::XMVectorAdd(v1, v2);
+	
+	DirectX::XMFLOAT3 resultFloat3;
+	
+	DirectX::XMStoreFloat3(&resultFloat3, result);
+	
+	return resultFloat3;
+}
+inline DirectX::XMFLOAT2 operator+(const DirectX::XMFLOAT2& r, const DirectX::XMFLOAT2& l)
+{
+	DirectX::XMVECTOR v1 = DirectX::XMLoadFloat2(&r);
+	DirectX::XMVECTOR v2 = DirectX::XMLoadFloat2(&l);
+	DirectX::XMVECTOR result = DirectX::XMVectorAdd(v1, v2);
+
+	DirectX::XMFLOAT2 resultFloat2;
+
+	DirectX::XMStoreFloat2(&resultFloat2, result);
+
+	return resultFloat2;
+}
+inline	DirectX::XMFLOAT2 operator*(float scaler, const DirectX::XMFLOAT2& l)
+{
+	DirectX::XMVECTOR v1 = DirectX::XMLoadFloat2(&l);
+	DirectX::XMVECTOR resultVec= DirectX::XMVectorScale(v1, scaler);
+	
+	DirectX::XMFLOAT2 resultFloat2;
+	DirectX::XMStoreFloat2(&resultFloat2, resultVec);
+	
+	return resultFloat2;
+	
+}
+
+inline	DirectX::XMFLOAT3 operator*(float scaler, const DirectX::XMFLOAT3& l)
+{
+	DirectX::XMVECTOR v1 = DirectX::XMLoadFloat3(&l);
+	DirectX::XMVECTOR resultVec = DirectX::XMVectorScale(v1, scaler);
+
+	DirectX::XMFLOAT3 resultFloat3;
+	DirectX::XMStoreFloat3(&resultFloat3, resultVec);
+
+	return resultFloat3;
+
+}
 class MatHelper
 {
 	
@@ -20,7 +69,19 @@ public:
 	{
 		return a + randF()*(b - a);
 	}
-	
+	static DirectX::XMFLOAT3 normalize(const DirectX::XMFLOAT3& xmf)
+	{
+		DirectX::XMVECTOR v1 = DirectX::XMLoadFloat3(&xmf);
+
+
+		DirectX::XMVECTOR normalized = DirectX::XMVector3Normalize(v1);
+
+		DirectX::XMFLOAT3 resultFloat3;
+
+		DirectX::XMStoreFloat3(&resultFloat3, normalized);
+
+		return resultFloat3;
+	}
 
 	static float AngleFromXY(float x, float y)
 	{

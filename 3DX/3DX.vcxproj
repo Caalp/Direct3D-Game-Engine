@@ -204,6 +204,7 @@
     <ClCompile Include="RasterizerState.cpp" />
     <ClCompile Include="SamplerState.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="Sky.cpp" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="Surface.cpp" />
     <ClCompile Include="TerrainClass.cpp" />
@@ -253,6 +254,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="SamplerState.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="Sky.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="Surface.h" />
     <ClInclude Include="TerrainClass.h" />
