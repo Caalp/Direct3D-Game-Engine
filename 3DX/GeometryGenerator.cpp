@@ -1,6 +1,8 @@
 #include "GeometryGenerator.h"
+
 #define XM_PI               3.141592654f
 #define XM_2PI              6.283185307f
+
 GeometryGenerator::GeometryGenerator():pitch(0.0f),yaw(0.0f),roll(0.0f),
 										x(0.0f),y(0.0f),z(0.0f)
 {
@@ -152,6 +154,111 @@ void GeometryGenerator::GenerateCylinder(Graphics & gfx, const char * filePath, 
 	Bind(gfx,md);
 }
 
+void GeometryGenerator::GenerateSphere(Graphics & gfx, const char * filePath, float radius, unsigned int sliceCount, unsigned int stackCount)
+{
+	this->filePath = static_cast<std::string>(filePath);
+
+
+	MeshData meshData;
+	Vertex v;
+	// Each slice of Sphere and each stack step in each slice
+	// phi angle is 0<= phi<= pi and theta is between 0<= theta <= 2pi
+	float phiStep = XM_PI / stackCount;
+	float thetaStep = XM_2PI / sliceCount;
+	float r = radius;
+	float phi = 0.0f;
+	float theta = 0.0f;
+	
+	
+	// Add top pole point and calculate the normal and texCoord 
+	v.Pos = DirectX::XMFLOAT3(0.0f, r, 0.0f);
+	v.Normal = MatHelper::normalize(v.Pos);
+	v.texCoord = DirectX::XMFLOAT2(0.0f, 0.0f);
+	// Push it to the vector
+	meshData.vertexData.push_back(v);
+
+	// Skip the first stack which is between points on the second latitude lines
+	// and the top pole point. For each stack(latitude lines) calculate each vertex point
+	// Calculating means : completing 2pi period. After a full period increase the phi angle
+	// (which is angle between y axis and rho vector) and calculate the next stacks vertices and so on.
+
+	for (int i = 1; i <= stackCount-1; i++)
+	{
+		phi = i * phiStep;
+		for (int j = 0; j <= sliceCount; j++)
+		{
+			// Angle theta for 2pi period.
+			theta = j * thetaStep;
+
+			// Calculate the x,y,z coordinates
+			// y axis is up vector and r*cos(phi) will give y coordinate
+			// for x,z we should first calculate their values xz plane
+			// after that with theta angle we can find x and z coordinates
+			v.Pos.x = r * sinf(phi)*cosf(theta);;
+			v.Pos.y = r * cosf(phi);
+			v.Pos.z = r * sinf(phi)*sinf(theta);
+
+			//v.Pos = MatHelper::normalize(v.Pos);
+			v.Normal = MatHelper::normalize(v.Pos);
+			
+			float du = theta / XM_2PI;
+			float dv = phi / XM_PI;
+			v.texCoord.x = du;
+			v.texCoord.y = dv;
+		
+			meshData.vertexData.push_back(v);
+		}
+		
+	}
+
+	// Push the bottom pole point to the vector
+	v.Pos = DirectX::XMFLOAT3(0.0f, -r, 0.0f);
+	v.Normal = MatHelper::normalize(v.Pos);
+	v.texCoord = DirectX::XMFLOAT2(1.0f, 0.0f);
+	meshData.vertexData.push_back(v);
+
+	// Calculate the triangles in first stack (between nort(top) pole point and first stack vertices
+	// Triangles are created respect to the clockwise winding order
+		for (int i = 1; i <= sliceCount; i++)
+	{
+		meshData.indices.push_back(0);
+		meshData.indices.push_back(i+ 1);
+		meshData.indices.push_back(i);
+	}
+
+	// Create index buffer vector for body of the sphere 
+	// (stack-2) because we need to avoid the portion which includes top and bottom pole part
+	for (int i = 0; i < stackCount-2; i++)
+	{
+		for (int j=1; j <= sliceCount; j++)
+		{
+				
+			meshData.indices.push_back((sliceCount + 1)*(i + 1) + j);
+			meshData.indices.push_back(((sliceCount+1)*i) + j);
+			meshData.indices.push_back(((sliceCount+1)*(i + 1)) + (j+1));
+
+			meshData.indices.push_back(((sliceCount + 1)*(i + 1)) + (j + 1));
+			meshData.indices.push_back(((sliceCount + 1)*i) + j);
+			meshData.indices.push_back(((sliceCount + 1)*i) + j+1);
+						
+		}
+	}
+	
+	// Fill the index buffer vector for bottom stack
+	// As a last vertex bottom pole point is pushed to the vector
+	// We should get its index and with substracting sliceCount visit each vertex in clockwise winding direction
+	int bottomPoleIndex = meshData.vertexData.size() - 1;
+	for (UINT i = 0; i < sliceCount; ++i)
+	{
+		meshData.indices.push_back(bottomPoleIndex);
+		meshData.indices.push_back((bottomPoleIndex-sliceCount) + i);
+		meshData.indices.push_back((bottomPoleIndex - sliceCount) + i + 1);
+	}
+
+	Bind(gfx, meshData);
+
+}
+
 void GeometryGenerator::GenerateIcosahedron(Graphics & gfx, const char * filePath)
 {
 	MeshData md;
@@ -245,10 +352,10 @@ void GeometryGenerator::Bind(Graphics & gfx, const MeshData& meshData)
 		//SetBlendState(true);
 		//AddStaticBind(std::make_unique<BlendState>(gfx));
 		AddBind(std::make_unique<VertexBuffer>(gfx, meshData.vertexData));
-		//AddStaticBind(std::make_unique<PixelShader>(gfx, L"PhongLightingPS.cso"));
+		//AddStaticBind(std::make_unique<PixelShader>(gfx, L"ConstantColorPS.cso"));
 		AddStaticBind(std::make_unique<PixelShader>(gfx, L"PhongLightingPS.cso"));
-		AddStaticBind(std::make_unique<GeometryShader>(gfx, L"GS_Subdivide.cso"));
-		auto vs = std::make_unique<VertexShader>(gfx, L"VS_Subdivision.cso");
+		//AddStaticBind(std::make_unique<GeometryShader>(gfx, L"GS_Subdivide.cso"));
+		auto vs = std::make_unique<VertexShader>(gfx, L"TexPhongVS.cso");
 		auto vsBlob = vs->GetVBlob();
 		AddStaticBind(std::move(vs));
 		AddStaticBind(std::make_unique<IndexBuff>(gfx, const_cast<std::vector<WORD>&>(meshData.indices)));

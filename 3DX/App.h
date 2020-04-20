@@ -45,4 +45,5 @@ private:
 	//Server* server;
 	Tree tree;
 	GeometryGenerator icosahedron;
+	GeometryGenerator sphere;
 };

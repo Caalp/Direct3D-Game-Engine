@@ -27,6 +27,7 @@ public:
 	GeometryGenerator();
 	void GenerateGrid(Graphics& gfx, const char* filePath, UINT numRow, UINT numCol, float dx, float dt, float damping, float texScale=1.0f );
 	void GenerateCylinder(Graphics& gfx, const char* filePath, float bottomRadius,float topRadius,float height, UINT sliceCount, UINT stackCount, float texScale = 1.0f);
+	void GenerateSphere(Graphics& gfx, const char* filePath, float radius, unsigned int sliceCount, unsigned int stackCount);
 	void GenerateIcosahedron(Graphics& gfx, const char* filePath);
 	void Update(float ft) override;
 	DirectX::XMMATRIX GetTransformation() const override;

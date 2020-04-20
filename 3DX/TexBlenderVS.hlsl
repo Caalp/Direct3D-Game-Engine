@@ -3,7 +3,7 @@
 struct VertexIn
 {
     float3 PosL : Position;
-    //float3 NormalL : Normal;
+    float3 NormalL : Normal;
     float2 texCoordinate : TexCoord;
 };
 

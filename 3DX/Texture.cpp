@@ -44,8 +44,8 @@ Texture::Texture(Graphics & gfx, const TextureLoader& s, unsigned int index)
 {
 	HRESULT hr;
 	unsigned int arraySize = s.filePath().size();
-	ID3D11Texture2D* textureBuf;
-	D3D11_TEXTURE2D_DESC textureDesc;
+	//ID3D11Texture2D* textureBuf;
+	/*D3D11_TEXTURE2D_DESC textureDesc;
 	ZeroMemory(&textureDesc, sizeof(textureDesc));
 	textureDesc.Width = s.GetWidth();
 	textureDesc.Height = s.GetHeight();
@@ -57,11 +57,11 @@ Texture::Texture(Graphics & gfx, const TextureLoader& s, unsigned int index)
 	textureDesc.Usage = D3D11_USAGE_STAGING;
 	textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
 	textureDesc.MiscFlags = 0;
-	GetDevice(gfx)->CreateTexture2D(&textureDesc, NULL, &textureBuf);
+	GetDevice(gfx)->CreateTexture2D(&textureDesc, NULL, &textureBuf);*/
 
-	GetContext(gfx)->CopyResource(textureBuf, (ID3D11Resource*)s.GetImageData(0));
+	/*GetContext(gfx)->CopyResource(textureBuf, (ID3D11Resource*)s.GetImageData(0));
 	D3D11_MAPPED_SUBRESOURCE  mapResource;
-	hr = GetContext(gfx)->Map(textureBuf, 0, D3D11_MAP_READ, NULL, &mapResource);
+	hr = GetContext(gfx)->Map(textureBuf, 0, D3D11_MAP_READ, NULL, &mapResource);*/
 
 	//std::vector<ID3D11Texture2D*> srcTex(arraySize);
 	//D3D11_TEXTURE2D_DESC tex2desc;

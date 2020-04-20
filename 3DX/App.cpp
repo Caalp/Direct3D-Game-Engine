@@ -30,8 +30,8 @@ App::App() :
 	floor.GenerateGrid(wnd.gfx(), "Textures\\checkboard.dds", 30.0f, 30.0f, 1.0f, 0.03f,0, 4.0f);
 	mirror.GenerateGrid(wnd.gfx(), "Textures\\ice.dds", 10.0f, 10.0f, 1.0f, 0.03f, 0.0f, 1.0f);
 	//cylinder.GenerateCylinder(wnd.gfx(), "Textures\\BoltAnim2", 1, 1, 1, 30, 30,2.0f);
-	icosahedron.GenerateIcosahedron(wnd.gfx(), "Textures\\earth.dds");
-
+	icosahedron.GenerateIcosahedron(wnd.gfx(), "Textures\\brick01.dds");
+	sphere.GenerateSphere(wnd.gfx(), "Textures\\earth.dds", 3.0f, 20, 20);
 	//Init Rotations
 	wall.RotateGeometry(0.0f, -1.5708f, 1.5708f);
 	mirror.RotateGeometry(0.0f, -1.5708f, 1.5708f);
@@ -227,8 +227,11 @@ void App::Update()
 		tree.SetBS(wnd.gfx(), BlendState::BlendType::AlphaToCoverage);
 	}
 	tree.Draw(wnd.gfx());*/
-	icosahedron.SetRS(wnd.gfx(), RasterizerState::RasterizerType::Default);
-	icosahedron.Draw(wnd.gfx());
+	//icosahedron.SetRS(wnd.gfx(), RasterizerState::RasterizerType::Default);
+	//icosahedron.Draw(wnd.gfx());
+
+	//sphere.SetRS(wnd.gfx(), RasterizerState::RasterizerType::Default);
+	sphere.Draw(wnd.gfx());
 	
 	wnd.gfx().ResetGS();
 	wnd.gfx().EndFrame();
