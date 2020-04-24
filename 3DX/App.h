@@ -14,6 +14,7 @@
 #include "Tree.h"
 //#include "Timer.h"
 #include "Water.h"
+#include "Sky.h"
 class App
 {
 public:
@@ -46,4 +47,5 @@ private:
 	Tree tree;
 	GeometryGenerator icosahedron;
 	GeometryGenerator sphere;
+	Sky sky;
 };

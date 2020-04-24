@@ -15,6 +15,7 @@ class GeometryGenerator : public Drawable
 		DirectX::XMFLOAT2 texCoord;
 
 	};
+
 	struct MeshData
 	{
 		std::vector<Vertex> vertexData;
@@ -31,6 +32,7 @@ public:
 	void GenerateIcosahedron(Graphics& gfx, const char* filePath);
 	void Update(float ft) override;
 	DirectX::XMMATRIX GetTransformation() const override;
+	DirectX::XMMATRIX GetTransformation(Graphics& gfx) const override;
 	DirectX::XMMATRIX GetTexTransformXM() const override;
 	void RotateGeometry(float pitch, float yaw, float roll);
 	void TranslateGeometry(float x, float y, float z);
@@ -38,8 +40,17 @@ public:
 	void ReflactionOn(bool reflactionStatus);
 	void UpdateTex(float dt);
 	void SubDivide(unsigned int numTimesDivide, MeshData& md);
+	MeshData* GetMeshData();
+	void EnableReflaction(bool status);
+	void EnableFog(bool status);
+	void EnableTexture(bool status);
+	void EnableAlphaClip(bool status);
 private:
-	
+	MeshData meshData;
+	bool reflectionEnabled = true;
+	bool fogEnabled = false;
+	bool alphaClipEnabled = false;
+	bool textureUsed = true;
 	//TextureLoader tx;
 	unsigned int index = 0;
 	std::string filePath;
@@ -49,4 +60,5 @@ private:
 	float x, y, z;
 	bool isReflaction = false;
 	bool isTexUsed = false;
+	int sizeOfVertices;
 };

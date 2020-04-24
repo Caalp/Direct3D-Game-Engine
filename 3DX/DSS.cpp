@@ -67,6 +67,13 @@ DSS::DSS(Graphics & gfx, DSSType dType):dss(dType)
 		DSSDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 		DSSDesc.DepthFunc = D3D11_COMPARISON_LESS;
 	}
+	else if (dType == LessOrEqual)
+	{
+		DSSDesc.DepthEnable = true;
+		DSSDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		DSSDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+
+	}
 	
 	GetDevice(gfx)->CreateDepthStencilState(&DSSDesc, pDSS.GetAddressOf());
 }

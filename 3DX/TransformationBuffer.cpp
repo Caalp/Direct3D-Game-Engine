@@ -23,8 +23,8 @@ void TransformationBuffer::UpdateBufferData(Graphics& gfx)
 		_TransformBuffer =
 		{
 
-			{DirectX::XMMatrixTranspose(parent.GetTransformation())},
-			{DirectX::XMMatrixTranspose(parent.GetTransformation()*gfx.GetCamera())},
+			{DirectX::XMMatrixTranspose(parent.GetTransformation(gfx))},
+			{DirectX::XMMatrixTranspose(parent.GetTransformation(gfx)*gfx.GetCamera())},
 			{ DirectX::XMMatrixIdentity() },
 			{gfx.GetCameraPos()},
 
@@ -35,8 +35,8 @@ void TransformationBuffer::UpdateBufferData(Graphics& gfx)
 		_TransformBuffer =
 		{
 
-			{DirectX::XMMatrixTranspose(parent.GetTransformation())},
-			{DirectX::XMMatrixTranspose(parent.GetTransformation()*gfx.GetCamera())},
+			{DirectX::XMMatrixTranspose(parent.GetTransformation(gfx))},
+			{DirectX::XMMatrixTranspose(parent.GetTransformation(gfx)*gfx.GetCamera())},
 			{DirectX::XMMatrixTranspose(parent.GetTexTransformXM())},
 			{gfx.GetCameraPos()},
 

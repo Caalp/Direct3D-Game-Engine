@@ -8,7 +8,7 @@
 
 
 App::App() :
-	wnd(800, 600, "Hello"), x(0.5f), y(-4.5f), z(0.0f), last_x(0), last_y(0),
+	wnd(800,600, "Hello"), x(0.5f), y(-4.5f), z(0.0f), last_x(0), last_y(0),
 	//(wnd.gfx()),
 	dirLight(wnd.gfx()), spotLight(wnd.gfx()),
 	pointLight(wnd.gfx()),
@@ -17,7 +17,8 @@ App::App() :
 	b1(wnd.gfx(), cam.GetPosition(), 50, 50, 120.0f, 120.0f),
 	d1(wnd.gfx(), -2.5f, 0.0f, 0.0f),
 	crate(wnd.gfx(), 0.0f, 1.0f, -5.0f),
-	tree(wnd.gfx(), { "Textures\\tree0.dds","Textures\\tree1.dds","Textures\\tree2.dds","Textures\\tree3.dds" })
+	tree(wnd.gfx(), { "Textures\\tree0.dds","Textures\\tree1.dds","Textures\\tree2.dds","Textures\\tree3.dds" }),
+	sky(wnd.gfx(), "Textures\\snowcube1024.dds",5000.0f)
 	
 	
 {
@@ -31,7 +32,8 @@ App::App() :
 	mirror.GenerateGrid(wnd.gfx(), "Textures\\ice.dds", 10.0f, 10.0f, 1.0f, 0.03f, 0.0f, 1.0f);
 	//cylinder.GenerateCylinder(wnd.gfx(), "Textures\\BoltAnim2", 1, 1, 1, 30, 30,2.0f);
 	icosahedron.GenerateIcosahedron(wnd.gfx(), "Textures\\brick01.dds");
-	sphere.GenerateSphere(wnd.gfx(), "Textures\\earth.dds", 3.0f, 20, 20);
+	
+	sphere.GenerateSphere(wnd.gfx(), "Textures\\stone.dds", 3.0f, 20, 20);
 	//Init Rotations
 	wall.RotateGeometry(0.0f, -1.5708f, 1.5708f);
 	mirror.RotateGeometry(0.0f, -1.5708f, 1.5708f);
@@ -75,7 +77,9 @@ void App::Update()
 	
   	if (wnd.kbd.KeyIsPressed('W'))
 	{
+		
 		cam.Walk(dt);
+		
 	}
  	if (wnd.kbd.KeyIsPressed('S'))
 	{
@@ -89,6 +93,7 @@ void App::Update()
 	}
 	if (wnd.kbd.KeyIsPressed('D'))
 	{
+		
 		cam.Strafe(dt);
 	}
 
@@ -231,8 +236,19 @@ void App::Update()
 	//icosahedron.Draw(wnd.gfx());
 
 	//sphere.SetRS(wnd.gfx(), RasterizerState::RasterizerType::Default);
+	//sphere.EnableTexture(true);
+	//sphere.EnableReflaction(true);
 	sphere.Draw(wnd.gfx());
+
+	sky.SetRS(wnd.gfx(), RasterizerState::RasterizerType::NoCull);
+	sky.SetDSS(wnd.gfx(), DSS::DSSType::LessOrEqual);
+	sky.Draw(wnd.gfx());
 	
-	wnd.gfx().ResetGS();
+	wnd.gfx().ResetDSS();
+	wnd.gfx().ResetRS();
+
+	
+
+	//wnd.gfx().ResetGS();
 	wnd.gfx().EndFrame();
 }

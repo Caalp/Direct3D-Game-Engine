@@ -159,7 +159,7 @@ void GeometryGenerator::GenerateSphere(Graphics & gfx, const char * filePath, fl
 	this->filePath = static_cast<std::string>(filePath);
 
 
-	MeshData meshData;
+	
 	Vertex v;
 	// Each slice of Sphere and each stack step in each slice
 	// phi angle is 0<= phi<= pi and theta is between 0<= theta <= 2pi
@@ -324,6 +324,11 @@ DirectX::XMMATRIX GeometryGenerator::GetTransformation() const
 	}
 }
 
+DirectX::XMMATRIX GeometryGenerator::GetTransformation(Graphics & gfx) const
+{
+	return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll)*DirectX::XMMatrixTranslation(x, y, z);
+}
+
 DirectX::XMMATRIX GeometryGenerator::GetTexTransformXM() const
 {
 	return DirectX::XMMatrixScaling(3.0f, 1.5f, 1.0f)*DirectX::XMMatrixTranslation(0.0076f * 0.02f, 0.0f, 0.0f);
@@ -359,7 +364,6 @@ void GeometryGenerator::Bind(Graphics & gfx, const MeshData& meshData)
 		auto vsBlob = vs->GetVBlob();
 		AddStaticBind(std::move(vs));
 		AddStaticBind(std::make_unique<IndexBuff>(gfx, const_cast<std::vector<WORD>&>(meshData.indices)));
-		//TextureLoader texLoader(filePath.c_str());
 		
 		
 		struct MaterialConstantPS
@@ -368,15 +372,33 @@ void GeometryGenerator::Bind(Graphics & gfx, const MeshData& meshData)
 			DirectX::XMFLOAT4 amb;
 			DirectX::XMFLOAT4 diff;
 			DirectX::XMFLOAT4 spec;
+			DirectX::XMFLOAT4 reflection;
 
 		}matConst;
 
-		matConst.amb = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-		matConst.diff = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-		matConst.spec = DirectX::XMFLOAT4(0.8f, 0.8f, 0.8f, 32.0f);
+		struct EffectStatus
+		{
+			BOOL fogEnabled;
+			BOOL reflactionEnabled;
+			BOOL alphaClipEnabled;
+			BOOL textureUsed;
+		}effectStatus;
+		matConst.amb = DirectX::XMFLOAT4(0.2f, 0.3f, 0.4f, 1.0f);
+		matConst.diff = DirectX::XMFLOAT4(0.2f, 0.3f, 0.4f, 1.0f);
+		matConst.spec = DirectX::XMFLOAT4(0.9f, 0.9f, 0.9f, 16.0f);
+		matConst.reflection = DirectX::XMFLOAT4(0.4f, 0.4f, 0.4f, 1.0f);
 		
+		effectStatus.fogEnabled = fogEnabled;
+		effectStatus.reflactionEnabled = true;
+		effectStatus.alphaClipEnabled = alphaClipEnabled;
+		effectStatus.textureUsed = true;
+
+		if (reflectionEnabled)
+		{
+			AddStaticBind(std::make_unique<Texture>(gfx, "Textures\\snowcube1024.dds", 1u));
+		}
 		AddStaticBind(std::make_unique<PSConstBuff<MaterialConstantPS>>(gfx, matConst, 1u));
-	
+		AddStaticBind(std::make_unique<PSConstBuff<EffectStatus>>(gfx, effectStatus, 4u));
 		
 
 		
@@ -499,3 +521,31 @@ void GeometryGenerator::SubDivide(unsigned int numTimesDivide, MeshData& md)
 		}
 	}
 }
+
+GeometryGenerator::MeshData* GeometryGenerator::GetMeshData() 
+{
+	return &meshData;
+}
+
+void GeometryGenerator::EnableReflaction(bool status)
+{
+	reflectionEnabled = status;
+}
+
+void GeometryGenerator::EnableFog(bool status)
+{
+	fogEnabled = status;
+}
+
+void GeometryGenerator::EnableTexture(bool status)
+{
+	textureUsed = status;
+}
+
+void GeometryGenerator::EnableAlphaClip(bool status)
+{
+	alphaClipEnabled = status;
+}
+
+
+

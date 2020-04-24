@@ -42,48 +42,9 @@
 
 Texture::Texture(Graphics & gfx, const TextureLoader& s, unsigned int index)
 {
+	bufferSlot = index;
 	HRESULT hr;
 	unsigned int arraySize = s.filePath().size();
-	//ID3D11Texture2D* textureBuf;
-	/*D3D11_TEXTURE2D_DESC textureDesc;
-	ZeroMemory(&textureDesc, sizeof(textureDesc));
-	textureDesc.Width = s.GetWidth();
-	textureDesc.Height = s.GetHeight();
-	textureDesc.MipLevels = 0;
-	textureDesc.ArraySize = 1;
-	textureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-	textureDesc.SampleDesc.Count = 1;
-	textureDesc.SampleDesc.Quality = 0;
-	textureDesc.Usage = D3D11_USAGE_STAGING;
-	textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-	textureDesc.MiscFlags = 0;
-	GetDevice(gfx)->CreateTexture2D(&textureDesc, NULL, &textureBuf);*/
-
-	/*GetContext(gfx)->CopyResource(textureBuf, (ID3D11Resource*)s.GetImageData(0));
-	D3D11_MAPPED_SUBRESOURCE  mapResource;
-	hr = GetContext(gfx)->Map(textureBuf, 0, D3D11_MAP_READ, NULL, &mapResource);*/
-
-	//std::vector<ID3D11Texture2D*> srcTex(arraySize);
-	//D3D11_TEXTURE2D_DESC tex2desc;
-	//ZeroMemory(&tex2desc, sizeof(tex2desc));
-	//
-	//tex2desc.Width = s.GetWidth();
-	//tex2desc.Height = s.GetHeight();
-	//tex2desc.MipLevels = 0;
-	//tex2desc.ArraySize = 1;
-	//tex2desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-	//tex2desc.SampleDesc.Quality = 0;
-	//tex2desc.SampleDesc.Count = 1;
-	//tex2desc.Usage = D3D11_USAGE_STAGING;
-	//
-	//tex2desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-	
-
-
-	
-		/*GetDevice(gfx)->CreateTexture2D(&tex2desc, nullptr, &srcTex[0]);
-		GetContext(gfx)->CopyResource(srcTex[0], (ID3D11Resource*)s.GetImageData(0));*/
-		//GetContext(gfx)->UpdateSubresource(srcTex[i], 0u, nullptr, s.GetImageData(i), s.GetWidth() * sizeof(float), 0u);
 	
 		std::vector<ID3D11Texture2D*> srcTex(arraySize);
 		for (UINT i = 0; i < arraySize; ++i)
@@ -169,7 +130,23 @@ Texture::Texture(Graphics & gfx, const TextureLoader& s, unsigned int index)
 	//GetContext(gfx)->GenerateMips(srv.Get());
 }
 
+Texture::Texture(Graphics & gfx, const char * filePath,unsigned int bufferSlot)
+{
+	this->bufferSlot = bufferSlot;
+	HRESULT hr;
+	
+	hr = D3DX11CreateShaderResourceViewFromFile(GetDevice(gfx), filePath, 0, 0, &srv, 0);
+	if (FAILED(hr))
+	{
+		MessageBox(0, "Loading from file to SRV failed!", "ERROR", 0);
+	}
+}
+
+
+
 void Texture::Bind(Graphics & gfx)
 {
-	GetContext(gfx)->PSSetShaderResources(0u, 1u, srv.GetAddressOf());
+	
+		GetContext(gfx)->PSSetShaderResources(bufferSlot, 1u, srv.GetAddressOf());
+	
 }
