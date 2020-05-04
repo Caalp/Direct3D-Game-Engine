@@ -26,6 +26,7 @@ private:
 private:
 	Window wnd;
 	Camera cam;
+	Camera dynamicCubeMapCamera[6];
 	DirectionalLight dirLight;
 	PointLight pointLight;
 	SpotLight spotLight;

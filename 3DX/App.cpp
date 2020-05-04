@@ -33,7 +33,7 @@ App::App() :
 	//cylinder.GenerateCylinder(wnd.gfx(), "Textures\\BoltAnim2", 1, 1, 1, 30, 30,2.0f);
 	icosahedron.GenerateIcosahedron(wnd.gfx(), "Textures\\brick01.dds");
 	
-	sphere.GenerateSphere(wnd.gfx(), "Textures\\stone.dds", 3.0f, 20, 20);
+	
 	//Init Rotations
 	wall.RotateGeometry(0.0f, -1.5708f, 1.5708f);
 	mirror.RotateGeometry(0.0f, -1.5708f, 1.5708f);
@@ -70,10 +70,7 @@ void App::Update()
 	
 	wnd.gfx().ClearFrame(0.75f, 0.75f, 0.75f);
 	
-	cam.UpdateViewXM();
-	wnd.gfx().SetCamera(cam.ViewProjXM());
-	wnd.gfx().SetView(cam.GetViewXM());
-	wnd.gfx().SetCameraPos(cam.GetPosition());
+	
 	
   	if (wnd.kbd.KeyIsPressed('W'))
 	{
@@ -154,7 +151,67 @@ void App::Update()
 		crate.MoveBox(dt, 0.0f, 0.0f);
 
 	}
-	
+
+
+	{
+		using namespace DirectX;
+
+		XMFLOAT3 cameraPos(0.0f, 2.0f, 0.0f);
+		XMFLOAT3 worldUp(0.0f, 1.0f, 0.0f);
+
+		XMFLOAT3 cameraTargets[6] =
+		{
+			XMFLOAT3(x + 1.0f,y,z),
+			XMFLOAT3(x - 1.0f,y,z),
+			XMFLOAT3(x,y + 1.0f,z),
+			XMFLOAT3(x,y - 1.0f,z),
+			XMFLOAT3(x,y,z + 1.0f),
+			XMFLOAT3(x,y,z - 1.0f),
+		};
+
+		XMFLOAT3 cameraUps[6] =
+		{
+			XMFLOAT3(0.0f,1.0f,0.0f),
+			XMFLOAT3(0.0f,1.0f,0.0f),
+			XMFLOAT3(0.0f,0.0f,-1.0f),
+			XMFLOAT3(0.0f,0.0f,1.0f),
+			XMFLOAT3(0.0f,1.0f,0.0f),
+			XMFLOAT3(0.0f,1.0f,0.0f),
+		};
+
+		for (int i = 0; i < 6; i++)
+		{
+			dynamicCubeMapCamera[i].LookAt(cameraPos, cameraTargets[i], cameraUps[i]);
+			dynamicCubeMapCamera[i].SetCameraLens(0.5f*3.141592654f, 1.0f, 0.1f, 1000.0f);
+			dynamicCubeMapCamera[i].UpdateViewXM();
+		}
+	}
+	for (int i = 0; i < 6; i++)
+	{
+		wnd.gfx().BuildDynamicCubeMapViews(i);
+		wnd.gfx().SetCamera(dynamicCubeMapCamera[i].ViewProjXM());
+		wnd.gfx().SetView(dynamicCubeMapCamera[i].GetViewXM());
+		wnd.gfx().SetCameraPos(dynamicCubeMapCamera[i].GetPosition());
+
+		dirLight.Bind(wnd.gfx());
+		pointLight.Bind(wnd.gfx());
+		spotLight.Bind(wnd.gfx());
+		sky.SetRS(wnd.gfx(), RasterizerState::RasterizerType::NoCull);
+		sky.SetDSS(wnd.gfx(), DSS::DSSType::LessOrEqual);
+		sky.Draw(wnd.gfx());
+		wnd.gfx().ResetDSS();
+		wnd.gfx().ResetRS();
+	}
+
+	wnd.gfx().SetDefaultRenderTarget();
+	wnd.gfx().SetDefaultViewport();
+	wnd.gfx().GenerateMIPsCubeMap();
+	wnd.gfx().ClearFrame(0.75f, 0.75f, 0.75f);
+	cam.UpdateViewXM();
+	wnd.gfx().SetCamera(cam.ViewProjXM());
+	wnd.gfx().SetView(cam.GetViewXM());
+	wnd.gfx().SetCameraPos(cam.GetPosition());
+
 	dirLight.Bind(wnd.gfx());
 	pointLight.Bind(wnd.gfx());
 	spotLight.Bind(wnd.gfx());
@@ -238,6 +295,7 @@ void App::Update()
 	//sphere.SetRS(wnd.gfx(), RasterizerState::RasterizerType::Default);
 	//sphere.EnableTexture(true);
 	//sphere.EnableReflaction(true);
+	sphere.GenerateSphere(wnd.gfx(), "Textures\\stone.dds", 3.0f, 20, 20);
 	sphere.Draw(wnd.gfx());
 
 	sky.SetRS(wnd.gfx(), RasterizerState::RasterizerType::NoCull);

@@ -7,7 +7,9 @@ public:
 	//Texture(Graphics& gfx, const class Surface& s);
 	Texture(Graphics& gfx, const TextureLoader& s,unsigned int index = 0);
 	Texture(Graphics& gfx, const char* filePath,unsigned int bufferSlot = 0u);
+	Texture(Graphics& gfx, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> paramSrv,unsigned int bufferSlot = 0u);
 	void Bind(Graphics& gfx) override;
+	
 protected:
 	UINT bufferSlot;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;

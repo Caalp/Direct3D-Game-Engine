@@ -26,9 +26,12 @@ public:
 	void ResetDSS();
 	void ResetBlendState();
 	void ResetGS();
-
+	void BuildDynamicCubeMapViews(int i);
+	void SetDefaultViewport();
+	void SetDefaultRenderTarget();
+	void GenerateMIPsCubeMap();
 	//friend class Box;
-
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> GetCubeMapSRV();
 	DirectX::XMMATRIX GetView() const;
 	void SetProjection(DirectX::FXMMATRIX proj) noexcept;
 	void SetView(DirectX::FXMMATRIX view);
@@ -42,7 +45,8 @@ private:
 	DirectX::XMMATRIX view;
 	DirectX::XMMATRIX camera;
 	DirectX::XMFLOAT3 cameraPos;
-
+	int width;
+	int height;
 	//---------------------------//
 	UINT m4xMsaaQuality;
 protected:
@@ -50,9 +54,11 @@ protected:
 	Microsoft::WRL::ComPtr<IDXGISwapChain> pSwapChain;
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pImmediateContext;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTarget;
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pDynamicCubeMapRTV[6];
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pdsView;
 	//Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerState;
-	
-
+	bool init = false;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> dsv;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
 	
 };

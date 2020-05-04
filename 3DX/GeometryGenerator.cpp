@@ -389,13 +389,13 @@ void GeometryGenerator::Bind(Graphics & gfx, const MeshData& meshData)
 		matConst.reflection = DirectX::XMFLOAT4(0.4f, 0.4f, 0.4f, 1.0f);
 		
 		effectStatus.fogEnabled = fogEnabled;
-		effectStatus.reflactionEnabled = true;
+		effectStatus.reflactionEnabled = reflectionEnabled;
 		effectStatus.alphaClipEnabled = alphaClipEnabled;
-		effectStatus.textureUsed = true;
+		effectStatus.textureUsed = textureUsed;
 
 		if (reflectionEnabled)
 		{
-			AddStaticBind(std::make_unique<Texture>(gfx, "Textures\\snowcube1024.dds", 1u));
+			AddStaticBind(std::make_unique<Texture>(gfx, gfx.GetCubeMapSRV(), 1u));
 		}
 		AddStaticBind(std::make_unique<PSConstBuff<MaterialConstantPS>>(gfx, matConst, 1u));
 		AddStaticBind(std::make_unique<PSConstBuff<EffectStatus>>(gfx, effectStatus, 4u));

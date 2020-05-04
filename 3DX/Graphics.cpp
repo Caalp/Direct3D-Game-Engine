@@ -33,6 +33,8 @@ HRESULT Graphics::CompileShader(LPCWSTR pScrData, LPCSTR entryPoint, LPCSTR shad
 
 Graphics::Graphics(HWND hWnd,int width,int height,bool Enable4xMsaa)
 {
+	this->width = width;
+	this->height = height;
 	D3D_FEATURE_LEVEL featureLevel;
 	HRESULT hr = D3D11CreateDevice(
 		0, 
@@ -634,6 +636,121 @@ void Graphics::ResetGS()
 	pImmediateContext->GSSetShader(0, 0, 0);
 }
 
+void Graphics::BuildDynamicCubeMapViews(int i)
+{
+	if (!init)
+	{
+		D3D11_TEXTURE2D_DESC texDesc;
+		texDesc.Width = 256;
+		texDesc.Height = 256;
+		texDesc.MipLevels = 0;
+		texDesc.ArraySize = 6;
+		texDesc.SampleDesc.Count = 1;
+		texDesc.SampleDesc.Quality = 0;
+		texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		texDesc.Usage = D3D11_USAGE_DEFAULT;
+		texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+		texDesc.CPUAccessFlags = 0;
+		texDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS | D3D11_RESOURCE_MISC_TEXTURECUBE;
+
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> cubeTex;
+		pDevice->CreateTexture2D(&texDesc, 0, cubeTex.GetAddressOf());
+
+		D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+		rtvDesc.Format = texDesc.Format;
+		rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
+		rtvDesc.Texture2DArray.ArraySize = 1;
+		rtvDesc.Texture2DArray.MipSlice = 0;
+
+
+		for (int i = 0; i < 6; i++)
+		{
+			rtvDesc.Texture2DArray.FirstArraySlice = i;
+			pDevice->CreateRenderTargetView(cubeTex.Get(), &rtvDesc, pDynamicCubeMapRTV[i].GetAddressOf());
+		}
+
+		
+		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+		srvDesc.Format = texDesc.Format;
+		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+		srvDesc.TextureCube.MipLevels = -1;
+		srvDesc.TextureCube.MostDetailedMip = 0;
+
+		pDevice->CreateShaderResourceView(cubeTex.Get(), &srvDesc, srv.GetAddressOf());
+
+		D3D11_TEXTURE2D_DESC depthTexDesc;
+		depthTexDesc.Width = 256;
+		depthTexDesc.Height = 256;
+		depthTexDesc.MipLevels = 1;
+		depthTexDesc.ArraySize = 1;
+		depthTexDesc.SampleDesc.Count = 1;
+		depthTexDesc.SampleDesc.Quality = 0;
+		depthTexDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		depthTexDesc.Usage = D3D11_USAGE_DEFAULT;
+		depthTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		depthTexDesc.CPUAccessFlags = 0;
+		depthTexDesc.MiscFlags = 0;
+
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> depthTex;
+		pDevice->CreateTexture2D(&depthTexDesc, 0, depthTex.GetAddressOf());
+
+		D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+		dsvDesc.Format = depthTexDesc.Format;
+		dsvDesc.Flags = 0;
+		dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		dsvDesc.Texture2D.MipSlice = 0;
+		
+		pDevice->CreateDepthStencilView(depthTex.Get(), &dsvDesc, dsv.GetAddressOf());
+
+		D3D11_VIEWPORT mCubeMapViewport;
+		mCubeMapViewport.TopLeftX = 0.0f;
+		mCubeMapViewport.TopLeftY = 0.0f;
+		mCubeMapViewport.Width = (float)256.0f;
+		mCubeMapViewport.Height = (float)256.0f;
+		mCubeMapViewport.MinDepth = 0.0f;
+		mCubeMapViewport.MaxDepth = 1.0f;
+		
+		pImmediateContext->RSSetViewports(1, &mCubeMapViewport);
+	}
+	init = true;
+	float color[] = { 0.75f, 0.75f, 0.75f,1.0f };
+	ID3D11RenderTargetView* renderTargets[1];
+	renderTargets[0] = pDynamicCubeMapRTV[i].Get();
+	
+		pImmediateContext->ClearRenderTargetView(pDynamicCubeMapRTV[i].Get(), color);
+		pImmediateContext->ClearDepthStencilView(pdsView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		pImmediateContext->OMSetRenderTargets(1, renderTargets, dsv.Get());
+}
+
+void Graphics::SetDefaultViewport()
+{
+	D3D11_VIEWPORT vp;
+	vp.Width = (float)width;
+	vp.Height = (float)height;
+	vp.MinDepth = 0;
+	vp.MaxDepth = 1.0f;
+	vp.TopLeftX = 0.0f;
+	vp.TopLeftY = 0.0f;
+
+	pImmediateContext->RSSetViewports(1u, &vp);
+}
+
+void Graphics::SetDefaultRenderTarget()
+{
+
+	pImmediateContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), pdsView.Get());
+}
+
+void Graphics::GenerateMIPsCubeMap()
+{
+	pImmediateContext->GenerateMips(srv.Get());
+}
+
+
+Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> Graphics::GetCubeMapSRV()
+{
+	return srv;
+}
 
 DirectX::XMMATRIX Graphics::GetView() const
 {

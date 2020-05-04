@@ -142,6 +142,11 @@ Texture::Texture(Graphics & gfx, const char * filePath,unsigned int bufferSlot)
 	}
 }
 
+Texture::Texture(Graphics & gfx, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> paramSrv, unsigned int bufferSlot)
+{
+	srv = paramSrv;
+}
+
 
 
 void Texture::Bind(Graphics & gfx)
@@ -150,3 +155,5 @@ void Texture::Bind(Graphics & gfx)
 		GetContext(gfx)->PSSetShaderResources(bufferSlot, 1u, srv.GetAddressOf());
 	
 }
+
+

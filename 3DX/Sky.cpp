@@ -6,7 +6,9 @@ Sky::Sky(Graphics & gfx, const char * filePath, float skyRadius)
 	// Create sphere of off the GeometryGenerator class to use 
 	// to map the texture as sky
 	GeometryGenerator sphere;
+	sphere.EnableReflaction(false);
 	sphere.GenerateSphere(gfx, filePath, skyRadius, 30, 30);
+	
 	int verticesSize = sphere.GetMeshData()->vertexData.size();
 	vertices.resize(verticesSize);
 
@@ -82,4 +84,39 @@ DirectX::XMMATRIX Sky::GetTransformation(Graphics & gfx) const
 {
 	DirectX::XMFLOAT3 camPos = gfx.GetCameraPos();
 	return DirectX::XMMatrixTranslation(camPos.x,camPos.y,camPos.z);
+}
+
+void Sky::CreateDynamicCubeMapCamera(float x, float y, float z)
+{
+	using namespace DirectX;
+
+	XMFLOAT3 cameraPos(x, y, z);
+	XMFLOAT3 worldUp(0.0f, 1.0f, 0.0f);
+
+	XMFLOAT3 cameraTargets[6] =
+	{
+		XMFLOAT3(x + 1.0f,y,z),
+		XMFLOAT3(x - 1.0f,y,z),
+		XMFLOAT3(x,y + 1.0f,z),
+		XMFLOAT3(x,y - 1.0f,z),
+		XMFLOAT3(x,y,z + 1.0f),
+		XMFLOAT3(x,y,z - 1.0f),
+	};
+
+	XMFLOAT3 cameraUps[6] =
+	{
+		XMFLOAT3(0.0f,1.0f,0.0f),
+		XMFLOAT3(0.0f,1.0f,0.0f),
+		XMFLOAT3(0.0f,0.0f,-1.0f),
+		XMFLOAT3(0.0f,0.0f,1.0f),
+		XMFLOAT3(0.0f,1.0f,0.0f),
+		XMFLOAT3(0.0f,1.0f,0.0f),
+	};
+
+	for (int i = 0; i < 6; i++)
+	{
+		dynamicCubeMapCamera[i].LookAt(cameraPos, cameraTargets[i], cameraUps[i]);
+		dynamicCubeMapCamera[i].SetCameraLens(0.5f*3.141592654f, 1.0f, 0.1f, 1000.0f);
+		dynamicCubeMapCamera[i].UpdateViewXM();
+	}
 }
