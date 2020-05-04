@@ -1,6 +1,7 @@
 #include "Box.h"
 #include "Surface.h"
 #include "TextureLoader.h"
+#include "MatHelper.h"
 
 
 Box::Box(Graphics & gfx, float x, float y, float z, bool reflaction, bool isShadowOn) :
@@ -75,45 +76,62 @@ Box::Box(Graphics & gfx, float x, float y, float z, bool reflaction, bool isShad
 		vertices[22].texCoord = { 0.0f,1.0f };
 		vertices[23].texCoord = { 1.0f,1.0f };
 		
-		/*vertices[0].Normal = {1.0f,0.0f,0.0f };
-		vertices[1].Normal = { 1.0f,0.0f,0.0f };
-		vertices[2].Normal = { 1.0f,0.0f,0.0f };
-		vertices[3].Normal = { 1.0f,0.0f,0.0f };
-
-
-		vertices[4].Normal = { -1.0f,0.0f,0.0f };
-		vertices[5].Normal = { -1.0f,0.0f,0.0f };
-		vertices[6].Normal = { -1.0f,0.0f,0.0f };
-		vertices[7].Normal = { -1.0f,0.0f,0.0f };
-
-		vertices[8].Normal = { 0.0f,0.0f,-1.0f };
-		vertices[9].Normal = { 0.0f,0.0f,-1.0f };
-		vertices[10].Normal = { 0.0f,0.0f,-1.0f };
-		vertices[11].Normal = { 0.0f,0.0f,-1.0f };
-
-		vertices[12].Normal = { 0.0f,0.0f,1.0f };
-		vertices[13].Normal = { 0.0f,0.0f,1.0f };
-		vertices[14].Normal = { 0.0f,0.0f,1.0f };
-		vertices[15].Normal = { 0.0f,0.0f,1.0f };
-
-		vertices[16].Normal = { -1.0f,0.0f,0.0f };
-		vertices[17].Normal = { -1.0f,0.0f,0.0f };
-		vertices[18].Normal = { -1.0f,0.0f,0.0f };
-		vertices[19].Normal = { -1.0f,0.0f,0.0f };
-
-		vertices[20].Normal = { 1.0f,0.0f,0.0f };
-		vertices[21].Normal = { 1.0f,0.0f,0.0f };
-		vertices[22].Normal = { 1.0f,0.0f,0.0f };
-		vertices[23].Normal = { 1.0f,0.0f,0.0f };
-*/
-		AddStaticBind(std::make_unique<VertexBuffer>(gfx, vertices));
-		AddStaticBind(std::make_unique<PixelShader>(gfx, L"PhongLightingPS.cso"));
-		
 		
 
-		auto vs = std::make_unique<VertexShader>(gfx, L"TexPhongVS.cso");
+		const int n = 5;
+		mInstancedData.resize(n*n*n);
+
+		float width = 200.0f;
+		float height = 200.0f;
+		float depth = 200.0f;
+
+		float x = -0.5f*width;
+		float y = -0.5f*height;
+		float z = -0.5f*depth;
+		float dx = width / (n - 1);
+		float dy = height / (n - 1);
+		float dz = depth / (n - 1);
+		for (int k = 0; k < n; ++k)
+		{
+			for (int i = 0; i < n; ++i)
+			{
+				for (int j = 0; j < n; ++j)
+				{
+					// Position instanced along a 3D grid.
+					mInstancedData[k*n*n + i * n + j].World = DirectX::XMFLOAT4X4(
+						1.0f, 0.0f, 0.0f, 0.0f,
+						0.0f, 1.0f, 0.0f, 0.0f,
+						0.0f, 0.0f, 1.0f, 0.0f,
+						x + j * dx, y + i * dy, z + k * dz, 1.0f);
+
+					// Random color.
+					mInstancedData[k*n*n + i * n + j].Color.x = MatHelper::randF(0.0f, 1.0f);
+					mInstancedData[k*n*n + i * n + j].Color.y = MatHelper::randF(0.0f, 1.0f);
+					mInstancedData[k*n*n + i * n + j].Color.z = MatHelper::randF(0.0f, 1.0f);
+					mInstancedData[k*n*n + i * n + j].Color.w = 1.0f;
+				}
+			}
+		}
+
+		AddStaticBind(std::make_unique<VertexBuffer>(gfx, vertices, mInstancedData));
+		//AddStaticBind(std::make_unique<VertexBuffer>(gfx, vertices));
+		//AddStaticBind(std::make_unique<PixelShader>(gfx, L"PhongLightingPS.cso"));
+		
+			AddStaticBind(std::make_unique<PixelShader>(gfx, L"PhongLightingPS.cso"));
+			auto vs = std::make_unique<VertexShader>(gfx, L"TexBlenderVS.cso");
+			auto vsBlob = vs->GetVBlob();
+			AddStaticBind(std::move(vs));
+		
+		/*else
+		{
+			AddStaticBind(std::make_unique<PixelShader>(gfx, L"PhongLightingPS.cso"));
+			auto vs = std::make_unique<VertexShader>(gfx, L"TexPhongVS.cso");
+			auto vsBlob = vs->GetVBlob();
+			AddStaticBind(std::move(vs));
+		}*/
+		/*auto vs = std::make_unique<VertexShader>(gfx, L"TexPhongVS.cso");
 		auto vsBlob = vs->GetVBlob();
-		AddStaticBind(std::move(vs));
+		AddStaticBind(std::move(vs));*/
 		std::vector<unsigned short> indices =
 		{
 			
@@ -142,27 +160,46 @@ Box::Box(Graphics & gfx, float x, float y, float z, bool reflaction, bool isShad
 
 		}matConst;
 
-		matConst.amb = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
-		matConst.diff = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.5f);
-		matConst.spec = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 16.0f);
+		matConst.amb = DirectX::XMFLOAT4(0.4f, 0.4f, 0.4f, 1.0f);
+		matConst.diff = DirectX::XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+		matConst.spec = DirectX::XMFLOAT4(0.8f, 0.8f, 0.8f, 16.0f);
 
 		AddStaticBind(std::make_unique<PSConstBuff<MaterialConstantPS>>(gfx, matConst, 1u));
 		
 		//AddStaticBind(std::make_unique<PSConstBuff<PSConst>>(gfx, psConst));
-		TextureLoader texLoader("Textures\\WoodCrate01.dds");
+		//TextureLoader texLoader("Textures\\WoodCrate01.dds");
 		//AddStaticBind(std::make_unique<RasterizerState>(gfx));
 	
 		AddStaticBind(std::make_unique<IndexBuff>(gfx, indices));
 		//AddStaticBind(std::make_unique<BlendState>(gfx,));
-		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
+		std::vector<D3D11_INPUT_ELEMENT_DESC> ied;
+		if (instancingEnabled)
 		{
-			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "texCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,24u,D3D11_INPUT_PER_VERTEX_DATA,0 }
-		};
+			ied =
+			{
+				{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+				{ "Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0 },
+				{ "texCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,24u,D3D11_INPUT_PER_VERTEX_DATA,0 },
+				{ "World",0,DXGI_FORMAT_R32G32B32A32_FLOAT,1,0,D3D11_INPUT_PER_INSTANCE_DATA,1},
+				{ "World",1,DXGI_FORMAT_R32G32B32A32_FLOAT,1,16,D3D11_INPUT_PER_INSTANCE_DATA,1},
+				{ "World",2,DXGI_FORMAT_R32G32B32A32_FLOAT,1,32,D3D11_INPUT_PER_INSTANCE_DATA,1},
+				{ "World",3,DXGI_FORMAT_R32G32B32A32_FLOAT,1,48,D3D11_INPUT_PER_INSTANCE_DATA,1},
+				{ "Color",0,DXGI_FORMAT_R32G32B32A32_FLOAT,1,64,D3D11_INPUT_PER_INSTANCE_DATA,1},
+			};
+		}
+		else
+		{
+			ied =
+			{
+				{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+				{ "Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0 },
+				{ "texCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,24u,D3D11_INPUT_PER_VERTEX_DATA,0 }
+			};
+		}
+		
 		AddStaticBind(std::make_unique<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 		AddStaticBind(std::make_unique<InputLayout>(gfx, ied, vsBlob));
-		AddStaticBind(std::make_unique<Texture>(gfx, texLoader));
+		//AddStaticBind(std::make_unique<Texture>(gfx, texLoader));
 		AddStaticBind(std::make_unique<SamplerState>(gfx));
 	}
 	else
@@ -179,6 +216,12 @@ void Box::Update(float ft)
 	yaw += ft;
 	roll += ft;
 	
+}
+
+void Box::FrustumCulling(Graphics & gfx)
+{
+	UpdateVertexBuffer(gfx, mInstancedData);
+
 }
 
 DirectX::XMMATRIX Box::GetTransformation() const

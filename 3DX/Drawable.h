@@ -21,20 +21,21 @@ public:
 	virtual DirectX::XMMATRIX GetTransformation() const = 0;
 	virtual DirectX::XMMATRIX GetTransformation(Graphics& gfx) const { return DirectX::XMMatrixIdentity(); };
 	virtual DirectX::XMMATRIX GetTexTransformXM() const { return DirectX::XMMatrixIdentity(); }
+	int GetVisibleCount() const;
 	template<typename T> 
 	void UpdateVertexBuffer(Graphics& gfx, const T& v)
 	{
-		for (auto& b : Bindables)
+		for (auto& b : staticBindable)
 		{
 			if (typeid(*b) == typeid(VertexBuffer))
 			{
 				auto buff = dynamic_cast<VertexBuffer*>(b.get());
-				buff->Update(gfx, v);
+				buff->Update(gfx, v,instancedObjectCount);
 			}
 
 		}
 	}
-
+	
 
 protected:
 	void AddBind(std::unique_ptr<Bindable> binds);
@@ -46,7 +47,7 @@ protected:
 	bool blendOn = false;
 	const IndexBuff*  pIndexBuffer = nullptr;
 	BlendState* pBlendState;
-	
+	int instancedObjectCount = 0;
 	std::vector<std::unique_ptr<Bindable>> Bindables;
 	std::vector<std::unique_ptr<Bindable>> staticBindable;
 	std::stack< std::unique_ptr<Bindable>> renderStates;

@@ -4,7 +4,7 @@ Texture2D diffuseMap;
 TextureCube tex;
 SamplerState samplerState;
 
-float4 main(float3 PosW : Pos, float3 NormalW : n, float3 eyePos : EyePosition,float2 tc : TexCoord) : SV_Target
+float4 main(float3 PosW : Pos, float3 NormalW : n, float3 eyePos : EyePosition,float2 tc : TexCoord,float4 Color : Color) : SV_Target
 {
    
     NormalW = normalize(NormalW);
@@ -21,8 +21,8 @@ float4 main(float3 PosW : Pos, float3 NormalW : n, float3 eyePos : EyePosition,f
     float4 A, D, S;
 	//Contribution from Directional Light
     ComputeDirectionalLight(toEyeW, NormalW, A, D, S);
-    ambient += A;
-    diffuse += D;
+    ambient += A * Color;
+    diffuse += D * Color;
     spec += S;
     //Contribution from Point light
     ComputePointLight(toEyeW, NormalW, PosW, A, D, S);

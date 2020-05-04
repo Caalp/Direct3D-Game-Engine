@@ -211,13 +211,13 @@
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="Timer.h" />
     <ClCompile Include="TransformationBuffer.cpp" />
     <ClCompile Include="Tree.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="Water.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WinMain.cpp" />
+    <ClCompile Include="xnacollision.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="additional_headers.h" />
@@ -226,6 +226,7 @@
     <ClInclude Include="Box.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="CPUStats.h" />
     <ClInclude Include="DSS.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="Drawable.h" />
@@ -234,6 +235,7 @@
     <ClInclude Include="ConstBuffs.h" />
     <ClInclude Include="CustomException.h" />
     <ClInclude Include="DrawableBase.h" />
+    <ClInclude Include="FrameStats.h" />
     <ClInclude Include="GeometryGenerator.h" />
     <ClInclude Include="GeometryShader.h" />
     <ClInclude Include="Graphics.h" />
@@ -252,6 +254,7 @@
     <ClInclude Include="RaknetIncludes.h" />
     <ClInclude Include="RasterizerState.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="RTV.h" />
     <ClInclude Include="SamplerState.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="Sky.h" />
@@ -260,13 +263,17 @@
     <ClInclude Include="TerrainClass.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureLoader.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="TransformationBuffer.h" />
     <ClInclude Include="Tree.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexShader.h" />
+    <ClInclude Include="ViewPort.h" />
     <ClInclude Include="Water.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="WinHeader.h" />
+    <ClInclude Include="xnacollision.h" />
+    <ClInclude Include="xnamath.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="3DX.rc" />
@@ -444,6 +451,10 @@
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
     <None Include="ClassDiagram1.cd" />
+    <None Include="xnamathconvert.inl" />
+    <None Include="xnamathmatrix.inl" />
+    <None Include="xnamathmisc.inl" />
+    <None Include="xnamathvector.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

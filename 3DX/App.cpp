@@ -3,7 +3,7 @@
 #include "Model.h"
 #include <random>
 #include "Surface.h"
-
+#include <sstream>
 
 
 
@@ -18,8 +18,8 @@ App::App() :
 	d1(wnd.gfx(), -2.5f, 0.0f, 0.0f),
 	crate(wnd.gfx(), 0.0f, 1.0f, -5.0f),
 	tree(wnd.gfx(), { "Textures\\tree0.dds","Textures\\tree1.dds","Textures\\tree2.dds","Textures\\tree3.dds" }),
-	sky(wnd.gfx(), "Textures\\snowcube1024.dds",5000.0f)
-	
+	sky(wnd.gfx(), "Textures\\snowcube1024.dds",5000.0f),
+	instancedBox(wnd.gfx(),0,0,0)
 	
 {
 	//server = new Server(8);
@@ -49,22 +49,29 @@ App::~App()
 
 int App::Go()
 {
+	timer.StartTimer();
 	while (true)
 	{
 		if (const auto error_code = Window::ProcessMessages())
 		{
 			return *error_code;
 		}
-		Update();
+		timer.StopTimer();
+		float a = timer.GetTime()/1000;
+		Update(a);
+		
+		
 	}
 	
 }
 
-void App::Update()
+void App::Update(float dt)
 {
 	//server->ReceivePackets();
-	
-	float dt = 0.190f;
+	static float d = 0;
+	d += dt;
+	float v = 10.0f;
+	//float dt = 0.190f;
 	float dtheta = 0.5f;
 	//float dtt = timer.Mark();
 	
@@ -74,27 +81,28 @@ void App::Update()
 	wnd.gfx().SetCamera(cam.ViewProjXM());
 	wnd.gfx().SetView(cam.GetViewXM());
 	wnd.gfx().SetCameraPos(cam.GetPosition());
+	wnd.gfx().SetProjection(cam.GetProjXM());
 	
   	if (wnd.kbd.KeyIsPressed('W'))
 	{
 		
-		cam.Walk(dt);
+		cam.Walk(v*dt);
 		
 	}
  	if (wnd.kbd.KeyIsPressed('S'))
 	{
 		
-		cam.Walk(-dt);
+		cam.Walk(v*-dt);
 	}
 	if (wnd.kbd.KeyIsPressed('A'))
 	{
 		
-		cam.Strafe(-dt);
+		cam.Strafe(v*-dt);
 	}
 	if (wnd.kbd.KeyIsPressed('D'))
 	{
 		
-		cam.Strafe(dt);
+		cam.Strafe(v*dt);
 	}
 
 	float totalTime = 1.0f;
@@ -154,7 +162,10 @@ void App::Update()
 		crate.MoveBox(dt, 0.0f, 0.0f);
 
 	}
-	
+	if (frustumCullingEnabled)
+	{
+
+	}
 	dirLight.Bind(wnd.gfx());
 	pointLight.Bind(wnd.gfx());
 	spotLight.Bind(wnd.gfx());
@@ -236,17 +247,24 @@ void App::Update()
 	//icosahedron.Draw(wnd.gfx());
 
 	//sphere.SetRS(wnd.gfx(), RasterizerState::RasterizerType::Default);
-	//sphere.EnableTexture(true);
-	//sphere.EnableReflaction(true);
+	/*sphere.EnableTexture(true);
+	sphere.EnableReflaction(true);
+	sphere.RotateGeometry(0.0f, d, 0.0f);
 	sphere.Draw(wnd.gfx());
-
-	sky.SetRS(wnd.gfx(), RasterizerState::RasterizerType::NoCull);
-	sky.SetDSS(wnd.gfx(), DSS::DSSType::LessOrEqual);
-	sky.Draw(wnd.gfx());
+*/
+	//sky.SetRS(wnd.gfx(), RasterizerState::RasterizerType::NoCull);
+	//sky.SetDSS(wnd.gfx(), DSS::DSSType::LessOrEqual);
+	//sky.Draw(wnd.gfx());
 	
-	wnd.gfx().ResetDSS();
-	wnd.gfx().ResetRS();
-
+	/*wnd.gfx().ResetDSS();
+	wnd.gfx().ResetRS();*/
+	instancedBox.FrustumCulling(wnd.gfx());
+	std::ostringstream outs;
+	
+	
+	outs << "Number of Visible objects" << "  "<<instancedBox.GetVisibleCount();
+	wnd.SetWindowTitle(outs.str());
+	instancedBox.Draw(wnd.gfx());
 	
 
 	//wnd.gfx().ResetGS();

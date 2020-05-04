@@ -600,6 +600,11 @@ void Graphics::DrawVertexed(UINT vertexCount, UINT startVertexLocation)
 	pImmediateContext->Draw(vertexCount, startVertexLocation);
 }
 
+void Graphics::DrawIndexedInstanced(UINT indexCount, UINT numOfIntances)
+{
+	pImmediateContext->DrawIndexedInstanced(indexCount, numOfIntances, 0, 0, 0);
+}
+
 void Graphics::EndFrame()
 {
 	HRESULT hr;

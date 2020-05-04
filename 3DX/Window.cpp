@@ -85,9 +85,10 @@ Window::~Window()
 	DestroyWindow(hWnd);
 }
 
-void Window::SetWindowTitle(std::string& name)
+void Window::SetWindowTitle(std::basic_string<TCHAR> title)
 {
-	SetWindowText(hWnd,name.c_str());
+	LPCSTR a = title.c_str();
+	SetWindowText(hWnd,reinterpret_cast<LPCSTR>(title.c_str()));
 }
 
 std::optional<int> Window::ProcessMessages() noexcept

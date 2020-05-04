@@ -219,7 +219,7 @@ void GeometryGenerator::GenerateSphere(Graphics & gfx, const char * filePath, fl
 
 	// Calculate the triangles in first stack (between nort(top) pole point and first stack vertices
 	// Triangles are created respect to the clockwise winding order
-		for (int i = 1; i <= sliceCount; i++)
+	for (int i = 1; i <= sliceCount; i++)
 	{
 		meshData.indices.push_back(0);
 		meshData.indices.push_back(i+ 1);

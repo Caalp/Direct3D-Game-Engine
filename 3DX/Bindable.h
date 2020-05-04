@@ -6,7 +6,6 @@
 
 class Bindable
 {
-	
 	friend class DrawableBase;
 public:
 	virtual void Bind(Graphics& gfx) = 0;

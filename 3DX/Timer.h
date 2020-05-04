@@ -1,14 +1,17 @@
 #pragma once
-
-#include <chrono>
-
-
+#include <Windows.h>
 class Timer
 {
 public:
-	Timer() noexcept;
-	float Mark() noexcept;
-	float Peek() const noexcept;
+	Timer() = default;
+	bool StartTimer();
+	void StopTimer();
+	float GetTime() const;
+	
 private:
-	std::chrono::steady_clock::time_point last;
+	__int64 frequency;
+	__int64 startTime;
+	float tickPerMs;
+	float frameTime;
+
 };

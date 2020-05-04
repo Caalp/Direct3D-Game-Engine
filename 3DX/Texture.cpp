@@ -128,6 +128,8 @@ Texture::Texture(Graphics & gfx, const TextureLoader& s, unsigned int index)
 	//GetDevice(gfx)->CreateTexture2D(&tex2desc, &sd0, &ptex);
 	GetDevice(gfx)->CreateShaderResourceView(texArrayElement, &srvDesc, &srv);
 	//GetContext(gfx)->GenerateMips(srv.Get());
+
+	texPacket.format = texDesc.Format;
 }
 
 Texture::Texture(Graphics & gfx, const char * filePath,unsigned int bufferSlot)
@@ -149,4 +151,9 @@ void Texture::Bind(Graphics & gfx)
 	
 		GetContext(gfx)->PSSetShaderResources(bufferSlot, 1u, srv.GetAddressOf());
 	
+}
+
+Texture::TexturePacket Texture::GetTexturePacket() const
+{
+	return texPacket;
 }

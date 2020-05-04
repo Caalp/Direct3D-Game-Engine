@@ -52,14 +52,15 @@ void Drawable::Draw(Graphics & gfx)
 	//	blendOn = false;
 	//}
 	// Temporary work around for tree drawing
-	if ( pIndexBuffer == nullptr)
+	/*if ( pIndexBuffer == nullptr)
 	{
 		gfx.DrawVertexed(3, 0);
 	}
 	else
 	{
 		gfx.DrawIndexed(pIndexBuffer->GetIndexCount());
-	}
+	}*/
+	gfx.DrawIndexedInstanced(pIndexBuffer->GetIndexCount(),instancedObjectCount);
 }
 
 void Drawable::AddIndexBuffer(std::shared_ptr<class IndexBuff> indexBuffer)
@@ -101,6 +102,11 @@ void Drawable::SetBS(Graphics & gfx, BlendState::BlendType bType)
 void Drawable::SetDSS(Graphics & gfx, DSS::DSSType dType)
 {
 	renderStates.push(std::make_unique<DSS>(gfx, dType));
+}
+
+int Drawable::GetVisibleCount() const
+{
+	return instancedObjectCount;
 }
 
 

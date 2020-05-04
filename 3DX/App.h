@@ -12,7 +12,7 @@
 #include "TextureLoader.h"
 #include "GeometryGenerator.h"
 #include "Tree.h"
-//#include "Timer.h"
+#include "Timer.h"
 #include "Water.h"
 #include "Sky.h"
 class App
@@ -22,8 +22,9 @@ public:
 	~App();
 	int Go();
 private:
-	void Update();
+	void Update(float dt);
 private:
+	bool frustumCullingEnabled = true;
 	Window wnd;
 	Camera cam;
 	DirectionalLight dirLight;
@@ -48,4 +49,6 @@ private:
 	GeometryGenerator icosahedron;
 	GeometryGenerator sphere;
 	Sky sky;
+	Timer timer;
+	Box instancedBox;
 };

@@ -31,6 +31,12 @@
     <Filter Include="Header Files\Drawables\Effects">
       <UniqueIdentifier>{61dbc41d-8a92-46aa-916a-951e92bf1c75}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameStatUtils">
+      <UniqueIdentifier>{228a73a5-1ff0-42c8-944d-0f70eeef8d02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\inl files">
+      <UniqueIdentifier>{e615a1c0-9731-45ab-9f5f-018962860d23}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -52,12 +58,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Graphics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Timer.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Surface.cpp">
@@ -148,6 +148,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sky.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xnacollision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -293,6 +299,27 @@
     <ClInclude Include="Sky.h">
       <Filter>Header Files\Drawables\objects</Filter>
     </ClInclude>
+    <ClInclude Include="CPUStats.h">
+      <Filter>Header Files\GameStatUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Header Files\GameStatUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameStats.h">
+      <Filter>Header Files\GameStatUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="RTV.h">
+      <Filter>Header Files\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewPort.h">
+      <Filter>Header Files\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="xnacollision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xnamath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="3DX.rc">
@@ -363,5 +390,17 @@
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
     <None Include="ClassDiagram1.cd" />
+    <None Include="xnamathconvert.inl">
+      <Filter>Header Files\inl files</Filter>
+    </None>
+    <None Include="xnamathmatrix.inl">
+      <Filter>Header Files\inl files</Filter>
+    </None>
+    <None Include="xnamathmisc.inl">
+      <Filter>Header Files\inl files</Filter>
+    </None>
+    <None Include="xnamathvector.inl">
+      <Filter>Header Files\inl files</Filter>
+    </None>
   </ItemGroup>
 </Project>
