@@ -13,8 +13,8 @@ Box::Box(Graphics & gfx, float x, float y, float z, bool reflaction, bool isShad
 		{
 
 			DirectX::XMFLOAT3 Pos;
-			DirectX::XMFLOAT3 Normal;
-			DirectX::XMFLOAT2 texCoord;
+			//DirectX::XMFLOAT3 Normal;
+			//DirectX::XMFLOAT2 texCoord;
 			
 		};
 		
@@ -50,7 +50,7 @@ Box::Box(Graphics & gfx, float x, float y, float z, bool reflaction, bool isShad
 		vertices[21].Pos = { side,side,-side };// 21
 		vertices[22].Pos = { -side,side,side };// 22
 		vertices[23].Pos = { side,side,side };// 23
-		vertices[0].texCoord = { 0.0f,0.0f };
+		/*vertices[0].texCoord = { 0.0f,0.0f };
 		vertices[1].texCoord = { 1.0f,0.0f };
 		vertices[2].texCoord = { 0.0f,1.0f };
 		vertices[3].texCoord = { 1.0f,1.0f };
@@ -73,7 +73,7 @@ Box::Box(Graphics & gfx, float x, float y, float z, bool reflaction, bool isShad
 		vertices[20].texCoord = { 0.0f,0.0f };
 		vertices[21].texCoord = { 1.0f,0.0f };
 		vertices[22].texCoord = { 0.0f,1.0f };
-		vertices[23].texCoord = { 1.0f,1.0f };
+		vertices[23].texCoord = { 1.0f,1.0f };*/
 		
 		/*vertices[0].Normal = {1.0f,0.0f,0.0f };
 		vertices[1].Normal = { 1.0f,0.0f,0.0f };
@@ -107,11 +107,11 @@ Box::Box(Graphics & gfx, float x, float y, float z, bool reflaction, bool isShad
 		vertices[23].Normal = { 1.0f,0.0f,0.0f };
 */
 		AddStaticBind(std::make_unique<VertexBuffer>(gfx, vertices));
-		AddStaticBind(std::make_unique<PixelShader>(gfx, L"PhongLightingPS.cso"));
+		AddStaticBind(std::make_unique<PixelShader>(gfx, L"ColorBlenderPS.cso"));
 		
 		
 
-		auto vs = std::make_unique<VertexShader>(gfx, L"TexPhongVS.cso");
+		auto vs = std::make_unique<VertexShader>(gfx, L"ColorBlenderVS.cso");
 		auto vsBlob = vs->GetVBlob();
 		AddStaticBind(std::move(vs));
 		std::vector<unsigned short> indices =
@@ -133,7 +133,7 @@ Box::Box(Graphics & gfx, float x, float y, float z, bool reflaction, bool isShad
 		}psConst;
 		psConst.alphaClip = true;*/
 
-		struct MaterialConstantPS
+		/*struct MaterialConstantPS
 		{
 
 			DirectX::XMFLOAT4 amb;
@@ -146,10 +146,10 @@ Box::Box(Graphics & gfx, float x, float y, float z, bool reflaction, bool isShad
 		matConst.diff = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.5f);
 		matConst.spec = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 16.0f);
 
-		AddStaticBind(std::make_unique<PSConstBuff<MaterialConstantPS>>(gfx, matConst, 1u));
+		AddStaticBind(std::make_unique<PSConstBuff<MaterialConstantPS>>(gfx, matConst, 1u));*/
 		
 		//AddStaticBind(std::make_unique<PSConstBuff<PSConst>>(gfx, psConst));
-		TextureLoader texLoader("Textures\\WoodCrate01.dds");
+		//TextureLoader texLoader("Textures\\WoodCrate01.dds");
 		//AddStaticBind(std::make_unique<RasterizerState>(gfx));
 	
 		AddStaticBind(std::make_unique<IndexBuff>(gfx, indices));
@@ -157,12 +157,12 @@ Box::Box(Graphics & gfx, float x, float y, float z, bool reflaction, bool isShad
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
 			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "texCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,24u,D3D11_INPUT_PER_VERTEX_DATA,0 }
+			//{ "Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			//{ "texCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,24u,D3D11_INPUT_PER_VERTEX_DATA,0 }
 		};
 		AddStaticBind(std::make_unique<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 		AddStaticBind(std::make_unique<InputLayout>(gfx, ied, vsBlob));
-		AddStaticBind(std::make_unique<Texture>(gfx, texLoader));
+		//AddStaticBind(std::make_unique<Texture>(gfx, texLoader));
 		AddStaticBind(std::make_unique<SamplerState>(gfx));
 	}
 	else
@@ -181,11 +181,11 @@ void Box::Update(float ft)
 	
 }
 
-DirectX::XMMATRIX Box::GetTransformation() const
+DirectX::XMMATRIX Box::GetTransformation(Graphics& gfx) const
 {
 	if (!isReflaction && !isShadow)
 	{
-		return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(x, y, z);
+		return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(x, y, z)*DirectX::XMMatrixRotationY(0.5f*yaw);
 	}
 	else if (isReflaction && !isShadow)
 	{

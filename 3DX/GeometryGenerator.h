@@ -47,7 +47,7 @@ public:
 	void EnableAlphaClip(bool status);
 private:
 	MeshData meshData;
-	bool reflectionEnabled = true;
+	bool reflectionEnabled = false;
 	bool fogEnabled = false;
 	bool alphaClipEnabled = false;
 	bool textureUsed = true;

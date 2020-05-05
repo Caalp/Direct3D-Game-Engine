@@ -160,7 +160,7 @@ Graphics::Graphics(HWND hWnd,int width,int height,bool Enable4xMsaa)
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsv = {};
 	dsv.Format =DXGI_FORMAT_D24_UNORM_S8_UINT;
-	dsv.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+	dsv.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsv.Texture2D.MipSlice = 0u;
 	pDevice->CreateDepthStencilView(depthTex.Get(), &dsv, pdsView.GetAddressOf());
 
@@ -710,7 +710,7 @@ void Graphics::BuildDynamicCubeMapViews(int i)
 		mCubeMapViewport.MinDepth = 0.0f;
 		mCubeMapViewport.MaxDepth = 1.0f;
 		
-		pImmediateContext->RSSetViewports(1, &mCubeMapViewport);
+		pImmediateContext->RSSetViewports(1u, &mCubeMapViewport);
 	}
 	init = true;
 	float color[] = { 0.75f, 0.75f, 0.75f,1.0f };
@@ -719,7 +719,7 @@ void Graphics::BuildDynamicCubeMapViews(int i)
 	
 		pImmediateContext->ClearRenderTargetView(pDynamicCubeMapRTV[i].Get(), color);
 		pImmediateContext->ClearDepthStencilView(pdsView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-		pImmediateContext->OMSetRenderTargets(1, renderTargets, dsv.Get());
+		pImmediateContext->OMSetRenderTargets(1u, renderTargets, dsv.Get());
 }
 
 void Graphics::SetDefaultViewport()

@@ -18,7 +18,7 @@ public:
 	void SetBS(Graphics& gfx, BlendState::BlendType bType);
 	void SetDSS(Graphics& gfx, DSS::DSSType dType);
 	virtual void Update(float ft) = 0;
-	virtual DirectX::XMMATRIX GetTransformation() const = 0;
+	virtual DirectX::XMMATRIX GetTransformation() const { return DirectX::XMMatrixIdentity(); };
 	virtual DirectX::XMMATRIX GetTransformation(Graphics& gfx) const { return DirectX::XMMatrixIdentity(); };
 	virtual DirectX::XMMATRIX GetTexTransformXM() const { return DirectX::XMMatrixIdentity(); }
 	template<typename T> 

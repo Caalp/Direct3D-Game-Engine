@@ -11,7 +11,7 @@ class Graphics
 {
 	friend class Bindable;
 public:
-	Graphics(HWND hWnd,int width,int height, bool Enable4xMsaa = true);
+	Graphics(HWND hWnd,int width,int height, bool Enable4xMsaa = false);
 	~Graphics() = default;
 	Graphics(const Graphics&) = delete;
 	Graphics& operator=(const Graphics&) = delete;

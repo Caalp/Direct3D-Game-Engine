@@ -49,50 +49,60 @@ App::~App()
 
 int App::Go()
 {
+	timer.StartTimer();
 	while (true)
 	{
 		if (const auto error_code = Window::ProcessMessages())
 		{
 			return *error_code;
 		}
-		Update();
+		timer.StopTimer();
+		float a = timer.GetTime() / 1000;
+		Update(a);
+
+
 	}
 	
 }
 
-void App::Update()
+void App::Update(float dt)
 {
+
+	static float d = 0;
+	d += dt;
 	//server->ReceivePackets();
+	crate.Update(dt);
 	
-	float dt = 0.190f;
 	float dtheta = 0.5f;
-	//float dtt = timer.Mark();
+	float v = 10.0f;
+	
 	
 	wnd.gfx().ClearFrame(0.75f, 0.75f, 0.75f);
 	
 	
 	
-  	if (wnd.kbd.KeyIsPressed('W'))
+	if (wnd.kbd.KeyIsPressed('W'))
 	{
-		
-		cam.Walk(dt);
-		
+
+		cam.Walk(v*dt);
+
 	}
- 	if (wnd.kbd.KeyIsPressed('S'))
+	if (wnd.kbd.KeyIsPressed('S'))
 	{
-		
-		cam.Walk(-dt);
+
+		cam.Walk(v*-dt);
 	}
 	if (wnd.kbd.KeyIsPressed('A'))
 	{
-		
-		cam.Strafe(-dt);
+
+		cam.Strafe(v*-dt);
 	}
 	if (wnd.kbd.KeyIsPressed('D'))
 	{
-		
-		cam.Strafe(dt);
+
+		cam.Strafe(v*dt);
 	}
+
 
 	float totalTime = 1.0f;
 	if (wnd.mouse.IsInWindow())
@@ -155,7 +165,7 @@ void App::Update()
 
 	{
 		using namespace DirectX;
-		float x(0.0f), y(-10.0f), z(0.0f);
+		float x(0.0f), y(0.0f), z(0.0f);
 		XMFLOAT3 cameraPos(x, y, z);
 		XMFLOAT3 worldUp(0.0f, 1.0f, 0.0f);
 
@@ -182,7 +192,7 @@ void App::Update()
 		for (int i = 0; i < 6; i++)
 		{
 			dynamicCubeMapCamera[i].LookAt(cameraPos, cameraTargets[i], cameraUps[i]);
-			dynamicCubeMapCamera[i].SetCameraLens(0.5f*3.141592654f, 1.0f, 1.0f, 1000.0f);
+			dynamicCubeMapCamera[i].SetCameraLens(0.5f*3.141592654f, 1.0f, 0.1f, 1000.0f);
 			dynamicCubeMapCamera[i].UpdateViewXM();
 		}
 	}
@@ -193,14 +203,16 @@ void App::Update()
 		wnd.gfx().SetView(dynamicCubeMapCamera[i].GetViewXM());
 		wnd.gfx().SetCameraPos(dynamicCubeMapCamera[i].GetPosition());
 
-		dirLight.Bind(wnd.gfx());
+		/*dirLight.Bind(wnd.gfx());
 		pointLight.Bind(wnd.gfx());
 		spotLight.Bind(wnd.gfx());
-		sky.SetRS(wnd.gfx(), RasterizerState::RasterizerType::NoCull);
+		*/
+		crate.Draw(wnd.gfx());
+		/*sky.SetRS(wnd.gfx(), RasterizerState::RasterizerType::NoCull);
 		sky.SetDSS(wnd.gfx(), DSS::DSSType::LessOrEqual);
 		sky.Draw(wnd.gfx());
 		wnd.gfx().ResetDSS();
-		wnd.gfx().ResetRS();
+		wnd.gfx().ResetRS();*/
 	}
 
 	wnd.gfx().SetDefaultRenderTarget();
@@ -295,6 +307,9 @@ void App::Update()
 	//sphere.SetRS(wnd.gfx(), RasterizerState::RasterizerType::Default);
 	//sphere.EnableTexture(true);
 	//sphere.EnableReflaction(true);
+	//crate.Update(dt);
+	crate.Draw(wnd.gfx());
+	sphere.EnableReflaction(true);
 	sphere.GenerateSphere(wnd.gfx(), "Textures\\stone.dds", 3.0f, 20, 20);
 	sphere.Draw(wnd.gfx());
 
