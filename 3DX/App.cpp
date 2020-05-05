@@ -155,8 +155,8 @@ void App::Update()
 
 	{
 		using namespace DirectX;
-
-		XMFLOAT3 cameraPos(0.0f, 2.0f, 0.0f);
+		float x(0.0f), y(-10.0f), z(0.0f);
+		XMFLOAT3 cameraPos(x, y, z);
 		XMFLOAT3 worldUp(0.0f, 1.0f, 0.0f);
 
 		XMFLOAT3 cameraTargets[6] =
@@ -182,7 +182,7 @@ void App::Update()
 		for (int i = 0; i < 6; i++)
 		{
 			dynamicCubeMapCamera[i].LookAt(cameraPos, cameraTargets[i], cameraUps[i]);
-			dynamicCubeMapCamera[i].SetCameraLens(0.5f*3.141592654f, 1.0f, 0.1f, 1000.0f);
+			dynamicCubeMapCamera[i].SetCameraLens(0.5f*3.141592654f, 1.0f, 1.0f, 1000.0f);
 			dynamicCubeMapCamera[i].UpdateViewXM();
 		}
 	}

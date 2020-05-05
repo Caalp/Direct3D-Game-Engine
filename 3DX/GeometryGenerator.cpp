@@ -386,7 +386,7 @@ void GeometryGenerator::Bind(Graphics & gfx, const MeshData& meshData)
 		matConst.amb = DirectX::XMFLOAT4(0.2f, 0.3f, 0.4f, 1.0f);
 		matConst.diff = DirectX::XMFLOAT4(0.2f, 0.3f, 0.4f, 1.0f);
 		matConst.spec = DirectX::XMFLOAT4(0.9f, 0.9f, 0.9f, 16.0f);
-		matConst.reflection = DirectX::XMFLOAT4(0.4f, 0.4f, 0.4f, 1.0f);
+		matConst.reflection = DirectX::XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f);
 		
 		effectStatus.fogEnabled = fogEnabled;
 		effectStatus.reflactionEnabled = reflectionEnabled;

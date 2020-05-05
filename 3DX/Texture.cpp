@@ -144,6 +144,7 @@ Texture::Texture(Graphics & gfx, const char * filePath,unsigned int bufferSlot)
 
 Texture::Texture(Graphics & gfx, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> paramSrv, unsigned int bufferSlot)
 {
+	this->bufferSlot = bufferSlot;
 	srv = paramSrv;
 }
 

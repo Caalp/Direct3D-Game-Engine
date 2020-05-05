@@ -52,11 +52,11 @@ Graphics::Graphics(HWND hWnd,int width,int height,bool Enable4xMsaa)
 		MessageBox(0, "D3D11CreateDevice Failed.", 0, 0);
 		return;
 	}
-	if (featureLevel != D3D_FEATURE_LEVEL_11_0)
-	{
-		MessageBox(0, "Display Adaptor does not support DirectX 11 Feature Level.", 0, 0);
-		return;
-	}
+	//if (featureLevel != D3D_FEATURE_LEVEL_11_0)
+	//{
+		//MessageBox(0, "Display Adaptor does not support DirectX 11 Feature Level.", 0, 0);
+		//return;
+	//}
 	// Check the feature level of the adaptor
 	pDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &m4xMsaaQuality);
 	assert(m4xMsaaQuality > 0);
