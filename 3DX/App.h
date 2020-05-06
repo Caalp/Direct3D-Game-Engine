@@ -30,10 +30,10 @@ private:
 	DirectionalLight dirLight;
 	PointLight pointLight;
 	SpotLight spotLight;
-	float x, y, z,dt;
+	float x, y, z, dt;
 	float last_x;
 	float last_y;
-	float mPhi, mTheta,mRadius;
+	float mPhi, mTheta, mRadius;
 	Model m;
 	TerrainClass b1;
 	Box d1;

@@ -7,7 +7,7 @@ public:
 	bool StartTimer();
 	void StopTimer();
 	float GetTime() const;
-	
+
 private:
 	__int64 frequency;
 	__int64 startTime;

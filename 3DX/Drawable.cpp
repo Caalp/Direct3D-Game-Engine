@@ -7,12 +7,12 @@ void Drawable::SetBlendState(bool state)
 
 void Drawable::Draw(Graphics & gfx)
 {
-	
-	
+
+
 
 	for (auto& b : Bindables)
 	{
-		
+
 		if (typeid(*b) == typeid(IndexBuff))
 		{
 			pIndexBuffer = dynamic_cast<IndexBuff*>(b.get());
@@ -20,7 +20,7 @@ void Drawable::Draw(Graphics & gfx)
 		if (typeid(*b) == typeid(BlendState))
 		{
 			pBlendState = dynamic_cast<BlendState*>(b.get());
-			
+
 		}
 		b->Bind(gfx);
 	}
@@ -33,7 +33,7 @@ void Drawable::Draw(Graphics & gfx)
 		if (typeid(*b) == typeid(BlendState))
 		{
 			pBlendState = dynamic_cast<BlendState*>(b.get());
-			
+
 		}
 		b->Bind(gfx);
 	}
@@ -42,8 +42,8 @@ void Drawable::Draw(Graphics & gfx)
 		renderStates.top()->Bind(gfx);
 		renderStates.pop();
 	}
-	
-	
+
+
 	//
 	//if (blendOn)
 	//{
@@ -52,7 +52,7 @@ void Drawable::Draw(Graphics & gfx)
 	//	blendOn = false;
 	//}
 	// Temporary work around for tree drawing
-	if ( pIndexBuffer == nullptr)
+	if (pIndexBuffer == nullptr)
 	{
 		gfx.DrawVertexed(3, 0);
 	}
@@ -90,7 +90,7 @@ bool Drawable::isStaticallyBinded() const
 
 void Drawable::SetRS(Graphics & gfx, RasterizerState::RasterizerType rType)
 {
-	renderStates.push(std::make_unique<RasterizerState>(gfx,rType));
+	renderStates.push(std::make_unique<RasterizerState>(gfx, rType));
 }
 
 void Drawable::SetBS(Graphics & gfx, BlendState::BlendType bType)

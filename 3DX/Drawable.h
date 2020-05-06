@@ -21,7 +21,7 @@ public:
 	virtual DirectX::XMMATRIX GetTransformation() const { return DirectX::XMMatrixIdentity(); };
 	virtual DirectX::XMMATRIX GetTransformation(Graphics& gfx) const { return DirectX::XMMatrixIdentity(); };
 	virtual DirectX::XMMATRIX GetTexTransformXM() const { return DirectX::XMMatrixIdentity(); }
-	template<typename T> 
+	template<typename T>
 	void UpdateVertexBuffer(Graphics& gfx, const T& v)
 	{
 		for (auto& b : Bindables)
@@ -46,7 +46,7 @@ protected:
 	bool blendOn = false;
 	const IndexBuff*  pIndexBuffer = nullptr;
 	BlendState* pBlendState;
-	
+
 	std::vector<std::unique_ptr<Bindable>> Bindables;
 	std::vector<std::unique_ptr<Bindable>> staticBindable;
 	std::stack< std::unique_ptr<Bindable>> renderStates;
