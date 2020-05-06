@@ -641,8 +641,8 @@ void Graphics::BuildDynamicCubeMapViews(int i)
 	if (!init)
 	{
 		D3D11_TEXTURE2D_DESC texDesc;
-		texDesc.Width = 256;
-		texDesc.Height = 256;
+		texDesc.Width = 256u;
+		texDesc.Height = 256u;
 		texDesc.MipLevels = 0;
 		texDesc.ArraySize = 6;
 		texDesc.SampleDesc.Count = 1;
@@ -669,7 +669,7 @@ void Graphics::BuildDynamicCubeMapViews(int i)
 			pDevice->CreateRenderTargetView(cubeTex.Get(), &rtvDesc, pDynamicCubeMapRTV[i].GetAddressOf());
 		}
 
-		
+
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 		srvDesc.Format = texDesc.Format;
 		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
@@ -679,8 +679,8 @@ void Graphics::BuildDynamicCubeMapViews(int i)
 		pDevice->CreateShaderResourceView(cubeTex.Get(), &srvDesc, srv.GetAddressOf());
 
 		D3D11_TEXTURE2D_DESC depthTexDesc;
-		depthTexDesc.Width = 256;
-		depthTexDesc.Height = 256;
+		depthTexDesc.Width = 256u;
+		depthTexDesc.Height = 256u;
 		depthTexDesc.MipLevels = 1;
 		depthTexDesc.ArraySize = 1;
 		depthTexDesc.SampleDesc.Count = 1;
@@ -699,9 +699,9 @@ void Graphics::BuildDynamicCubeMapViews(int i)
 		dsvDesc.Flags = 0;
 		dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 		dsvDesc.Texture2D.MipSlice = 0;
-		
-		pDevice->CreateDepthStencilView(depthTex.Get(), &dsvDesc, dsv.GetAddressOf());
 
+		pDevice->CreateDepthStencilView(depthTex.Get(), &dsvDesc, dsv.GetAddressOf());
+	}
 		D3D11_VIEWPORT mCubeMapViewport;
 		mCubeMapViewport.TopLeftX = 0.0f;
 		mCubeMapViewport.TopLeftY = 0.0f;
@@ -711,7 +711,7 @@ void Graphics::BuildDynamicCubeMapViews(int i)
 		mCubeMapViewport.MaxDepth = 1.0f;
 		
 		pImmediateContext->RSSetViewports(1, &mCubeMapViewport);
-	}
+	
 	init = true;
 	float color[] = { 0.75f, 0.75f, 0.75f,1.0f };
 	ID3D11RenderTargetView* renderTargets[1];

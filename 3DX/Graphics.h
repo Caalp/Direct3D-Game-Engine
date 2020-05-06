@@ -47,6 +47,7 @@ private:
 	DirectX::XMFLOAT3 cameraPos;
 	int width;
 	int height;
+	
 	//---------------------------//
 	UINT m4xMsaaQuality;
 protected:

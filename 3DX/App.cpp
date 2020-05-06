@@ -8,7 +8,7 @@
 
 
 App::App() :
-	wnd(800,600, "Hello"), x(0.5f), y(-4.5f), z(0.0f), last_x(0), last_y(0),
+	wnd(800, 600, "Hello"), x(0.5f), y(-4.5f), z(0.0f), last_x(0), last_y(0),
 	//(wnd.gfx()),
 	dirLight(wnd.gfx()), spotLight(wnd.gfx()),
 	pointLight(wnd.gfx()),
@@ -18,22 +18,22 @@ App::App() :
 	d1(wnd.gfx(), -2.5f, 0.0f, 0.0f),
 	crate(wnd.gfx(), 0.0f, 1.0f, -5.0f),
 	tree(wnd.gfx(), { "Textures\\tree0.dds","Textures\\tree1.dds","Textures\\tree2.dds","Textures\\tree3.dds" }),
-	sky(wnd.gfx(), "Textures\\snowcube1024.dds",5000.0f)
-	
-	
+	sky(wnd.gfx(), "Textures\\snowcube1024.dds", 5000.0f)
+
+
 {
 	//server = new Server(8);
 	//server->CreateServerInterface();
 	//server->StartupServer();
 	//  bbInitializations 
-	water.Init(wnd.gfx(), 160, 160, 1.0f,0.03f,3.25f,0.4f);
-	wall.GenerateGrid(wnd.gfx(), "Textures\\brick01.dds", 20, 20, 1.0f, 0.03f, 0,3.0f);
-	floor.GenerateGrid(wnd.gfx(), "Textures\\checkboard.dds", 30.0f, 30.0f, 1.0f, 0.03f,0, 4.0f);
+	water.Init(wnd.gfx(), 160, 160, 1.0f, 0.03f, 3.25f, 0.4f);
+	wall.GenerateGrid(wnd.gfx(), "Textures\\brick01.dds", 20, 20, 1.0f, 0.03f, 0, 3.0f);
+	floor.GenerateGrid(wnd.gfx(), "Textures\\checkboard.dds", 30.0f, 30.0f, 1.0f, 0.03f, 0, 4.0f);
 	mirror.GenerateGrid(wnd.gfx(), "Textures\\ice.dds", 10.0f, 10.0f, 1.0f, 0.03f, 0.0f, 1.0f);
 	//cylinder.GenerateCylinder(wnd.gfx(), "Textures\\BoltAnim2", 1, 1, 1, 30, 30,2.0f);
 	icosahedron.GenerateIcosahedron(wnd.gfx(), "Textures\\brick01.dds");
-	
-	
+
+
 	//Init Rotations
 	wall.RotateGeometry(0.0f, -1.5708f, 1.5708f);
 	mirror.RotateGeometry(0.0f, -1.5708f, 1.5708f);
@@ -49,55 +49,65 @@ App::~App()
 
 int App::Go()
 {
+	timer.StartTimer();
 	while (true)
 	{
 		if (const auto error_code = Window::ProcessMessages())
 		{
 			return *error_code;
 		}
-		Update();
+		timer.StopTimer();
+		float a = timer.GetTime() / 1000;
+		Update(a);
+
+
 	}
-	
+
 }
 
-void App::Update()
+void App::Update(float dt)
 {
+
+	static float d = 0;
+	d += dt;
 	//server->ReceivePackets();
-	
-	float dt = 0.190f;
+	crate.Update(dt);
+
 	float dtheta = 0.5f;
-	//float dtt = timer.Mark();
-	
+	float v = 70.0f;
+
+
 	wnd.gfx().ClearFrame(0.75f, 0.75f, 0.75f);
-	
-	
-	
-  	if (wnd.kbd.KeyIsPressed('W'))
+
+
+
+	if (wnd.kbd.KeyIsPressed('W'))
 	{
-		
-		cam.Walk(dt);
-		
+
+		cam.Walk(v*dt);
+
 	}
- 	if (wnd.kbd.KeyIsPressed('S'))
+	if (wnd.kbd.KeyIsPressed('S'))
 	{
-		
-		cam.Walk(-dt);
+
+		cam.Walk(v*-dt);
 	}
 	if (wnd.kbd.KeyIsPressed('A'))
 	{
-		
-		cam.Strafe(-dt);
+
+		cam.Strafe(v*-dt);
 	}
 	if (wnd.kbd.KeyIsPressed('D'))
 	{
-		
-		cam.Strafe(dt);
+
+		cam.Strafe(v*dt);
 	}
+
 
 	float totalTime = 1.0f;
 	if (wnd.mouse.IsInWindow())
 	{
-		
+
 		if (wnd.mouse.IsInWindow() && wnd.mouse.LeftIsPressed())
 		{
 
@@ -109,9 +119,9 @@ void App::Update()
 		}
 		last_x = (float)wnd.mouse.GetPosX();
 		last_y = (float)wnd.mouse.GetPosY();
-		
+
 	}
-	
+
 	static float t_base = 0.0f;
 	if ((totalTime - t_base) >= 0.25f)
 	{
@@ -119,17 +129,17 @@ void App::Update()
 
 		DWORD i = 5 + rand() % (water.GetRowCount() - 10);
 		DWORD j = 5 + rand() % (water.GetColumnCount() - 10);
-		
+
 		float r = MatHelper::randF(1.0f, 2.0f);
 
 		water.Disturb(i, j, r);
 	}
-	
+
 	if (wnd.kbd.KeyIsPressed('Q'))
 	{
 		cam.Pitch((float)-0.1*dtheta);
 	}
-	
+
 	if (wnd.kbd.KeyIsPressed('E'))
 	{
 		cam.Pitch((float)0.1*dtheta);
@@ -141,9 +151,9 @@ void App::Update()
 
 	if (wnd.kbd.KeyIsPressed('C'))
 	{
-		
+
 		cam.RotateY((float)0.1*dtheta);
-		
+
 	}
 	if (wnd.kbd.KeyIsPressed('O'))
 	{
@@ -155,7 +165,7 @@ void App::Update()
 
 	{
 		using namespace DirectX;
-		float x(0.0f), y(-10.0f), z(0.0f);
+		float x(0.0f), y(2.0f), z(0.0f);
 		XMFLOAT3 cameraPos(x, y, z);
 		XMFLOAT3 worldUp(0.0f, 1.0f, 0.0f);
 
@@ -182,7 +192,7 @@ void App::Update()
 		for (int i = 0; i < 6; i++)
 		{
 			dynamicCubeMapCamera[i].LookAt(cameraPos, cameraTargets[i], cameraUps[i]);
-			dynamicCubeMapCamera[i].SetCameraLens(0.5f*3.141592654f, 1.0f, 1.0f, 1000.0f);
+			dynamicCubeMapCamera[i].SetCameraLens(0.5f*3.141592654f, 1.0f, 0.1f, 1000.0f);
 			dynamicCubeMapCamera[i].UpdateViewXM();
 		}
 	}
@@ -196,11 +206,15 @@ void App::Update()
 		dirLight.Bind(wnd.gfx());
 		pointLight.Bind(wnd.gfx());
 		spotLight.Bind(wnd.gfx());
+		
+		
 		sky.SetRS(wnd.gfx(), RasterizerState::RasterizerType::NoCull);
 		sky.SetDSS(wnd.gfx(), DSS::DSSType::LessOrEqual);
 		sky.Draw(wnd.gfx());
+		
 		wnd.gfx().ResetDSS();
 		wnd.gfx().ResetRS();
+		crate.Draw(wnd.gfx());
 	}
 
 	wnd.gfx().SetDefaultRenderTarget();
@@ -295,17 +309,26 @@ void App::Update()
 	//sphere.SetRS(wnd.gfx(), RasterizerState::RasterizerType::Default);
 	//sphere.EnableTexture(true);
 	//sphere.EnableReflaction(true);
-	sphere.GenerateSphere(wnd.gfx(), "Textures\\stone.dds", 3.0f, 20, 20);
+	//crate.Update(dt);
+	crate.Draw(wnd.gfx());
+	static bool initSphere = false;
+	if (!initSphere)
+	{
+		sphere.EnableReflaction(true);
+		sphere.GenerateSphere(wnd.gfx(), "Textures\\stone.dds", 3.0f, 20, 20);
+		initSphere = true;
+	}
+	
 	sphere.Draw(wnd.gfx());
 
 	sky.SetRS(wnd.gfx(), RasterizerState::RasterizerType::NoCull);
 	sky.SetDSS(wnd.gfx(), DSS::DSSType::LessOrEqual);
 	sky.Draw(wnd.gfx());
-	
+
 	wnd.gfx().ResetDSS();
 	wnd.gfx().ResetRS();
 
-	
+
 
 	//wnd.gfx().ResetGS();
 	wnd.gfx().EndFrame();

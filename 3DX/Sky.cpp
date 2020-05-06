@@ -83,6 +83,7 @@ DirectX::XMMATRIX Sky::GetTransformation() const
 DirectX::XMMATRIX Sky::GetTransformation(Graphics & gfx) const
 {
 	DirectX::XMFLOAT3 camPos = gfx.GetCameraPos();
+	//return DirectX::XMMatrixIdentity();
 	return DirectX::XMMatrixTranslation(camPos.x,camPos.y,camPos.z);
 }
 
