@@ -47,7 +47,7 @@ private:
 	DirectX::XMFLOAT3 cameraPos;
 	int width;
 	int height;
-	
+	D3D11_VIEWPORT mCubeMapViewport;
 	//---------------------------//
 	UINT m4xMsaaQuality;
 protected:
@@ -60,6 +60,7 @@ protected:
 	//Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerState;
 	bool init = false;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> dsv;
+	
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
 	
 };

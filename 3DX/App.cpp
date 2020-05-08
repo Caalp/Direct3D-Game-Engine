@@ -165,7 +165,7 @@ void App::Update(float dt)
 
 	{
 		using namespace DirectX;
-		float x(0.0f), y(2.0f), z(0.0f);
+		float x(0.0f), y(0.0f), z(0.0f);
 		XMFLOAT3 cameraPos(x, y, z);
 		XMFLOAT3 worldUp(0.0f, 1.0f, 0.0f);
 
@@ -310,7 +310,7 @@ void App::Update(float dt)
 	//sphere.EnableTexture(true);
 	//sphere.EnableReflaction(true);
 	//crate.Update(dt);
-	crate.Draw(wnd.gfx());
+	
 	static bool initSphere = false;
 	if (!initSphere)
 	{
@@ -324,7 +324,7 @@ void App::Update(float dt)
 	sky.SetRS(wnd.gfx(), RasterizerState::RasterizerType::NoCull);
 	sky.SetDSS(wnd.gfx(), DSS::DSSType::LessOrEqual);
 	sky.Draw(wnd.gfx());
-
+	crate.Draw(wnd.gfx());
 	wnd.gfx().ResetDSS();
 	wnd.gfx().ResetRS();
 
