@@ -6,6 +6,7 @@
 #include "SpotLight.h"
 #include "TerrainClass.h"
 #include "Model.h"
+#include "Timer.h"
 class App
 {
 public:
@@ -13,8 +14,9 @@ public:
 	~App();
 	int Go();
 private:
-	void Update();
+	void Update(float dt);
 private:
+	
 	Window wnd;
 	Camera cam;
 	DirectionalLight dirLight;
@@ -28,5 +30,5 @@ private:
 	TerrainClass b1{ wnd.gfx(), cam.GetPosition(), 50, 50, 160.0f, 160.0f };
 	Box d1{ wnd.gfx(),10.0f,80.0f,-10.0f };
 	std::vector<Box*> vb;
-
+	Timer timer;
 };

@@ -53,6 +53,7 @@ public:
 	//Rotation
 	void Pitch(float angle);
 	void RotateY(float angle);
+	void Yaw(float angle);
 
 	void UpdateViewXM();
 	//void Render();

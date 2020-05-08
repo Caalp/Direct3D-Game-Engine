@@ -1,4 +1,4 @@
-# DirectX based Game Engine
+ DirectX based Game Engine
 ## Contents
 
 [Introduction](#Introduction)

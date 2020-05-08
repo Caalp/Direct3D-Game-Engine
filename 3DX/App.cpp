@@ -33,20 +33,25 @@ App::~App()
 
 int App::Go()
 {
+	
+	timer.StartTimer();
 	while (true)
 	{
 		if (const auto error_code = Window::ProcessMessages())
 		{
 			return *error_code;
 		}
-		Update();
+		timer.StopTimer();
+		float a = timer.GetTime() / 1000;
+		Update(a);
+
+
 	}
-	
 }
 
-void App::Update()
+void App::Update(float dt)
 {
-	float dt = 20.0f;
+	static float v = 20.0f;
 	float dtheta = 0.2f;
 	
 	wnd.gfx().ClearFrame(0.2f, 0.4f, 0.5f);
@@ -55,24 +60,24 @@ void App::Update()
 	wnd.gfx().SetView(cam.GetViewXM());
 	wnd.gfx().SetCameraPos(cam.GetPosition());
 		
-  	if (wnd.kbd.KeyIsPressed('W'))
+	if (wnd.kbd.KeyIsPressed('W'))
 	{
-		cam.Walk((float)0.2f*dt);
+		cam.Walk(v*dt);
 	}
- 	if (wnd.kbd.KeyIsPressed('S'))
+	if (wnd.kbd.KeyIsPressed('S'))
 	{
-		
-		cam.Walk((float)-0.2f*dt);
+		cam.Walk(v*-dt);
 	}
 	if (wnd.kbd.KeyIsPressed('A'))
 	{
-		
-		cam.Strafe((float)-0.1f*dt);
+		cam.Strafe(v*-dt);
 	}
 	if (wnd.kbd.KeyIsPressed('D'))
 	{
-		cam.Strafe((float)0.1f*dt);
+		cam.Strafe(v*dt);
 	}
+
+
 	if (wnd.kbd.KeyIsPressed('Q'))
 	{
 		cam.Pitch((float)-0.1*dtheta);
@@ -93,17 +98,20 @@ void App::Update()
 	}
 	if (wnd.mouse.IsInWindow())
 	{
-		
-		float dx = DirectX::XMConvertToRadians(0.0305f*static_cast<float>(((float)(last_x-wnd.mouse.GetPosX()))));
-		float dy = DirectX::XMConvertToRadians(0.0305f*static_cast<float>(((float)(last_y-wnd.mouse.GetPosY()))));
-		last_x =(float) wnd.mouse.GetPosX();
+
+		if (wnd.mouse.IsInWindow() && wnd.mouse.LeftIsPressed())
+		{
+
+			float dx = DirectX::XMConvertToRadians(0.25f*static_cast<float>(wnd.mouse.GetPosX() - last_x));
+			float dy = DirectX::XMConvertToRadians(0.25f*static_cast<float>(wnd.mouse.GetPosY() - last_y));
+
+			cam.Pitch(dy);
+			cam.Yaw(dx);
+		}
+		last_x = (float)wnd.mouse.GetPosX();
 		last_y = (float)wnd.mouse.GetPosY();
-		
-		cam.Pitch(dy);
-		cam.RotateY(dx);
+
 	}
-	
-	
 	std::mt19937 rng{ std::random_device{}() };
 	std::uniform_int_distribution<int> rnd(0, 800);
 

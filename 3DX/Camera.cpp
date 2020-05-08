@@ -195,6 +195,14 @@ void Camera::RotateY(float angle)
 
 }
 
+void Camera::Yaw(float angle)
+{
+	DirectX::XMMATRIX r = DirectX::XMMatrixRotationY(angle);
+	DirectX::XMStoreFloat3(&cam_up, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&cam_up), r));
+	DirectX::XMStoreFloat3(&cam_look, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&cam_look), r));
+	DirectX::XMStoreFloat3(&cam_right, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&cam_right), r));
+}
+
 void Camera::UpdateViewXM()
 {
 	DirectX::XMVECTOR R = DirectX::XMLoadFloat3(&cam_right);
