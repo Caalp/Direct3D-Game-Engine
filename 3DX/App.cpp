@@ -51,7 +51,7 @@ int App::Go()
 
 void App::Update(float dt)
 {
-	static float v = 20.0f;
+	static float v = 70.0f;
 	float dtheta = 0.2f;
 	
 	wnd.gfx().ClearFrame(0.2f, 0.4f, 0.5f);
