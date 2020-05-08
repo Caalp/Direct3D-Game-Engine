@@ -5,6 +5,7 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "TerrainClass.h"
+#include "Timer.h"
 class App
 {
 public:
@@ -12,8 +13,9 @@ public:
 	~App();
 	int Go();
 private:
-	void Update();
+	void Update(float dt);
 private:
+	Timer timer;
 	Window wnd;
 	Camera cam;
 	DirectionalLight dirLight;

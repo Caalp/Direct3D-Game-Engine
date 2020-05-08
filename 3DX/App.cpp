@@ -4,7 +4,7 @@
 #include <random>
 
 App::App() :
-	wnd(1280, 720, "Hello") ,x(0.5f),y(-4.5f),z(0.0f),last_x(0),last_y(0),
+	wnd(800,600, "Hello") ,x(0.5f),y(-4.5f),z(0.0f),last_x(0),last_y(0),
 	//(wnd.gfx()),
 	dirLight(wnd.gfx()),spotLight(wnd.gfx()),
 	pointLight(wnd.gfx()),
@@ -33,21 +33,26 @@ App::~App()
 
 int App::Go()
 {
+	timer.StartTimer();
 	while (true)
 	{
 		if (const auto error_code = Window::ProcessMessages())
 		{
 			return *error_code;
 		}
-		Update();
+		timer.StopTimer();
+		float a = timer.GetTime() / 1000;
+		Update(a);
+
+
 	}
 	
 }
 
-void App::Update()
+void App::Update(float dt)
 {
-	float dt = 20.0f;
-	float dtheta = 0.2f;
+	static float v = 70.0f;
+	static float dtheta = 0.2f;
 	
 	wnd.gfx().ClearFrame(0.2f, 0.4f, 0.5f);
 	cam.UpdateViewXM();
@@ -55,42 +60,23 @@ void App::Update()
 	
 	wnd.gfx().SetView(cam.GetViewXM());
 		
-  	if (wnd.kbd.KeyIsPressed('W'))
+	if (wnd.kbd.KeyIsPressed('W'))
 	{
-		cam.Walk((float)0.2f*dt);
+		cam.Walk(v*dt);
 	}
- 	if (wnd.kbd.KeyIsPressed('S'))
+	if (wnd.kbd.KeyIsPressed('S'))
 	{
-		
-		cam.Walk((float)-0.2f*dt);
+		cam.Walk(v*-dt);
 	}
 	if (wnd.kbd.KeyIsPressed('A'))
 	{
-		
-		cam.Strafe((float)-0.1f*dt);
+		cam.Strafe(v*-dt);
 	}
 	if (wnd.kbd.KeyIsPressed('D'))
 	{
-		cam.Strafe((float)0.1f*dt);
-	}
-	if (wnd.kbd.KeyIsPressed('Q'))
-	{
-		cam.Pitch((float)-0.1*dtheta);
-	}
-	
-	if (wnd.kbd.KeyIsPressed('E'))
-	{
-		cam.Pitch((float)0.1*dtheta);
-	}
-	if (wnd.kbd.KeyIsPressed('Z'))
-	{
-		cam.RotateY((float)-0.1*dtheta);
+		cam.Strafe(v*dt);
 	}
 
-	if (wnd.kbd.KeyIsPressed('C'))
-	{
-		cam.RotateY((float)0.1*dtheta);
-	}
 	if (wnd.mouse.IsInWindow())
 	{
 		
