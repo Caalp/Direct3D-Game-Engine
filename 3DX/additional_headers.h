@@ -9,5 +9,5 @@
 #include "PixelShader.h"
 #include "InputLayout.h"
 #include "PrimitiveTopology.h"
-#include "TransCB_.h"
+#include "TransformationBuffer.h"
 #include "SamplerState.h"

@@ -1,6 +1,8 @@
 #pragma once
-#include "additional_headers.h"
-class TerrainClass : public DrawableSource<TerrainClass>
+#include "Drawable.h"
+
+
+class TerrainClass : public Drawable
 {
 public:
 	TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos, UINT tW, UINT tH, float width, float height);

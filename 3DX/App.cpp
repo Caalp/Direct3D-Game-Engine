@@ -4,11 +4,11 @@
 #include <random>
 
 App::App() :
-	wnd(800,600, "Hello") ,x(0.5f),y(-4.5f),z(0.0f),last_x(0),last_y(0),
+	wnd(800, 600, "Hello") ,x(0.5f),y(-4.5f),z(0.0f),last_x(0),last_y(0),
 	//(wnd.gfx()),
 	dirLight(wnd.gfx()),spotLight(wnd.gfx()),
 	pointLight(wnd.gfx()),
-	mPhi(1.5f*3.1415926535f),mTheta(1.5f*3.1415926535f),mRadius(80.0f)//,m(wnd.gfx(),"suzanne.obj")
+	mPhi(1.5f*3.1415926535f),mTheta(1.5f*3.1415926535f),mRadius(80.0f),m(wnd.gfx(),"suzanne.obj")
 	
 {
 	
@@ -33,50 +33,64 @@ App::~App()
 
 int App::Go()
 {
-	timer.StartTimer();
 	while (true)
 	{
 		if (const auto error_code = Window::ProcessMessages())
 		{
 			return *error_code;
 		}
-		timer.StopTimer();
-		float a = timer.GetTime() / 1000;
-		Update(a);
-
-
+		Update();
 	}
 	
 }
 
-void App::Update(float dt)
+void App::Update()
 {
-	static float v = 70.0f;
-	static float dtheta = 0.2f;
+	float dt = 20.0f;
+	float dtheta = 0.2f;
 	
 	wnd.gfx().ClearFrame(0.2f, 0.4f, 0.5f);
 	cam.UpdateViewXM();
 	wnd.gfx().SetCamera(cam.ViewProjXM());
-	
 	wnd.gfx().SetView(cam.GetViewXM());
+	wnd.gfx().SetCameraPos(cam.GetPosition());
 		
-	if (wnd.kbd.KeyIsPressed('W'))
+  	if (wnd.kbd.KeyIsPressed('W'))
 	{
-		cam.Walk(v*dt);
+		cam.Walk((float)0.2f*dt);
 	}
-	if (wnd.kbd.KeyIsPressed('S'))
+ 	if (wnd.kbd.KeyIsPressed('S'))
 	{
-		cam.Walk(v*-dt);
+		
+		cam.Walk((float)-0.2f*dt);
 	}
 	if (wnd.kbd.KeyIsPressed('A'))
 	{
-		cam.Strafe(v*-dt);
+		
+		cam.Strafe((float)-0.1f*dt);
 	}
 	if (wnd.kbd.KeyIsPressed('D'))
 	{
-		cam.Strafe(v*dt);
+		cam.Strafe((float)0.1f*dt);
+	}
+	if (wnd.kbd.KeyIsPressed('Q'))
+	{
+		cam.Pitch((float)-0.1*dtheta);
+	}
+	
+	if (wnd.kbd.KeyIsPressed('E'))
+	{
+		cam.Pitch((float)0.1*dtheta);
+	}
+	if (wnd.kbd.KeyIsPressed('Z'))
+	{
+		cam.RotateY((float)-0.1*dtheta);
 	}
 
+	if (wnd.kbd.KeyIsPressed('C'))
+	{
+		cam.RotateY((float)0.1*dtheta);
+	}
 	if (wnd.mouse.IsInWindow())
 	{
 		
@@ -98,22 +112,22 @@ void App::Update(float dt)
 		vb[i] = new Box(wnd.gfx(), rnd(rng), rnd(rng), 10.0f);
 	}*/
 
-	
-	d1.Update(0.5f);
+	b1.Draw(wnd.gfx());
+	d1.Update(0.015f);
 	d1.Draw(wnd.gfx());
 
-	b1.Draw(wnd.gfx());
+	
 	/*for (auto& elem : vb)
 	{
 		
 		elem->Draw(wnd.gfx());
 		elem->Update(0.015f);
 	}*/
-	
+	m.Draw(wnd.gfx());
 	dirLight.Bind(wnd.gfx());
 	pointLight.Bind(wnd.gfx());
 	spotLight.Bind(wnd.gfx());
-	//m.Draw(wnd.gfx());
+	
 	
 	
 	

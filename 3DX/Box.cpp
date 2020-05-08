@@ -81,25 +81,27 @@ Box::Box(Graphics & gfx, float x, float y, float z) :
 			{ "POS",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 }	
 		};
 		AddStaticBind(std::make_unique<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
-
+		AddStaticBind(std::make_unique<InputLayout>(gfx, ied, vsBlob));
 	}
 	else
 	{
 		SetIndexBufferFromStatic();
 	}
-	struct VSMaterialConstant
-	{
-		DirectX::XMMATRIX model;
-		DirectX::XMMATRIX worldviewProj;
-		DirectX::XMFLOAT3 eyePos;
-		//float padding;
-		
-	} VSConst;
-	VSConst.model = DirectX::XMMatrixTranspose(GetTransformation());
-	VSConst.worldviewProj = DirectX::XMMatrixTranspose(GetTransformation() * gfx.GetCamera());
-	VSConst.eyePos = DirectX::XMFLOAT3(1.0f,1.0f,1.0f);
+	//struct VSMaterialConstant
+	//{
+	//	DirectX::XMMATRIX model;
+	//	DirectX::XMMATRIX worldviewProj;
+	//	DirectX::XMFLOAT3 eyePos;
+	//	//float padding;
+	//	
+	//} VSConst;
+	//VSConst.model = DirectX::XMMatrixTranspose(GetTransformation());
+	//VSConst.worldviewProj = DirectX::XMMatrixTranspose(GetTransformation() * gfx.GetCamera());
+	//VSConst.eyePos = DirectX::XMFLOAT3(1.0f,1.0f,1.0f);
 
-	AddBind(std::make_unique<VSConstBuff<VSMaterialConstant>>(gfx, VSConst));
+	//AddBind(std::make_unique<VSConstBuff<VSMaterialConstant>>(gfx, VSConst));
+	 
+	 AddBind(std::make_unique<TransformationBuffer>(gfx,*this));
 }
 
 void Box::Update(float ft)

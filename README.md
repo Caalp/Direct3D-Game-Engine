@@ -1,3 +1,20 @@
-# Direct3D
+# DirectX based Game Engine
+## Contents
 
-Trying to build and bring together basic parts of a DirectX based 3D game engine.
+[Introduction](#Introduction)
+
+[Getting Started](#Getting-Started)
+
+[Details](#Details)
+
+[Contributing](#Contributing)
+
+
+## Introduction
+- DirectX based game engine project. This project is intended to be from zero to functional game engine.
+
+## Getting Started
+
+## Details
+
+## Contributing

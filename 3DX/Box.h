@@ -1,9 +1,9 @@
 #pragma once
-#include "DrawableSource.h"
+#include "Drawable.h"
 #include <random>
 #include "Camera.h"
 
-class Box : public DrawableSource<Box>
+class Box : public Drawable
 {
 public:
 	Box(Graphics& gfx, float x, float y,float z);
@@ -11,7 +11,7 @@ public:
 	DirectX::XMMATRIX GetTransformation() const;
 	
 private:
-
+	
 	float pitch = 1.0f;
 	float yaw = 1.0f;
 	float roll = 1.0f;

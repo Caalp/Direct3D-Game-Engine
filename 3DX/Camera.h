@@ -5,6 +5,7 @@
 
 class Camera 
 {
+	
 public:
 	Camera();
 	Camera(const Camera&) = delete;
