@@ -16,3 +16,5 @@
 #include "Texture.h"
 #include "DSS.h"
 #include "GeometryShader.h"
+#include "HullShader.h"
+#include "DomainShader.h"

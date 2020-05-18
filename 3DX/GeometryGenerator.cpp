@@ -386,7 +386,7 @@ void GeometryGenerator::Bind(Graphics & gfx, const MeshData& meshData)
 		matConst.amb = DirectX::XMFLOAT4(0.2f, 0.3f, 0.4f, 1.0f);
 		matConst.diff = DirectX::XMFLOAT4(0.2f, 0.3f, 0.4f, 1.0f);
 		matConst.spec = DirectX::XMFLOAT4(0.9f, 0.9f, 0.9f, 16.0f);
-		matConst.reflection = DirectX::XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f);
+		matConst.reflection = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		
 		effectStatus.fogEnabled = fogEnabled;
 		effectStatus.reflactionEnabled = reflectionEnabled;
@@ -407,7 +407,7 @@ void GeometryGenerator::Bind(Graphics & gfx, const MeshData& meshData)
 
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
-			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
 			{"Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0},
 			{"TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,24u,D3D11_INPUT_PER_VERTEX_DATA,0},
 

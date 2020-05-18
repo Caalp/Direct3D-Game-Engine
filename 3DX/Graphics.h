@@ -20,6 +20,7 @@ public:
 	void DrawCube(float angle, float x, float y);*/
 	void DrawIndexed(UINT count);
 	void DrawVertexed(UINT vertexCount, UINT startVertexLocation);
+	void Draw(UINT vertexCount, UINT vertexStartSlot);
 	void EndFrame();
 	void ClearFrame(float red,float gren,float blue);
 	void ResetRS();

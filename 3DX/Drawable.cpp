@@ -43,7 +43,7 @@ void Drawable::Draw(Graphics & gfx)
 		renderStates.pop();
 	}
 
-
+	gfx.Draw(4, 0);
 	//
 	//if (blendOn)
 	//{
@@ -52,14 +52,14 @@ void Drawable::Draw(Graphics & gfx)
 	//	blendOn = false;
 	//}
 	// Temporary work around for tree drawing
-	if (pIndexBuffer == nullptr)
+	/*if (pIndexBuffer == nullptr)
 	{
 		gfx.DrawVertexed(3, 0);
 	}
 	else
 	{
 		gfx.DrawIndexed(pIndexBuffer->GetIndexCount());
-	}
+	}*/
 }
 
 void Drawable::AddIndexBuffer(std::shared_ptr<class IndexBuff> indexBuffer)

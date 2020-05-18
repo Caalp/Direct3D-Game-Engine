@@ -14,7 +14,7 @@ App::App() :
 	pointLight(wnd.gfx()),
 	mPhi(1.5f*3.1415926535f), mTheta(1.5f*3.1415926535f), mRadius(80.0f),
 	m(wnd.gfx(), "\\Models\\nano_textured\\nanosuit.obj"),
-	b1(wnd.gfx(), cam.GetPosition(), 50, 50, 120.0f, 120.0f),
+	b1(wnd.gfx(), cam.GetPosition(), 50, 50, 120.0f, 120.0f,true),
 	d1(wnd.gfx(), -2.5f, 0.0f, 0.0f),
 	crate(wnd.gfx(), 0.0f, 1.0f, -5.0f),
 	tree(wnd.gfx(), { "Textures\\tree0.dds","Textures\\tree1.dds","Textures\\tree2.dds","Textures\\tree3.dds" }),
@@ -163,7 +163,7 @@ void App::Update(float dt)
 	}
 
 
-	{
+	/*{
 		using namespace DirectX;
 		float x(0.0f), y(0.0f), z(0.0f);
 		XMFLOAT3 cameraPos(x, y, z);
@@ -221,14 +221,11 @@ void App::Update(float dt)
 	wnd.gfx().SetDefaultViewport();
 	wnd.gfx().GenerateMIPsCubeMap();
 	wnd.gfx().ClearFrame(0.75f, 0.75f, 0.75f);
-	cam.UpdateViewXM();
-	wnd.gfx().SetCamera(cam.ViewProjXM());
-	wnd.gfx().SetView(cam.GetViewXM());
-	wnd.gfx().SetCameraPos(cam.GetPosition());
+	
 
 	dirLight.Bind(wnd.gfx());
 	pointLight.Bind(wnd.gfx());
-	spotLight.Bind(wnd.gfx());
+	spotLight.Bind(wnd.gfx());*/
 	//b1.Draw(wnd.gfx());
 	//floor.Draw(wnd.gfx());
 	////wall.Draw(wnd.gfx());
@@ -311,7 +308,7 @@ void App::Update(float dt)
 	//sphere.EnableReflaction(true);
 	//crate.Update(dt);
 	
-	static bool initSphere = false;
+	/*static bool initSphere = false;
 	if (!initSphere)
 	{
 		sphere.EnableReflaction(true);
@@ -327,8 +324,13 @@ void App::Update(float dt)
 	crate.Draw(wnd.gfx());
 	wnd.gfx().ResetDSS();
 	wnd.gfx().ResetRS();
-
-
+*/
+	cam.UpdateViewXM();
+	wnd.gfx().SetCamera(cam.ViewProjXM());
+	wnd.gfx().SetView(cam.GetViewXM());
+	wnd.gfx().SetCameraPos(cam.GetPosition());	
+	b1.SetRS(wnd.gfx(), RasterizerState::RasterizerType::Default);
+	b1.Draw(wnd.gfx());
 
 	//wnd.gfx().ResetGS();
 	wnd.gfx().EndFrame();

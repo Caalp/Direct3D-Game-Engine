@@ -602,6 +602,11 @@ void Graphics::DrawVertexed(UINT vertexCount, UINT startVertexLocation)
 	pImmediateContext->Draw(vertexCount, startVertexLocation);
 }
 
+void Graphics::Draw(UINT vertexCount, UINT vertexStartSlot)
+{
+	pImmediateContext->Draw(vertexCount, vertexStartSlot);
+}
+
 void Graphics::EndFrame()
 {
 	HRESULT hr;

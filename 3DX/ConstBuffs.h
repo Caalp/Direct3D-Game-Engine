@@ -61,11 +61,14 @@ public:
 	
 	void Bind(Graphics& gfx) override
 	{
-		Bindable::GetContext(gfx)->VSSetConstantBuffers(0u, 1u,pConstBuffer.GetAddressOf());
+		Bindable::GetContext(gfx)->DSSetConstantBuffers(0u, 1u,pConstBuffer.GetAddressOf());
+		//Bindable::GetContext(gfx)->HSSetConstantBuffers(0u, 1u, pConstBuffer.GetAddressOf());
 	}
 	void Bind(Graphics& gfx, UINT startSlot,UINT numofBuff) override
 	{
-		Bindable::GetContext(gfx)->VSSetConstantBuffers(startSlot,numofBuff, ConstBuffs<C>::pConstBuffer.GetAddressOf());
+		//Bindable::GetContext(gfx)->VSSetConstantBuffers(startSlot,numofBuff, ConstBuffs<C>::pConstBuffer.GetAddressOf());
+		Bindable::GetContext(gfx)->DSSetConstantBuffers(startSlot,numofBuff, ConstBuffs<C>::pConstBuffer.GetAddressOf());
+		Bindable::GetContext(gfx)->HSSetConstantBuffers(startSlot,numofBuff, ConstBuffs<C>::pConstBuffer.GetAddressOf());
 	}
 };
 
