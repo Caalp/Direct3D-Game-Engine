@@ -15,6 +15,7 @@
 #include "Timer.h"
 #include "Water.h"
 #include "Sky.h"
+#include "Bezier.h"
 class App
 {
 public:
@@ -50,4 +51,5 @@ private:
 	GeometryGenerator sphere;
 	Sky sky;
 	Timer timer;
+	Bezier bezierPatch;
 };

@@ -153,6 +153,9 @@
     <ClCompile Include="DomainShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Bezier.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinHeader.h">
@@ -305,6 +308,9 @@
     <ClInclude Include="DomainShader.h">
       <Filter>Header Files\Bindables</Filter>
     </ClInclude>
+    <ClInclude Include="Bezier.h">
+      <Filter>Header Files\Drawables</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="3DX.rc">
@@ -381,6 +387,18 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="PSBasicTessellation.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VSBezierTessellation.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PSBezierTessellation.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="HSBezierTessellation.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="DSBezierTessellation.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -43,7 +43,7 @@ void Drawable::Draw(Graphics & gfx)
 		renderStates.pop();
 	}
 
-	gfx.Draw(4, 0);
+	gfx.Draw(16, 0);
 	//
 	//if (blendOn)
 	//{

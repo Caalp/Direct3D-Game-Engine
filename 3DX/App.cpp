@@ -18,7 +18,8 @@ App::App() :
 	d1(wnd.gfx(), -2.5f, 0.0f, 0.0f),
 	crate(wnd.gfx(), 0.0f, 1.0f, -5.0f),
 	tree(wnd.gfx(), { "Textures\\tree0.dds","Textures\\tree1.dds","Textures\\tree2.dds","Textures\\tree3.dds" }),
-	sky(wnd.gfx(), "Textures\\snowcube1024.dds", 5000.0f)
+	sky(wnd.gfx(), "Textures\\snowcube1024.dds", 5000.0f),
+	bezierPatch(wnd.gfx())
 
 
 {
@@ -330,8 +331,9 @@ void App::Update(float dt)
 	wnd.gfx().SetView(cam.GetViewXM());
 	wnd.gfx().SetCameraPos(cam.GetPosition());	
 	b1.SetRS(wnd.gfx(), RasterizerState::RasterizerType::Default);
-	b1.Draw(wnd.gfx());
-
+	bezierPatch.SetRS(wnd.gfx(), RasterizerState::RasterizerType::Default);
+	//b1.Draw(wnd.gfx());
+	bezierPatch.Draw(wnd.gfx());
 	//wnd.gfx().ResetGS();
 	wnd.gfx().EndFrame();
 }
