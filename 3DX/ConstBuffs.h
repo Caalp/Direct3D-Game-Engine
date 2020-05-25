@@ -81,7 +81,7 @@ public:
 	{
 		Bindables::GetContext(gfx)->PSSetConstantBuffers(slot, 1u,pConstBuffer.GetAddressOf());
 	}
-	/*void Bind(Graphics& gfx, UINT startSlot, UINT numofBuff override
+	/*void Bind(Graphics& gfx, UINT startSlot, UINT numofBuff) override
 	{
 		GetContext(gfx)->VSSetConstantBuffers(startSlot, numofBuff, pConstBuffer.GetAddressof());
 	}*/

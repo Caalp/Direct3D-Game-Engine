@@ -96,6 +96,7 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(SolutionDir)3DX\assimp\include</AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>
       </AdditionalUsingDirectories>
+      <PreprocessorDefinitions>_DISABLE_EXTENDED_ALIGNED_STORAGE;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -180,10 +181,11 @@
     <ClCompile Include="Bindables.cpp" />
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CommandBucket.cpp" />
+    <ClCompile Include="CommandPacket.cpp" />
     <ClCompile Include="CustomException.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="Drawable.cpp" />
-    <ClCompile Include="DrawableBase.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="IndexBuff.cpp" />
     <ClCompile Include="InputLayout.cpp" />
@@ -196,6 +198,7 @@
     <ClCompile Include="PrimitiveTopology.cpp" />
     <ClCompile Include="SamplerState.cpp" />
     <ClCompile Include="SpotLight.cpp" />
+    <ClCompile Include="Step.cpp" />
     <ClCompile Include="Surface.cpp" />
     <ClCompile Include="TerrainClass.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -212,19 +215,17 @@
     <ClInclude Include="Bindables.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CommandBucket.h" />
+    <ClInclude Include="CommandPacket.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="Drawable.h" />
-    <ClInclude Include="DrawableSource.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="ConstBuffs.h" />
     <ClInclude Include="CustomException.h" />
-    <ClInclude Include="DrawableBase.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="IndexBuff.h" />
     <ClInclude Include="InputLayout.h" />
     <ClInclude Include="Keyboard.h" />
-    <ClInclude Include="Light.h" />
-    <ClInclude Include="LightSource.h" />
     <ClInclude Include="MatHelper.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Mouse.h" />
@@ -235,13 +236,13 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="SamplerState.h" />
     <ClInclude Include="SpotLight.h" />
+    <ClInclude Include="Step.h" />
     <ClInclude Include="Surface.h" />
     <ClInclude Include="TerrainClass.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TransformationBuffer.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexShader.h" />
-    <ClInclude Include="Waves.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="WinHeader.h" />
   </ItemGroup>

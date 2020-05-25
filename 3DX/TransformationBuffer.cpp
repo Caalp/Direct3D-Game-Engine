@@ -40,8 +40,3 @@ void TransformationBuffer::Bind(Graphics & gfx)
 }
 
 
-
-
-
-
-//std::unique_ptr<VSConstBuff<TransformBuffer>> TransformationBuffer::s_TransformBuffer;

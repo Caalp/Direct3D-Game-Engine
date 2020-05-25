@@ -8,8 +8,8 @@ Box::Box(Graphics & gfx, float x, float y, float z) :
 	x(x), y(y), z(z)
 {
 
-	if (!isStaticallyBinded())
-	{
+	
+	
 		struct Vertex
 		{
 
@@ -52,17 +52,6 @@ Box::Box(Graphics & gfx, float x, float y, float z) :
 		vertices[6].pos = DirectX::XMFLOAT3(-1.0f, 1.0f, 1.0f);
 		vertices[7].pos = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
 		
-		
-		
-		AddStaticBind(std::make_unique<VertexBuffer>(gfx, vertices));
-		AddStaticBind(std::make_unique< PSConstBuff <PixelShaderConstants>>(gfx, cb2,1u));
-		AddStaticBind(std::make_unique<PixelShader>(gfx, L"ColorBlenderPS.cso"));
-		
-		
-
-		auto vs = std::make_unique<VertexShader>(gfx, L"ColorBlenderVS.cso");
-		auto vsBlob = vs->GetVBlob();
-		AddStaticBind(std::move(vs));
 		std::vector<WORD> indices =
 		{
 			0,2,1, 2,3,1,
@@ -74,34 +63,47 @@ Box::Box(Graphics & gfx, float x, float y, float z) :
 
 		};
 		
-		AddStaticBind(std::make_unique<IndexBuff>(gfx, indices));
+		vertexBuffer = std::make_shared<VertexBuffer>(gfx, vertices);
+		primitiveTopology = std::make_shared<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		indexBuffer = std::make_shared<IndexBuff>(gfx, indices);
 		
-		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
+		CommandPacket cmd{ this };
+		
 		{
-			{ "POS",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 }	
-		};
-		AddStaticBind(std::make_unique<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
-		AddStaticBind(std::make_unique<InputLayout>(gfx, ied, vsBlob));
-	}
-	else
-	{
-		SetIndexBufferFromStatic();
-	}
-	//struct VSMaterialConstant
-	//{
-	//	DirectX::XMMATRIX model;
-	//	DirectX::XMMATRIX worldviewProj;
-	//	DirectX::XMFLOAT3 eyePos;
-	//	//float padding;
-	//	
-	//} VSConst;
-	//VSConst.model = DirectX::XMMatrixTranspose(GetTransformation());
-	//VSConst.worldviewProj = DirectX::XMMatrixTranspose(GetTransformation() * gfx.GetCamera());
-	//VSConst.eyePos = DirectX::XMFLOAT3(1.0f,1.0f,1.0f);
+			Step s0{ "default_box" };
+			s0.AddBind(std::make_shared<PixelShader>(gfx, L"ConstantColorPS.cso"));
+			auto vs = std::make_shared<VertexShader>(gfx, L"ColorBlenderVS.cso");
+			auto vsBlob = vs->GetVBlob();
+			s0.AddBind(std::move(vs));
+			const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
+			{
+				{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 }
+			};
 
-	//AddBind(std::make_unique<VSConstBuff<VSMaterialConstant>>(gfx, VSConst));
-	 
-	 AddBind(std::make_unique<TransformationBuffer>(gfx,*this));
+			s0.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
+
+
+
+			s0.AddBind(std::make_shared<TransformationBuffer>(gfx,*this));
+			s0.AddBind(std::make_shared< PSConstBuff <PixelShaderConstants>>(gfx, cb2, 0u));
+
+
+			cmd.PushStep(s0);
+			PushPacket(std::make_shared<CommandPacket>(cmd));
+			
+		}
+
+		
+		
+		
+		
+
+		
+		
+		
+		
+		
+		
 }
 
 void Box::Update(float ft)

@@ -3,8 +3,8 @@
 Camera::Camera() :
 	cam_pos(0.0f,0.0f,0.0f),
 	cam_right(1.0f,0.0f,0.0f),
-	cam_up(0.0f,0.0f,-1.0f),
-	cam_look(0.0f,-1.0f,0.0f)
+	cam_up(0.0f,1.0f,0.0f),
+	cam_look(0.0f,0.0f,1.0f)
 {
 	
 }

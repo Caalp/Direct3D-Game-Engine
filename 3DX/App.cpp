@@ -8,7 +8,7 @@ App::App() :
 	//(wnd.gfx()),
 	dirLight(wnd.gfx()),spotLight(wnd.gfx()),
 	pointLight(wnd.gfx()),
-	mPhi(1.5f*3.1415926535f),mTheta(1.5f*3.1415926535f),mRadius(80.0f),m(wnd.gfx(),"suzanne.obj")
+	mPhi(1.5f*3.1415926535f),mTheta(1.5f*3.1415926535f),mRadius(80.0f)//m(wnd.gfx(),"suzanne.obj")
 	
 {
 	
@@ -18,7 +18,7 @@ App::App() :
 	
 	vb.resize(100);
 	
-
+	box0.LinkBucket(&bucket0);
 	
 }
 
@@ -112,29 +112,14 @@ void App::Update(float dt)
 		last_y = (float)wnd.mouse.GetPosY();
 
 	}
-	std::mt19937 rng{ std::random_device{}() };
-	std::uniform_int_distribution<int> rnd(0, 800);
+	box0.Update(dt);
+	box0.Bind(wnd.gfx());
 
-	/*for (int i = 0; i < 100; i++)
-	{
-		vb[i] = new Box(wnd.gfx(), rnd(rng), rnd(rng), 10.0f);
-	}*/
-
-	b1.Draw(wnd.gfx());
-	d1.Update(0.015f);
-	d1.Draw(wnd.gfx());
-
+	bucket0.ProcessBucket(wnd.gfx());
 	
-	/*for (auto& elem : vb)
-	{
-		
-		elem->Draw(wnd.gfx());
-		elem->Update(0.015f);
-	}*/
-	m.Draw(wnd.gfx());
-	dirLight.Bind(wnd.gfx());
+	/*dirLight.Bind(wnd.gfx());
 	pointLight.Bind(wnd.gfx());
-	spotLight.Bind(wnd.gfx());
+	spotLight.Bind(wnd.gfx());*/
 	
 	
 	

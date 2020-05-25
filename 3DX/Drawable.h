@@ -2,29 +2,29 @@
 
 #include "additional_headers.h"
 
+#include "CommandBucket.h"
+
 class Drawable
 {
+
 public:
 	Drawable() = default;
 	Drawable(const Drawable&) = delete;
-	void Draw(Graphics& gfx);
-	void AddIndexBuffer(std::shared_ptr<class IndexBuff> indexBuffer);
-	void SetIndexBufferFromStatic();
-	bool isStaticallyBinded() const;
-	virtual void Update(float ft) = 0;
-	virtual DirectX::XMMATRIX GetTransformation() const = 0;
+	void Bind(Graphics& gfx) const;
+	void LinkBucket(CommandBucket* cmdBucket);
+	virtual DirectX::XMMATRIX GetTransformation() const { return DirectX::XMMatrixIdentity(); };
+	virtual DirectX::XMMATRIX GetTransformation(Graphics& gfx) const { return DirectX::XMMatrixIdentity(); };
+	virtual DirectX::XMMATRIX GetTexTransformXM() const { return DirectX::XMMatrixIdentity(); }
 
+	
+	void PushPacket(std::shared_ptr<CommandPacket> cmd);
+	UINT GetIndexCount() const;
 
 protected:
-	void AddBind(std::unique_ptr<Bindables> binds);
-	void AddStaticBind(std::unique_ptr<Bindables> sbinds);
+	std::shared_ptr<IndexBuff> indexBuffer;
+	std::shared_ptr<VertexBuffer> vertexBuffer;
+	std::shared_ptr<PrimitiveTopology> primitiveTopology;
+	std::shared_ptr<CommandPacket> cmdPacket;
 
-private:
-	//virtual const std::vector<std::unique_ptr<Bindables>>& GetStaticBinds() const noexcept = 0;
-protected:
-	const IndexBuff*  pIndexBuffer;
-	std::vector<std::unique_ptr<Bindables>> bindables;
-	std::vector<std::unique_ptr<Bindables>> staticBindables;
 };
-
 

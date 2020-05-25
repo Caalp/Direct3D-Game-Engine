@@ -1,62 +1,27 @@
 #include "Drawable.h"
 
-void Drawable::Draw(Graphics & gfx)
+void Drawable::Bind(Graphics & gfx) const
 {
-	for (auto& b : bindables)
-	{
-		
-		if (typeid(*b) == typeid(IndexBuff))
-		{
-			pIndexBuffer = dynamic_cast<IndexBuff*>(b.get());
-		}
-		b->Bind(gfx);
-	}
-	for (auto& b : staticBindables)
-	{
-		if (typeid(*b) == typeid(IndexBuff))
-		{
-			pIndexBuffer = dynamic_cast<IndexBuff*>(b.get());
-		}
-		b->Bind(gfx);
-	}
-
-	gfx.DrawIndexed(pIndexBuffer->GetIndexCount());
+	indexBuffer->Bind(gfx);
+	vertexBuffer->Bind(gfx);
+	primitiveTopology->Bind(gfx);
 }
 
-void Drawable::AddIndexBuffer(std::shared_ptr<class IndexBuff> indexBuffer)
+void Drawable::LinkBucket(CommandBucket * cmdBucket)
 {
-	pIndexBuffer = indexBuffer.get();
+	cmdBucket->Submit(std::move(cmdPacket));
 }
 
-void Drawable::SetIndexBufferFromStatic()
+
+
+
+void Drawable::PushPacket(std::shared_ptr<CommandPacket> cmd)
 {
-	for (auto& elem : staticBindables)
-	{
-		if (typeid(*elem) == typeid(IndexBuff))
-		{
-			pIndexBuffer = dynamic_cast<IndexBuff*>(elem.get());
-			return;
-		}
-	}
+	cmdPacket = std::move(cmd);
 }
 
-bool Drawable::isStaticallyBinded() const
+UINT Drawable::GetIndexCount() const
 {
-	if (staticBindables.empty())
-	{
-		return false;
-	}
-	return true;
+	return indexBuffer->GetIndexCount();
 }
 
-void Drawable::AddBind(std::unique_ptr<Bindables> binds)
-{
-	bindables.push_back(std::move(binds));
-}
-
-void Drawable::AddStaticBind(std::unique_ptr<Bindables> sBinds)
-{
-	staticBindables.push_back(std::move(sBinds));
-}
-
-//std::vector<std::unique_ptr<Bindables>> Drawable::staticBindables;

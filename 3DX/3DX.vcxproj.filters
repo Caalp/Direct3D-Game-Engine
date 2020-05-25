@@ -28,8 +28,20 @@
     <Filter Include="Header Files\Drawables\objects">
       <UniqueIdentifier>{c08cc9e2-a512-4858-ac78-459e06d838f7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Drawables\Effects">
-      <UniqueIdentifier>{61dbc41d-8a92-46aa-916a-951e92bf1c75}</UniqueIdentifier>
+    <Filter Include="Source Files\Drawables">
+      <UniqueIdentifier>{8f5f2807-41c1-4392-88d9-1e091af2532a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Lights">
+      <UniqueIdentifier>{1b12feb1-5412-4760-80f3-5daeee7ce4db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Lights">
+      <UniqueIdentifier>{63b6428b-3980-4833-a9a0-32ad3de63c0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\RenderQueueItems">
+      <UniqueIdentifier>{290e704b-3e78-44fb-a024-70e70b5498a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RenderQueueItems">
+      <UniqueIdentifier>{72d665e9-2e13-4ab4-9b6b-ed62c72b94f5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -40,9 +52,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CustomException.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Keyboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mouse.cpp">
@@ -90,35 +99,44 @@
     <ClCompile Include="InputLayout.cpp">
       <Filter>Source Files\Bindables</Filter>
     </ClCompile>
-    <ClCompile Include="DrawableBase.cpp">
+    <ClCompile Include="Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DirectionalLight.cpp">
+      <Filter>Source Files\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Source Files\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Keyboard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformationBuffer.cpp">
+      <Filter>Source Files\Bindables</Filter>
+    </ClCompile>
     <ClCompile Include="Box.cpp">
+      <Filter>Source Files\Drawables</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotLight.cpp">
+      <Filter>Source Files\Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="Drawable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TerrainClass.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Drawables</Filter>
     </ClCompile>
-    <ClCompile Include="DirectionalLight.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="CommandBucket.cpp">
+      <Filter>Source Files\RenderQueueItems</Filter>
     </ClCompile>
-    <ClCompile Include="PointLight.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="CommandPacket.cpp">
+      <Filter>Source Files\RenderQueueItems</Filter>
     </ClCompile>
-    <ClCompile Include="SpotLight.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TransformationBuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Drawable.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Step.cpp">
+      <Filter>Source Files\RenderQueueItems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -182,44 +200,17 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TerrainClass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="additional_headers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LightSource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Waves.h">
-      <Filter>Header Files\Drawables\Effects</Filter>
-    </ClInclude>
-    <ClInclude Include="Light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MatHelper.h">
       <Filter>Header Files\Bindables</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectionalLight.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PointLight.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SpotLight.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Box.h">
       <Filter>Header Files\Drawables\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="DrawableBase.h">
-      <Filter>Header Files\Drawables</Filter>
-    </ClInclude>
-    <ClInclude Include="DrawableSource.h">
-      <Filter>Header Files\Drawables</Filter>
     </ClInclude>
     <ClInclude Include="VertexShader.h">
       <Filter>Header Files\Bindables</Filter>
@@ -229,6 +220,27 @@
     </ClInclude>
     <ClInclude Include="Drawable.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLight.h">
+      <Filter>Header Files\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Header Files\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotLight.h">
+      <Filter>Header Files\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainClass.h">
+      <Filter>Header Files\Drawables\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandBucket.h">
+      <Filter>Header Files\RenderQueueItems</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandPacket.h">
+      <Filter>Header Files\RenderQueueItems</Filter>
+    </ClInclude>
+    <ClInclude Include="Step.h">
+      <Filter>Header Files\RenderQueueItems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

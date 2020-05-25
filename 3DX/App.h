@@ -7,6 +7,7 @@
 #include "TerrainClass.h"
 #include "Model.h"
 #include "Timer.h"
+#include "CommandBucket.h"
 class App
 {
 public:
@@ -26,9 +27,10 @@ private:
 	float last_x;
 	float last_y;
 	float mPhi, mTheta,mRadius;
-	Model m;
-	TerrainClass b1{ wnd.gfx(), cam.GetPosition(), 50, 50, 160.0f, 160.0f };
-	Box d1{ wnd.gfx(),10.0f,80.0f,-10.0f };
+	CommandBucket bucket0;
+	//Model m;
+	//TerrainClass b1{ wnd.gfx(), cam.GetPosition(), 50, 50, 160.0f, 160.0f };
+	Box box0{ wnd.gfx(),0.0f,0.0f,0.0f };
 	std::vector<Box*> vb;
 	Timer timer;
 };
