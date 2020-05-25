@@ -331,9 +331,9 @@ void App::Update(float dt)
 	wnd.gfx().SetView(cam.GetViewXM());
 	wnd.gfx().SetCameraPos(cam.GetPosition());	
 	b1.SetRS(wnd.gfx(), RasterizerState::RasterizerType::Default);
-	bezierPatch.SetRS(wnd.gfx(), RasterizerState::RasterizerType::Default);
-	//b1.Draw(wnd.gfx());
-	bezierPatch.Draw(wnd.gfx());
+	//bezierPatch.SetRS(wnd.gfx(), RasterizerState::RasterizerType::Default);
+	b1.Draw(wnd.gfx());
+	//bezierPatch.Draw(wnd.gfx());
 	//wnd.gfx().ResetGS();
 	wnd.gfx().EndFrame();
 }

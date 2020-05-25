@@ -147,11 +147,26 @@ TerrainClass::TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos,UINT tW, UINT
 	else
 	{
 		
-		std::vector<DirectX::XMFLOAT3> vertices =
+		/*std::vector<DirectX::XMFLOAT3> vertices =
 		{
 			{-10.0f, 0.0f, +10.0f},
 			{+10.0f, 0.0f, +10.0f},
 			{-10.0f, 0.0f, -10.0f},
+			{+10.0f, 0.0f, -10.0f}
+		};*/
+
+		std::vector<DirectX::XMFLOAT3> vertices =
+		{
+			{-10.0f, 0.0f, +10.0f},
+			{-10.0f,0.0f,0.0f},
+			{-10.0f, 0.0f, -10.0f},
+
+			{0.0f,0.0f,+10.0f},
+			{0.0f,0.0f,0.0f},
+			{0.0f,0.0f,-10.0f},
+			
+			{+10.0f, 0.0f, +10.0f},
+			{10.0f,0.0f,0.0f},
 			{+10.0f, 0.0f, -10.0f}
 		};
 		AddStaticBind(std::make_unique<VertexBuffer>(gfx,vertices));
@@ -167,7 +182,7 @@ TerrainClass::TerrainClass(Graphics& gfx, DirectX::XMFLOAT3 eyePos,UINT tW, UINT
 		};
 
 		AddStaticBind(std::make_unique<InputLayout>(gfx, ied, vsBlob));
-		AddStaticBind(std::make_unique<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST));
+		AddStaticBind(std::make_unique<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_9_CONTROL_POINT_PATCHLIST));
 	}
 	 AddBind(std::make_unique<TransformationBuffer>(gfx, *this));
 }
