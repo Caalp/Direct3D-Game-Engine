@@ -95,7 +95,7 @@
       <ConformanceMode>true</ConformanceMode>
       <FloatingPointModel>Fast</FloatingPointModel>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)Raknet\include;%(AdditionalIncludeDirectories);$(ProjectDir)DirectXTex\x86\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)includes;$(ProjectDir)Raknet\include;%(AdditionalIncludeDirectories);$(ProjectDir)DirectXTex\x86\include</AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>
       </AdditionalUsingDirectories>
     </ClCompile>
