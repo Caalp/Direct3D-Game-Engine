@@ -1,6 +1,5 @@
 #include "App.h"
 #include "Box.h"
-#include "Model.h"
 #include <random>
 
 App::App() :

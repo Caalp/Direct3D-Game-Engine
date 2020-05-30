@@ -33,7 +33,7 @@
 //
 //std::unique_ptr<Mesh> Model::ParseMesh(Graphics & gfx, const aiMesh& mesh, const aiMaterial * const * pMaterials)
 //{
-//	std::vector<std::unique_ptr<Bindables>> bindablePtrs;
+//	std::vector<std::unique_ptr<Bindable>> bindablePtrs;
 //	std::vector<V> vertices;
 //	std::vector<WORD> indices;
 //	std::vector<Texture2> textures;
@@ -123,10 +123,10 @@
 //	return pNode;
 //}
 //
-//Mesh::Mesh(Graphics & gfx, std::vector<std::unique_ptr<Bindables>> bindables)
+//Mesh::Mesh(Graphics & gfx, std::vector<std::unique_ptr<Bindable>> Bindable)
 //{
 //	AddBind(std::make_unique<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
-//	for (auto& elem : bindables)
+//	for (auto& elem : Bindable)
 //	{
 //		AddBind(std::move(elem));
 //	}

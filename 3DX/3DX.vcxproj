@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\calpy\source\repos\3DX\3DX\assimp\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\calpy\source\repos\3DX\3DX\libs;C:\Users\calpy\source\repos\3DX\3DX\assimp\bin\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\calpy\source\repos\Direct3D\3DX\includes;C:\Users\calpy\source\repos\3DX\3DX\assimp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\calpy\source\repos\3DX\3DX\assimp\bin\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>C:\Users\calpy\source\repos\3DX\3DX\assimp\include;$(IncludePath)</IncludePath>
@@ -100,8 +100,8 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)3DX\assimp\bin\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3dx11d.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\calpy\source\repos\Direct3D\3DX\libs;$(SolutionDir)3DX\assimp\bin\x64</AdditionalLibraryDirectories>
     </Link>
     <FxCompile />
     <FxCompile>
@@ -149,7 +149,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)3DX\assimp\bin\x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3dx11.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
@@ -178,15 +178,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Bindables.cpp" />
+    <ClCompile Include="Bindable.cpp" />
+    <ClCompile Include="BlendState.cpp" />
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CommandBucket.cpp" />
     <ClCompile Include="CommandPacket.cpp" />
     <ClCompile Include="CustomException.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
+    <ClCompile Include="DomainShader.cpp" />
     <ClCompile Include="Drawable.cpp" />
+    <ClCompile Include="DSS.cpp" />
+    <ClCompile Include="GeometryShader.cpp" />
     <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="HullShader.cpp" />
     <ClCompile Include="IndexBuff.cpp" />
     <ClCompile Include="InputLayout.cpp" />
     <ClCompile Include="Keyboard.cpp" />
@@ -196,14 +201,15 @@
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PrimitiveTopology.cpp" />
+    <ClCompile Include="RasterizerState.cpp" />
     <ClCompile Include="SamplerState.cpp" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="Step.cpp" />
     <ClCompile Include="Surface.cpp" />
     <ClCompile Include="TerrainClass.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="Timer.h" />
     <ClCompile Include="TransformationBuffer.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="VertexShader.cpp" />
@@ -212,17 +218,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="additional_headers.h" />
-    <ClInclude Include="Bindables.h" />
+    <ClInclude Include="Bindable.h" />
+    <ClInclude Include="BlendState.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CommandBucket.h" />
     <ClInclude Include="CommandPacket.h" />
     <ClInclude Include="DirectionalLight.h" />
+    <ClInclude Include="DomainShader.h" />
     <ClInclude Include="Drawable.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="ConstBuffs.h" />
     <ClInclude Include="CustomException.h" />
+    <ClInclude Include="DSS.h" />
+    <ClInclude Include="GeometryShader.h" />
     <ClInclude Include="Graphics.h" />
+    <ClInclude Include="HullShader.h" />
     <ClInclude Include="IndexBuff.h" />
     <ClInclude Include="InputLayout.h" />
     <ClInclude Include="Keyboard.h" />
@@ -233,6 +244,7 @@
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="PrimitiveTopology.h" />
+    <ClInclude Include="RasterizerState.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SamplerState.h" />
     <ClInclude Include="SpotLight.h" />
@@ -240,6 +252,8 @@
     <ClInclude Include="Surface.h" />
     <ClInclude Include="TerrainClass.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureLoader.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="TransformationBuffer.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexShader.h" />
@@ -299,13 +313,33 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="TextureMappingPS.hlsl">
+    <FxCompile Include="PS_Textured.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="PS_TextureMapping.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="TextureMappingVS.hlsl">
+    <FxCompile Include="VS_TextureMapping.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="VS_Textured.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

@@ -5,7 +5,7 @@ Step::Step(const std::string ID)
 	stepID = ID;
 }
 
-void Step::AddBind(std::shared_ptr<Bindables> bindable)
+void Step::AddBind(std::shared_ptr<Bindable> bindable)
 {
 	bindables.push_back(std::move(bindable));
 }

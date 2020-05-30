@@ -1,7 +1,7 @@
 #pragma once
-#include "Bindables.h"
+#include "Bindable.h"
 
-class PixelShader : public Bindables
+class PixelShader : public Bindable
 {
 public:
 	PixelShader(Graphics& gfx,LPCWSTR filename);

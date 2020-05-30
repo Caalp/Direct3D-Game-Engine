@@ -1,7 +1,7 @@
 #pragma once
-#include "Bindables.h"
+#include "Bindable.h"
 template<typename C>
-class ConstBuffs : public Bindables
+class ConstBuffs : public Bindable
 {
 	
 public:
@@ -61,11 +61,11 @@ public:
 	
 	void Bind(Graphics& gfx) override
 	{
-		Bindables::GetContext(gfx)->VSSetConstantBuffers(0u, 1u,pConstBuffer.GetAddressOf());
+		Bindable::GetContext(gfx)->VSSetConstantBuffers(0u, 1u,pConstBuffer.GetAddressOf());
 	}
 	void Bind(Graphics& gfx, UINT startSlot,UINT numofBuff) override
 	{
-		Bindables::GetContext(gfx)->VSSetConstantBuffers(startSlot,numofBuff, ConstBuffs<C>::pConstBuffer.GetAddressOf());
+		Bindable::GetContext(gfx)->VSSetConstantBuffers(startSlot,numofBuff, ConstBuffs<C>::pConstBuffer.GetAddressOf());
 	}
 };
 
@@ -79,7 +79,7 @@ public:
 
 	void Bind(Graphics& gfx) override
 	{
-		Bindables::GetContext(gfx)->PSSetConstantBuffers(slot, 1u,pConstBuffer.GetAddressOf());
+		Bindable::GetContext(gfx)->PSSetConstantBuffers(slot, 1u,pConstBuffer.GetAddressOf());
 	}
 	/*void Bind(Graphics& gfx, UINT startSlot, UINT numofBuff) override
 	{

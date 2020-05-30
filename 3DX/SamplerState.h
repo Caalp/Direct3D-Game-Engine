@@ -1,7 +1,7 @@
 #pragma once
-#include "Bindables.h"
+#include "Bindable.h"
 
-class SamplerState : public Bindables
+class SamplerState : public Bindable
 {
 public:
 	SamplerState(Graphics& gfx);
