@@ -11,5 +11,11 @@ SamplerState sampState;
 
 float4 main(VSOut pin) : SV_Target
 {
-	return tex.Sample(sampState,pin.tex);
+
+	float4 color =  tex.Sample(sampState,pin.tex);
+	if ((color.a - 0.05f) < 0)
+	{
+		clip(color.a - 0.05f);
+	}
+	return color;
 }

@@ -9,3 +9,8 @@
 #include "PrimitiveTopology.h"
 #include "TransformationBuffer.h"
 #include "SamplerState.h"
+#include "RasterizerState.h"
+#include "GeometryShader.h"
+#include "DomainShader.h"
+#include "HullShader.h"
+#include "BlendState.h"
