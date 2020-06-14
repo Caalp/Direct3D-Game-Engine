@@ -184,7 +184,7 @@ Box::Box(Graphics & gfx, float x, float y, float z) :
 
 			s1.AddBind(std::make_shared<TransformationBuffer>(gfx, *this));
 			//s1.AddBind(std::make_shared< PSConstBuff <PixelShaderConstants>>(gfx, cb2, 0u));
-
+			s1.AddBind(std::make_shared<RasterizerState>(gfx, RasterizerState::RasterizerType::NoCull));
 
 			cmd.PushStep(s1);
 			
