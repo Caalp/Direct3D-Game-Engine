@@ -4,12 +4,13 @@
 #include<wrl.h>
 #include <directxmath.h>
 #include <d3dcompiler.h>
-
+#include "Command.h"
 
 
 class Graphics
 {
 	friend class Bindable;
+	friend class Command;
 public:
 	Graphics(HWND hWnd);
 	~Graphics() = default;

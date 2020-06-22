@@ -222,6 +222,7 @@
     <ClInclude Include="BlendState.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Command.h" />
     <ClInclude Include="CommandBucket.h" />
     <ClInclude Include="CommandPacket.h" />
     <ClInclude Include="DirectionalLight.h" />
@@ -255,6 +256,7 @@
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TransformationBuffer.h" />
+    <ClInclude Include="union_cast.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexShader.h" />
     <ClInclude Include="Window.h" />
