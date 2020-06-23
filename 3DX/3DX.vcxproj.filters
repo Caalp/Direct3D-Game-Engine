@@ -43,6 +43,9 @@
     <Filter Include="Source Files\RenderQueueItems">
       <UniqueIdentifier>{72d665e9-2e13-4ab4-9b6b-ed62c72b94f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Buckets">
+      <UniqueIdentifier>{8b524781-1732-4ba9-8e84-623426d8958f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -120,12 +123,6 @@
     <ClCompile Include="TerrainClass.cpp">
       <Filter>Source Files\Drawables</Filter>
     </ClCompile>
-    <ClCompile Include="CommandBucket.cpp">
-      <Filter>Source Files\RenderQueueItems</Filter>
-    </ClCompile>
-    <ClCompile Include="CommandPacket.cpp">
-      <Filter>Source Files\RenderQueueItems</Filter>
-    </ClCompile>
     <ClCompile Include="Step.cpp">
       <Filter>Source Files\RenderQueueItems</Filter>
     </ClCompile>
@@ -155,6 +152,9 @@
     </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultBucket.h">
+      <Filter>Header Files\Buckets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

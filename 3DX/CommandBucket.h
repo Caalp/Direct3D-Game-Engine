@@ -23,6 +23,8 @@ public:
 
 	}
 	//CommandBucket(const Drawable* db,std::string bucketID);
+	void Sort();
+	void Flush();
 	void Submit(std::shared_ptr<CommandPacket> cmdPacket);
 	void ProcessBucket(Graphics& gfx);
 	
@@ -32,6 +34,8 @@ private:
 	Key* keys;
 	CommandPacket* cmdPackets;
 	static unsigned int currentIndex;
+	// Think about type of the bindable (unique_ptr) etc
+	std::vector<std::unique_ptr<Bindable>> bucketBindables;
 };
 
 template<typename T>

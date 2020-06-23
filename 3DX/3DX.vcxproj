@@ -182,8 +182,6 @@
     <ClCompile Include="BlendState.cpp" />
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="CommandBucket.cpp" />
-    <ClCompile Include="CommandPacket.cpp" />
     <ClCompile Include="CustomException.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="DomainShader.cpp" />
@@ -203,6 +201,7 @@
     <ClCompile Include="PrimitiveTopology.cpp" />
     <ClCompile Include="RasterizerState.cpp" />
     <ClCompile Include="SamplerState.cpp" />
+    <ClCompile Include="DefaultBucket.h" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="Step.cpp" />
     <ClCompile Include="Surface.cpp" />

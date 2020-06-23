@@ -1,17 +1,16 @@
 #pragma once
 
 
-typedef const void* BackendDispatchFunction;
-
+//function pointer typedef
+typedef void(*BackendDispatchFunction)(const void*);
 
 namespace command
 {
 	struct Draw
 	{
-
-		//backendDispatch function
-		//vertexCount
-		//startindex
+		static const BackendDispatchFunction BackendDispatch;
+		UINT startIndex;
+		UINT indexCount;
 		//vertexbuffer
 		//primitiveTopology
 		//vertexlayout
@@ -19,13 +18,12 @@ namespace command
 	};
 	struct DrawIndexed
 	{
-
-		BackendDispatchFunction bdf;
+		static const BackendDispatchFunction BackendDispatch;
 		UINT startIndex;
 		UINT indexCount;
-		std::unique_ptr<Bindable> vertexBuffer;
-		std::unique_ptr<Bindable> indexBuff;
-		std::unique_ptr<PrimitiveTopology> topology;
+		//std::unique_ptr<Bindable> vertexBuffer;
+		//std::unique_ptr<Bindable> indexBuff;
+		//std::unique_ptr<PrimitiveTopology> topology;
 		
 		//vertexlayout
 
@@ -33,7 +31,7 @@ namespace command
 }
 
 
-namespace BackendDispatch 
+namespace backendDispatch 
 {
 	void Draw(const void* data)
 	{

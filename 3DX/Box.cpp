@@ -138,7 +138,7 @@ Box::Box(Graphics & gfx, float x, float y, float z) :
 		primitiveTopology = std::make_shared<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		indexBuffer = std::make_shared<IndexBuff>(gfx, indices);
 		
-		CommandPacket cmd{ this };
+		//CommandPacket cmd{ this };
 		//
 		//{
 		//	Step s0{ "default_box" };
