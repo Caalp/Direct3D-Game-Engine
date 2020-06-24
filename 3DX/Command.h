@@ -2,7 +2,7 @@
 
 
 //function pointer typedef
-typedef void(*BackendDispatchFunction)(const void*);
+typedef void(*BackendDispatchFunction)(const void*,void*);
 
 namespace command
 {
@@ -28,20 +28,22 @@ namespace command
 		//vertexlayout
 
 	};
+	const BackendDispatchFunction DrawIndexed::BackendDispatch = &backendDispatch::DrawIndexed;
 }
 
 
 namespace backendDispatch 
 {
-	void Draw(const void* data)
+	void Draw(const void* data,void* gfx)
 	{
 		const command::Draw* realData = reinterpret_cast<const command::Draw*>(data);
-		// TO DO : backend draw call
+		
 	}
-	void DrawIndexed(const void* data)
+	void DrawIndexed(const void* data,void* gfx)
 	{
 		const command::DrawIndexed* realData = reinterpret_cast<const command::DrawIndexed*>(data);
-		
+		Graphics* const pGfx = reinterpret_cast<Graphics* const>(gfx);
+		pGfx->DrawIndexed(realData->indexCount);
 		//Graphics::DrawIndexed(realData->indexCount);
 	}
 }
