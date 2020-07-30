@@ -5,8 +5,13 @@
 #include <directxmath.h>
 #include <d3dcompiler.h>
 #include "Command.h"
+#include "Imgui\\imgui_impl_dx11.h"
+#include "Imgui\\imgui.h"
+#include "Imgui\\imgui_impl_win32.h"
 
 
+bool show_demo_window = false;
+class RenderTarget;
 class Graphics
 {
 	friend class Bindable;
@@ -22,7 +27,7 @@ public:
 	void DrawIndexed(UINT count);
 	void EndFrame();
 	void ClearFrame(float red,float gren,float blue);
-
+	std::shared_ptr<RenderTarget> GetTarget();
 	//friend class Box;
 
 	DirectX::XMMATRIX GetView() const;
@@ -33,15 +38,29 @@ public:
 	DirectX::XMMATRIX GetCamera() const;
 	void SetCameraPos(const DirectX::XMFLOAT3& pos);
 	DirectX::XMFLOAT3 GetCameraPos() const;
+
+
+	// These functions need definition
+	const UINT& GetWidth() const;
+	const UINT& GetHeight() const;
+
+
 private:
 	DirectX::XMMATRIX projection;
 	DirectX::XMMATRIX view;
 	DirectX::XMMATRIX camera;
 	DirectX::XMFLOAT3 cameraPos;
-protected:
-	Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
-	Microsoft::WRL::ComPtr<IDXGISwapChain> pSwapChain;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pImmediateContext;
-	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTarget;
+	
+public:
+	static Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
+	static Microsoft::WRL::ComPtr<IDXGISwapChain> pSwapChain;
+	static Microsoft::WRL::ComPtr<ID3D11DeviceContext> pImmediateContext;
+	std::shared_ptr<RenderTarget> pTarget;
+	
+
 	
 };
+
+Microsoft::WRL::ComPtr<ID3D11Device> Graphics::pDevice;
+Microsoft::WRL::ComPtr<IDXGISwapChain> Graphics::pSwapChain;
+Microsoft::WRL::ComPtr<ID3D11DeviceContext> Graphics::pImmediateContext;

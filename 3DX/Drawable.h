@@ -1,8 +1,9 @@
 #pragma once
 
 #include "additional_headers.h"
+#include "Technique.h"
 
-#include "CommandBucket.h"
+class RenderGraph;
 
 class Drawable
 {
@@ -11,20 +12,22 @@ public:
 	Drawable() = default;
 	Drawable(const Drawable&) = delete;
 	void Bind(Graphics& gfx) const;
-	void LinkBucket(CommandBucket* cmdBucket);
+	
+	void LinkTechnique(RenderGraph& rg);
 	virtual DirectX::XMMATRIX GetTransformation() const { return DirectX::XMMatrixIdentity(); };
 	virtual DirectX::XMMATRIX GetTransformation(Graphics& gfx) const { return DirectX::XMMatrixIdentity(); };
 	virtual DirectX::XMMATRIX GetTexTransformXM() const { return DirectX::XMMatrixIdentity(); }
 
-	
-	void PushPacket(std::shared_ptr<CommandPacket> cmd);
+	void AppendTechnique(const Technique& tech);
+	void Submit(size_t channel);
 	UINT GetIndexCount() const;
 
 protected:
-	std::shared_ptr<IndexBuff> indexBuffer;
-	std::shared_ptr<VertexBuffer> vertexBuffer;
-	std::shared_ptr<PrimitiveTopology> primitiveTopology;
-	std::shared_ptr<CommandPacket> cmdPacket;
+	std::unique_ptr<VertexBuffer> vertexBuffer;
+	std::unique_ptr<PrimitiveTopology> primitiveTopology;
+	std::unique_ptr<IndexBuff> indexBuffer;
+	std::vector<Technique> techniques;
 
 };
+
 

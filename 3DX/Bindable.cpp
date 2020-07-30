@@ -10,7 +10,7 @@ ID3D11DeviceContext * Bindable::GetContext(Graphics & gfx)
 	return gfx.pImmediateContext.Get();
 }
 
-ID3D11RenderTargetView * Bindable::GetTarget(Graphics & gfx)
+const std::shared_ptr<RenderTarget>& Bindable::GetTarget(Graphics & gfx)
 {
-	return gfx.pTarget.Get();
+	return gfx.pTarget;
 }

@@ -1,16 +1,33 @@
 #pragma once
-#include "Bindable.h"
+
 #include <vector>
 #include <memory>
 #include <string>
+
+
+
+
+class RenderGraph;
+class RenderQueuePass;
+class Bindable;
+class Drawable;
+class Graphics;
+
 class Step
 {
+	
 public:
-	Step(const std::string ID);
+	Step( std::string targetName);
 	void AddBind(std::shared_ptr<Bindable> bindable);
-	void Bind(Graphics& gfx);
-private:
-	std::string stepID;
-	std::vector<std::shared_ptr<Bindable>> bindables;
+	void Submit(Drawable& d);
+	void Link(RenderGraph& rg);
+	void Bind(Graphics& gfx) const ;
+	const std::string& GetTargetPassName() const;
 
+	//void Submit(RenderGraph& rg);
+private:
+	std::string targetPassName;
+	std::vector<std::shared_ptr<Bindable>> bindables;
+	RenderQueuePass* targetPass;
+	//static const BackendDispatchFunction dispatchFunction;
 };

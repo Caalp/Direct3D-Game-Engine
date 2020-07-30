@@ -2,7 +2,9 @@
 #include "additional_headers.h"
 #include "Texture.h"
 #include "Surface.h"
-
+#include "Channels.h"
+#include "Technique.h"
+#include "Step.h"
 
 Box::Box(Graphics & gfx, float x, float y, float z) :
 	x(x), y(y), z(z)
@@ -133,10 +135,14 @@ Box::Box(Graphics & gfx, float x, float y, float z) :
 				20,23,21, 20,22,23
 
 		};
+
+		vertexBuffer = std::make_unique<VertexBuffer>(gfx, vertices);
+		primitiveTopology = std::make_unique<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		indexBuffer = std::make_unique<IndexBuff>(gfx, indices);
 		
-		vertexBuffer = std::make_shared<VertexBuffer>(gfx, vertices);
-		primitiveTopology = std::make_shared<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		indexBuffer = std::make_shared<IndexBuff>(gfx, indices);
+		//vertexBuffer = std::make_shared<VertexBuffer>(gfx, vertices);
+		//primitiveTopology = std::make_shared<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		//indexBuffer = std::make_shared<IndexBuff>(gfx, indices);
 		
 		//CommandPacket cmd{ this };
 		//
@@ -163,9 +169,9 @@ Box::Box(Graphics & gfx, float x, float y, float z) :
 		//	//PushPacket(std::make_shared<CommandPacket>(cmd));
 		//	
 		//}
-
+		Technique textured_object("defaultBox",channel1::defaultChannel);
 		{
-			Step s1{ "textured_box" };
+			Step s1{"default"};
 
 			s1.AddBind(std::make_shared<PixelShader>(gfx, L"PS_TextureMapping.cso"));
 			auto vs = std::make_shared<VertexShader>(gfx, L"VS_TextureMapping.cso");
@@ -184,25 +190,20 @@ Box::Box(Graphics & gfx, float x, float y, float z) :
 
 			s1.AddBind(std::make_shared<TransformationBuffer>(gfx, *this));
 			//s1.AddBind(std::make_shared< PSConstBuff <PixelShaderConstants>>(gfx, cb2, 0u));
-			s1.AddBind(std::make_shared<RasterizerState>(gfx, RasterizerState::RasterizerType::NoCull));
+			//s1.AddBind(std::make_shared<RasterizerState>(gfx, RasterizerState::RasterizerType::NoCull));
 
-			cmd.PushStep(s1);
-			
-
-
+			textured_object.AddStep(s1);
 		}
+		AppendTechnique(textured_object);
+		
+		
+		
 
 		
 		
-		PushPacket(std::make_shared<CommandPacket>(cmd));
-		
-
 		
 		
-		
-		
-		
-		
+				
 }
 
 void Box::Update(float ft)

@@ -8,6 +8,8 @@
 #include "Model.h"
 #include "CommandBucket.h"
 #include "Timer.h"
+#include "TestRenderGraph.h"
+
 class App
 {
 public:
@@ -27,7 +29,8 @@ private:
 	float last_x;
 	float last_y;
 	float mPhi, mTheta,mRadius;
-	CommandBucket bucket0;
+	TestRenderGraph rg{ wnd.gfx() };
+	//CommandBucket bucket0;
 	//Model m;
 	//TerrainClass b1{ wnd.gfx(), cam.GetPosition(), 50, 50, 160.0f, 160.0f };
 	Box box0{ wnd.gfx(),0.0f,0.0f,0.0f };

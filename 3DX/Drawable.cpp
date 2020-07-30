@@ -1,27 +1,39 @@
 #include "Drawable.h"
 
-void Drawable::Bind(Graphics & gfx) const
+#include "RenderGraph.h"
+
+void Drawable::Bind(Graphics& gfx) const
 {
-	indexBuffer->Bind(gfx);
 	vertexBuffer->Bind(gfx);
 	primitiveTopology->Bind(gfx);
+	indexBuffer->Bind(gfx);
 }
 
-void Drawable::LinkBucket(CommandBucket * cmdBucket)
+void Drawable::LinkTechnique(RenderGraph& rg)
 {
-	cmdBucket->Submit(std::move(cmdPacket));
+	for (auto& elem : techniques)
+	{
+		elem.Link(rg);
+	}
 }
 
-
-
-
-void Drawable::PushPacket(std::shared_ptr<CommandPacket> cmd)
+void Drawable::AppendTechnique(const Technique& tech)
 {
-	cmdPacket = std::move(cmd);
+	techniques.push_back(tech);
+}
+
+void Drawable::Submit(size_t channel)
+{
+	for (auto& t : techniques)
+	{
+		t.Submit(*this,channel);
+	}
 }
 
 UINT Drawable::GetIndexCount() const
 {
 	return indexBuffer->GetIndexCount();
 }
+
+
 

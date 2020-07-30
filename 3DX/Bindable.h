@@ -3,11 +3,9 @@
 #include "Camera.h"
 
 
-
 class Bindable
 {
 	
-	friend class DrawableBase;
 public:
 	virtual void Bind(Graphics& gfx) = 0;
 	virtual void Bind(Graphics& gfx, UINT, UINT) {};
@@ -17,5 +15,5 @@ public:
 protected:
 	static ID3D11Device* GetDevice(Graphics& gfx);
 	static ID3D11DeviceContext* GetContext(Graphics& gfx);
-	static ID3D11RenderTargetView* GetTarget(Graphics& gfx);
+	static const std::shared_ptr<RenderTarget>& GetTarget(Graphics& gfx);
 };

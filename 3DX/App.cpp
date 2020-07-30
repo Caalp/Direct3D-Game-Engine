@@ -1,7 +1,7 @@
 #include "App.h"
 #include "Box.h"
 #include <random>
-
+#include "Channels.h"
 App::App() :
 	wnd(800, 600, "Hello") ,x(0.5f),y(-4.5f),z(0.0f),last_x(0),last_y(0),
 	//(wnd.gfx()),
@@ -17,8 +17,8 @@ App::App() :
 	
 	vb.resize(100);
 	
-	box0.LinkBucket(&bucket0);
-	
+	//box0.LinkBucket(&bucket0);
+	box0.LinkTechnique(rg);
 }
 
 App::~App()
@@ -53,7 +53,7 @@ void App::Update(float dt)
 	static float v = 70.0f;
 	float dtheta = 0.2f;
 	
-	wnd.gfx().ClearFrame(0.2f, 0.4f, 0.5f);
+	
 	cam.UpdateViewXM();
 	wnd.gfx().SetCamera(cam.ViewProjXM());
 	wnd.gfx().SetView(cam.GetViewXM());
@@ -112,20 +112,22 @@ void App::Update(float dt)
 
 	}
 	box0.Update(dt);
-	box0.Bind(wnd.gfx());
-
-	bucket0.ProcessBucket(wnd.gfx());
+	box0.Submit(channel1::defaultChannel);
+	
+	//bucket0.ProcessBucket(wnd.gfx());
 	
 	/*dirLight.Bind(wnd.gfx());
 	pointLight.Bind(wnd.gfx());
 	spotLight.Bind(wnd.gfx());*/
 	
 	
+	rg.Execute(wnd.gfx());
 	
 	
+	//static bool show_demo_window = false;
 	
-
 	//wnd.gfx().DrawCube(45.0f, wnd.mouse.GetPosX() / 400.0f - 1.0f, -wnd.mouse.GetPosY() / 300.0f + 1.0f);
 	
 	wnd.gfx().EndFrame();
+	rg.Reset();
 }
