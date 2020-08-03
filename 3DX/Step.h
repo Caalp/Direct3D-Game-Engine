@@ -23,9 +23,11 @@ public:
 	void Link(RenderGraph& rg);
 	void Bind(Graphics& gfx) const ;
 	const std::string& GetTargetPassName() const;
+	bool isLinked() const;
 
 	//void Submit(RenderGraph& rg);
 private:
+	bool linked = false;
 	std::string targetPassName;
 	std::vector<std::shared_ptr<Bindable>> bindables;
 	RenderQueuePass* targetPass;

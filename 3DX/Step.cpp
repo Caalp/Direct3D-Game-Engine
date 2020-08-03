@@ -22,9 +22,15 @@ void Step::Submit(Drawable& d)
 void Step::Link(RenderGraph& rg)
 {
 	// Check if targetPass is already linked
-	assert(targetPass == nullptr);
+	//assert(targetPass == nullptr);
 	// Get the renderQueuePass from argument RenderQueue
-	targetPass = &rg.GetRenderQueuePass(targetPassName);
+	if (!targetPass)
+	{
+		targetPass = rg.GetRenderQueuePass(targetPassName);
+	}
+	
+	
+	
 }
 
 void Step::Bind(Graphics & gfx) const 
@@ -39,4 +45,9 @@ void Step::Bind(Graphics & gfx) const
 const std::string& Step::GetTargetPassName() const
 {
 	return targetPassName;
+}
+
+bool Step::isLinked() const
+{
+	return linked;
 }

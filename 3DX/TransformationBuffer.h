@@ -23,7 +23,7 @@ private:
 	};
 	
 protected:
-	TransformBuffer _TransformBuffer;
+	TransformBuffer _TransformBuffer; 
 	mutable std::unique_ptr<VSConstBuff<TransformBuffer>> m_TransformBuffer;
 	const Drawable& parent;
 	

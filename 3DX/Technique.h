@@ -2,6 +2,7 @@
 #include <string>
 #include "Step.h"
 
+
 class RenderGraph;
 
 class Technique
@@ -13,7 +14,7 @@ public:
 	void Link(RenderGraph& rg);
 	void Submit(Drawable& d, size_t channel);
 	void AddStep(Step& step);
-	
+	std::string GetName() const;
 
 private:
 	bool isActive = true;

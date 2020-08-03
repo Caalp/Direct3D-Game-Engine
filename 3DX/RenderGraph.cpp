@@ -19,23 +19,25 @@ RenderGraph::RenderGraph(Graphics& gfx) : backBuffer(gfx.GetTarget()),depthBuffe
     AddGlobalSink(DirectBufferSink<DepthStencil>::Make("depthbuffer", depthBuffer));
 }
 
-RenderQueuePass& RenderGraph::GetRenderQueuePass(const std::string& techName)
+RenderQueuePass* RenderGraph::GetRenderQueuePass(const std::string& techName)
 {
-    try
-    {
-        for (const auto& p : passes)
-        {
-            if (p->GetPassName() == techName)
-            {
-                return dynamic_cast<RenderQueuePass&>(*p);
-            }
-        }
-    }
-    catch(std::bad_cast& e)
-    {
-        throw(e.what());
-    }
-
+  
+       try
+       {
+           for (const auto& p : passes)
+           {
+               if (p->GetPassName() == techName)
+               {
+                   
+                   return dynamic_cast<RenderQueuePass*>(p.get());
+               }
+           }
+       }
+       catch (std::bad_cast& e)
+       {
+           throw(e.what());
+       }
+       return nullptr;
 }
 
 void RenderGraph::AddGlobalSource(std::unique_ptr<Source> source)

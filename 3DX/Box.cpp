@@ -6,11 +6,13 @@
 #include "Technique.h"
 #include "Step.h"
 
-Box::Box(Graphics & gfx, float x, float y, float z) :
-	x(x), y(y), z(z)
+Box::Box(Graphics & gfx, float x, float y, float z) : Drawable("box")
+	/*posX(x), y(y), z(z)*/
 {
 
-	
+	posX = x;
+	posY = y;
+	posZ = z;
 	
 		struct Vertex
 		{
@@ -169,34 +171,57 @@ Box::Box(Graphics & gfx, float x, float y, float z) :
 		//	//PushPacket(std::make_shared<CommandPacket>(cmd));
 		//	
 		//}
-		Technique textured_object("defaultBox",channel1::defaultChannel);
+		Technique textured_object("box",channel1::defaultChannel);
 		{
-			Step s1{"default"};
-
-			s1.AddBind(std::make_shared<PixelShader>(gfx, L"PS_TextureMapping.cso"));
-			auto vs = std::make_shared<VertexShader>(gfx, L"VS_TextureMapping.cso");
-			auto vsBlob = vs->GetVBlob();
-			s1.AddBind(std::move(vs));
-			const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 			{
-				{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-				{ "TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0 }
-			};
+				Step s1{ "default" };
 
-			s1.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
+				s1.AddBind(std::make_shared<PixelShader>(gfx, L"PS_TextureMapping.cso"));
+				auto vs = std::make_shared<VertexShader>(gfx, L"VS_TextureMapping.cso");
+				auto vsBlob = vs->GetVBlob();
+				s1.AddBind(std::move(vs));
+				const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
+				{
+					{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+					{ "TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0 }
+				};
 
-			s1.AddBind(std::make_shared<SamplerState>(gfx));
-			s1.AddBind(std::make_shared<Texture>(gfx, "Textures\\WireFence.dds"));
+				s1.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
 
-			s1.AddBind(std::make_shared<TransformationBuffer>(gfx, *this));
-			//s1.AddBind(std::make_shared< PSConstBuff <PixelShaderConstants>>(gfx, cb2, 0u));
-			//s1.AddBind(std::make_shared<RasterizerState>(gfx, RasterizerState::RasterizerType::NoCull));
+				s1.AddBind(std::make_shared<SamplerState>(gfx));
+				s1.AddBind(std::make_shared<Texture>(gfx, "Textures\\WireFence.dds"));
 
-			textured_object.AddStep(s1);
+				s1.AddBind(std::make_shared<TransformationBuffer>(gfx, *this));
+				SetTransformationXM(DirectX::XMMatrixIdentity());
+				textured_object.AddStep(s1);
+			}
+			{
+				Step s2{ "mirrorReflection" };
+
+				s2.AddBind(std::make_shared<PixelShader>(gfx, L"PS_TextureMapping.cso"));
+				auto vs = std::make_shared<VertexShader>(gfx, L"VS_TextureMapping.cso");
+				auto vsBlob = vs->GetVBlob();
+				s2.AddBind(std::move(vs));
+				const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
+				{
+					{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+					{ "TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0 }
+				};
+
+				s2.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
+
+				s2.AddBind(std::make_shared<SamplerState>(gfx));
+				s2.AddBind(std::make_shared<Texture>(gfx, "Textures\\WireFence.dds"));
+
+				s2.AddBind(std::make_shared<TransformationBuffer>(gfx, *this));
+				DirectX::XMVECTOR mirrorPlane = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+				DirectX::XMMATRIX R = DirectX::XMMatrixReflect(mirrorPlane);
+
+				SetTransformationXM(DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll)* DirectX::XMMatrixTranslation(x, y, z) * R);
+				textured_object.AddStep(s2);
+			}
 		}
 		AppendTechnique(textured_object);
-		
-		
 		
 
 		
@@ -206,19 +231,21 @@ Box::Box(Graphics & gfx, float x, float y, float z) :
 				
 }
 
-void Box::Update(float ft)
-{
-	pitch += ft;
-	yaw += ft;
-	roll += ft;
-	
-}
+//void Box::Update(float ft)
+//{
+//
+//	pitch += ft;
+//	yaw += ft;
+//	roll += ft;
+//	SetTransformationXM(DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(x, y, z));
+//	
+//}
 
-DirectX::XMMATRIX Box::GetTransformation() const
-{
-	return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(x, y,z);
-	//return DirectX::XMMatrixIdentity();
-}
+//DirectX::XMMATRIX Box::GetTransformation() const
+//{
+//	return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(x, y,z);
+//	//return DirectX::XMMatrixIdentity();
+//}
 
 
 

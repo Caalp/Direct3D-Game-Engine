@@ -52,6 +52,9 @@
     <Filter Include="Header Files\Imgui">
       <UniqueIdentifier>{5ff1a495-b37b-4b58-ac25-e708733e6e48}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\RenderGraphs">
+      <UniqueIdentifier>{a8f61274-6448-441a-8c71-31b92393825d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -213,6 +216,27 @@
     <ClCompile Include="Imgui\imgui_demo.cpp">
       <Filter>Source Files\Imgui</Filter>
     </ClCompile>
+    <ClCompile Include="MarkMirrorPass.cpp">
+      <Filter>Source Files\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="BlendTransparentPass.cpp">
+      <Filter>Source Files\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="MirrorReflectionPass.cpp">
+      <Filter>Source Files\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="Sphere.cpp">
+      <Filter>Source Files\Drawables</Filter>
+    </ClCompile>
+    <ClCompile Include="Plane.cpp">
+      <Filter>Source Files\Drawables</Filter>
+    </ClCompile>
+    <ClCompile Include="Cylinder.cpp">
+      <Filter>Source Files\Drawables</Filter>
+    </ClCompile>
+    <ClCompile Include="Icosahedron.cpp">
+      <Filter>Source Files\Drawables</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinHeader.h">
@@ -353,9 +377,6 @@
     <ClInclude Include="ClearBufferPass.h">
       <Filter>Header Files\Passes</Filter>
     </ClInclude>
-    <ClInclude Include="TestRenderGraph.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DefaultPass.h">
       <Filter>Header Files\Passes</Filter>
     </ClInclude>
@@ -415,6 +436,36 @@
     </ClInclude>
     <ClInclude Include="Imgui\imstb_truetype.h">
       <Filter>Header Files\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="MarkMirrorPass.h">
+      <Filter>Header Files\Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="MirrorReflectionPass.h">
+      <Filter>Header Files\Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="BlendTransparentPass.h">
+      <Filter>Header Files\Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="TestRenderGraph.h">
+      <Filter>Header Files\RenderGraphs</Filter>
+    </ClInclude>
+    <ClInclude Include="MirrorRenderGraph.h">
+      <Filter>Header Files\RenderGraphs</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>Header Files\Drawables</Filter>
+    </ClInclude>
+    <ClInclude Include="CyclopsUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>Header Files\Drawables</Filter>
+    </ClInclude>
+    <ClInclude Include="Cylinder.h">
+      <Filter>Header Files\Drawables</Filter>
+    </ClInclude>
+    <ClInclude Include="Icosahedron.h">
+      <Filter>Header Files\Drawables</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

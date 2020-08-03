@@ -28,7 +28,7 @@ public:
 	//	passes.push_back(std::move(pass));
 	//}
 	RenderGraph(Graphics& gfx);
-	RenderQueuePass& GetRenderQueuePass(const std::string& techName);
+	RenderQueuePass* GetRenderQueuePass(const std::string& techName);
 	void AddGlobalSource(std::unique_ptr<Source> source);
 	void AddGlobalSink(std::unique_ptr<Sink> sink);
 	//std::vector<std::unique_ptr<Sink>>& GetSink(Pass& p) const;
@@ -40,6 +40,7 @@ private:
 	std::shared_ptr<RenderTarget> backBuffer;
 	std::shared_ptr<DepthStencil> depthBuffer;
 private:
+
 	std::vector<std::unique_ptr<Pass>> passes;
 	std::vector<std::unique_ptr<Sink>> globalSinks;
 	std::vector<std::unique_ptr<Source>> globalSources;

@@ -2,7 +2,8 @@
 
 void RenderQueuePass::Accept(Job job)
 {
-	jobs.push_back(job);
+	
+	jobs.emplace_back(std::move(job));
 }
 
 void RenderQueuePass::Execute(Graphics& gfx)

@@ -182,10 +182,12 @@
     <ClCompile Include="Bindable.cpp" />
     <ClCompile Include="BindingPass.cpp" />
     <ClCompile Include="BlendState.cpp" />
+    <ClCompile Include="BlendTransparentPass.cpp" />
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ClearBufferPass.cpp" />
     <ClCompile Include="CustomException.cpp" />
+    <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="DefaultPass.cpp" />
     <ClCompile Include="DepthStencil.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
@@ -195,6 +197,7 @@
     <ClCompile Include="GeometryShader.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="HullShader.cpp" />
+    <ClCompile Include="Icosahedron.cpp" />
     <ClCompile Include="Imgui\imgui.cpp" />
     <ClCompile Include="Imgui\imgui_demo.cpp" />
     <ClCompile Include="Imgui\imgui_draw.cpp" />
@@ -205,11 +208,14 @@
     <ClCompile Include="InputLayout.cpp" />
     <ClCompile Include="Job.cpp" />
     <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="MarkMirrorPass.cpp" />
+    <ClCompile Include="MirrorReflectionPass.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Pass.cpp" />
     <ClCompile Include="PixelShader.cpp" />
+    <ClCompile Include="Plane.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PrimitiveTopology.cpp" />
     <ClCompile Include="RasterizerState.cpp" />
@@ -219,6 +225,7 @@
     <ClCompile Include="SamplerState.cpp" />
     <ClCompile Include="Sink.cpp" />
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="Step.cpp" />
     <ClCompile Include="Surface.cpp" />
@@ -238,6 +245,7 @@
     <ClInclude Include="Bindable.h" />
     <ClInclude Include="BindingPass.h" />
     <ClInclude Include="BlendState.h" />
+    <ClInclude Include="BlendTransparentPass.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="BufferResource.h" />
     <ClInclude Include="Camera.h" />
@@ -246,6 +254,8 @@
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandBucket.h" />
     <ClInclude Include="CommandPacket.h" />
+    <ClInclude Include="CyclopsUtils.h" />
+    <ClInclude Include="Cylinder.h" />
     <ClInclude Include="DefaultPass.h" />
     <ClInclude Include="DepthStencil.h" />
     <ClInclude Include="DirectionalLight.h" />
@@ -258,6 +268,7 @@
     <ClInclude Include="GeometryShader.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="HullShader.h" />
+    <ClInclude Include="Icosahedron.h" />
     <ClInclude Include="Imgui\imconfig.h" />
     <ClInclude Include="Imgui\imgui.h" />
     <ClInclude Include="Imgui\imgui_impl_dx11.h" />
@@ -271,11 +282,15 @@
     <ClInclude Include="Job.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="MatHelper.h" />
+    <ClInclude Include="MarkMirrorPass.h" />
+    <ClInclude Include="MirrorReflectionPass.h" />
+    <ClInclude Include="MirrorRenderGraph.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="Pass.h" />
     <ClInclude Include="PixelShader.h" />
+    <ClInclude Include="Plane.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="PrimitiveTopology.h" />
     <ClInclude Include="RasterizerState.h" />
@@ -286,6 +301,7 @@
     <ClInclude Include="SamplerState.h" />
     <ClInclude Include="Sink.h" />
     <ClInclude Include="Source.h" />
+    <ClInclude Include="Sphere.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="Step.h" />
     <ClInclude Include="Surface.h" />

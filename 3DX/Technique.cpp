@@ -17,7 +17,9 @@ void Technique::Link(RenderGraph& rg)
 	
 		for (auto& s : steps)
 		{
+			
 			s.Link(rg);
+			
 		}
 	
 
@@ -38,4 +40,9 @@ void Technique::AddStep(Step& step)
 {
 	//assert(this->step == nullptr);
 	steps.push_back(step);
+}
+
+std::string Technique::GetName() const
+{
+	return techniqueName;
 }
