@@ -34,6 +34,7 @@ DepthStencil::DepthStencil(Graphics& gfx, UINT width, UINT height) : width(width
 	dsv.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsv.Texture2D.MipSlice = 0u;
 	GetDevice(gfx)->CreateDepthStencilView(depthTex.Get(), &dsv, depthStencilView.GetAddressOf());
+	depthTex->Release();
 }
 
 
@@ -53,6 +54,7 @@ DepthStencil::DepthStencil(Graphics& gfx, ID3D11Texture2D* texture, UINT state)
 	dsv.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsv.Texture2D.MipSlice = 0u;
 	GetDevice(gfx)->CreateDepthStencilView(texture, &dsv, depthStencilView.GetAddressOf());
+	texture->Release();
 }
 
 void DepthStencil::BindAsBuffer(Graphics& gfx)
@@ -66,7 +68,7 @@ void DepthStencil::BindAsBuffer(Graphics& gfx, BufferResource* depth)
 
 void DepthStencil::Clear(Graphics& gfx)
 {
-	GetContext(gfx)->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f,0u);
+	GetContext(gfx)->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f,0.0f);
 }
 
 OutputOnlyDepthBuffer::OutputOnlyDepthBuffer(Graphics& gfx) : OutputOnlyDepthBuffer(gfx,gfx.GetWidth(),gfx.GetHeight())

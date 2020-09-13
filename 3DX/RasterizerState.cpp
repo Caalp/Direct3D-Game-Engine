@@ -31,7 +31,7 @@ void RasterizerState::Bind(Graphics & gfx)
 {
 	if (rsType == RasterizerType::Default)
 	{
-		GetContext(gfx)->RSSetState(rasState.Get());
+		GetContext(gfx)->RSSetState(0);
 	}
 	else
 	{

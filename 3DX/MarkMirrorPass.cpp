@@ -4,6 +4,7 @@
 
 MarkMirrorPass::MarkMirrorPass(Graphics& gfx, std::string passName) : RenderQueuePass(passName)
 {
+	//RegisterSink(std::make_unique<DirectBufferSink<RenderTarget>>("rendertarget", renderTarget));
 	RegisterSink(std::make_unique<DirectBufferSink<DepthStencil>>("depthstencil", depthStencil));
 	AddBind(std::make_unique<BlendState>(gfx, true,BlendState::BlendType::NoRenderTargetWrite));
 	AddBind(std::make_unique<DSS>(gfx, DSS::DSSType::Mirror));

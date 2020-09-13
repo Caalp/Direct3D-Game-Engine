@@ -14,3 +14,8 @@
 #include "DomainShader.h"
 #include "HullShader.h"
 #include "BlendState.h"
+
+
+// typedefs and defines
+
+typedef DirectX::XMFLOAT3 Vec3;

@@ -1,7 +1,7 @@
 #include "Drawable.h"
 
 #include "RenderGraph.h"
-
+#include <sstream>
 Drawable::Drawable(std::string id) : objectID(id)
 {
 }
@@ -23,7 +23,7 @@ void Drawable::LinkTechnique(RenderGraph& rg)
 
 void Drawable::SetTransformationXM(const DirectX::XMMATRIX& xm)
 {
-	transformation = std::move(xm);
+	transformation  = std::make_shared<DirectX::XMMATRIX>(xm);
 }
 
 void Drawable::RotateGeometry(float pitch, float yaw, float roll)
@@ -42,10 +42,14 @@ void Drawable::TranslateGeometry(float x, float y, float z)
 
 void Drawable::Update(float ft)
 {
+	std::ostringstream ss;
+	ss << objectID << " :" << "posX: " << posX << " posY: " << posY << " posZ: " << posZ << std::endl;
+	std::string s(ss.str());
+	OutputDebugString(s.c_str());
 	pitch += ft;
 	yaw += ft;
 	roll += ft;
-	SetTransformationXM(DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(posX, posY, posZ));
+	
 }
 
 void Drawable::AppendTechnique(const Technique& tech)

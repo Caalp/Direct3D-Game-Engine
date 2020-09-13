@@ -83,7 +83,7 @@ void RenderGraph::AppendPass(std::unique_ptr<Pass> pass)
         return a;
     };
         // GetSink here return vector of unique_ptr of sinks
-    std::string* dissolvedName;
+    std::string* dissolvedName = nullptr;
         for (const auto& si : pass->GetSinks())
         {
             dissolvedName = dispatchName(si->GetTargetName());
@@ -117,6 +117,8 @@ void RenderGraph::AppendPass(std::unique_ptr<Pass> pass)
 
             }
         }
+        if(!dissolvedName)
+            delete dissolvedName;
 
         passes.push_back(std::move(pass));
 

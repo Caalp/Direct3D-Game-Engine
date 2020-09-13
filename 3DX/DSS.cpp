@@ -90,13 +90,8 @@ DSS::DSS(Graphics & gfx, DSSType dType):dss(dType)
 
 void DSS::Bind(Graphics & gfx)
 {
-	if (dss == NoDoubleBlend)
-	{
-		GetContext(gfx)->OMSetDepthStencilState(pDSS.Get(), 0);
-	}
-	else
-	{
-		GetContext(gfx)->OMSetDepthStencilState(pDSS.Get(), 1);
+	
+		GetContext(gfx)->OMSetDepthStencilState(pDSS.Get(), 1u);
 
-	}
+	
 }

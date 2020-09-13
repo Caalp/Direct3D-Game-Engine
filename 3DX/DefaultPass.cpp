@@ -9,7 +9,7 @@ DefaultPass::DefaultPass(Graphics& gfx, std::string passName) : RenderQueuePass(
 	RegisterSink(std::make_unique<DirectBufferSink<RenderTarget>>("rendertarget", renderTarget));
 	RegisterSink(std::make_unique<DirectBufferSink<DepthStencil>>("depthstencil", depthStencil));
 	AddBind(std::make_unique<DSS>(gfx,DSS::DSSType::Default));
-	AddBind(std::make_unique<RasterizerState>(gfx, RasterizerState::RasterizerType::NoCull));
+	//AddBind(std::make_unique<RasterizerState>(gfx, RasterizerState::RasterizerType::NoCull));
 
 }
 

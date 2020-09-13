@@ -6,7 +6,7 @@ Camera::Camera() :
 	cam_up(0.0f,1.0f,0.0f),
 	cam_look(0.0f,0.0f,1.0f)
 {
-	
+	//Entity* entt = SceneRenderer::scene.CreateEntity(this);
 }
 
 DirectX::XMVECTOR Camera::GetPositionXM() const

@@ -8,7 +8,7 @@ SpotLight::SpotLight(Graphics & gfx) : __buff(gfx,3u)
 		{1.0f,1.0f,0.0f,1.0f}, //diffuse
 		{1.0f,1.0f,1.0f,1.0f}, // specular
 		{1.0f,0.0f,0.010f}, // attenuation
-		{10.0f,70.084f,-24.0f}, // pos
+		{0.0f,70.084f,-14.0f}, // pos
 		{0.000f,0.-0.9560,0.394}, // direction
 		1000.0f, // range
 		100.0f // spot

@@ -1,6 +1,8 @@
 #include "Plane.h"
 #include "Channels.h"
 #include "Texture.h"
+#include "Entity.h"
+#include "SceneRenderer.h"
 
 Plane::Plane(Graphics& gfx, std::string name, UINT numRows, UINT numCols, float dx, float dt, float damping, float texScale) : Drawable(name)
 {
@@ -108,8 +110,8 @@ void Plane::Utilize(Graphics& gfx)
 			const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 			{
 				{"Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-				{"Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0},
-				{"TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,24u,D3D11_INPUT_PER_VERTEX_DATA,0},
+				//{"Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0},
+				{"TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0},
 
 			};
 			s1.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
@@ -117,17 +119,35 @@ void Plane::Utilize(Graphics& gfx)
 			s1.AddBind(std::make_shared<SamplerState>(gfx));
 			s1.AddBind(std::make_shared<Texture>(gfx, "Textures\\ice.dds"));
 
-			s1.AddBind(std::make_shared<TransformationBuffer>(gfx, *this));
-			SetTransformationXM(DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(posX,posY,posZ));
+			Entity* entt = SceneRenderer::scene.CreateEntity(this);
+			entt->AddComponent<Transformation>(DirectX::XMMatrixRotationRollPitchYaw(0.0f, -1.5708f, 1.5708f) * DirectX::XMMatrixTranslation(0.0f, 0.0f, -3.0f));
+			uint32_t mID = std::move(entt->GetID());
+			s1.AddBind(std::make_shared<TransformationBuffer>(gfx,mID));
+			
+			//DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(posX,posY,posZ);
 			mirorObject.AddStep(s1);
 		}
 		{
 			Step s2{ "blendTransparent" };
 
-			s2.AddBind(std::make_shared<PixelShader>(gfx, L"PS_TextureMapping.cso"));
-			auto vs = std::make_shared<VertexShader>(gfx, L"VS_TextureMapping.cso");
+			s2.AddBind(std::make_shared<PixelShader>(gfx, L"PhongLightingPS.cso"));
+			auto vs = std::make_shared<VertexShader>(gfx, L"PhongLightingVS.cso");
 			auto vsBlob = vs->GetVBlob();
 			s2.AddBind(std::move(vs));
+			struct MaterialConstantPS
+			{
+
+				DirectX::XMFLOAT4 amb;
+				DirectX::XMFLOAT4 diff;
+				DirectX::XMFLOAT4 spec;
+
+			}matConst;
+
+			matConst.amb = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+			matConst.diff = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 0.5f);
+			matConst.spec = DirectX::XMFLOAT4(0.8f, 0.8f, 0.8f, 32.0f);
+
+			s2.AddBind(std::make_shared<PSConstBuff<MaterialConstantPS>>(gfx, matConst, 1u));
 			const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 			{
 				{"Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
@@ -140,8 +160,11 @@ void Plane::Utilize(Graphics& gfx)
 			s2.AddBind(std::make_shared<SamplerState>(gfx));
 			s2.AddBind(std::make_shared<Texture>(gfx, "Textures\\ice.dds"));
 
-			s2.AddBind(std::make_shared<TransformationBuffer>(gfx, *this));
-			SetTransformationXM(DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(posX, posY, posZ));
+			Entity* entt = SceneRenderer::scene.CreateEntity(this);
+			entt->AddComponent<Transformation>(DirectX::XMMatrixRotationRollPitchYaw(0.0f, -1.5708f, 1.5708f)* DirectX::XMMatrixTranslation(0.0f, 0.0f, -3.0f));
+			uint32_t mID = std::move(entt->GetID());
+			s2.AddBind(std::make_shared<TransformationBuffer>(gfx, mID));
+			
 			mirorObject.AddStep(s2);
 		}
 	}
@@ -168,8 +191,13 @@ void Plane::Utilize(Graphics& gfx)
 			s1.AddBind(std::make_shared<SamplerState>(gfx));
 			s1.AddBind(std::make_shared<Texture>(gfx, "Textures\\checkboard.dds"));
 
-			s1.AddBind(std::make_shared<TransformationBuffer>(gfx, *this));
-			SetTransformationXM(DirectX::XMMatrixIdentity());
+			//
+			Entity* entt = SceneRenderer::scene.CreateEntity(this);
+			entt->AddComponent<Transformation>(DirectX::XMMatrixTranslation(0.0f, -3.0f, -14.0f));
+			uint32_t mID = std::move(entt->GetID());
+			//
+
+			s1.AddBind(std::make_shared<TransformationBuffer>(gfx, mID));
 			textured_object.AddStep(s1);
 		}
 		

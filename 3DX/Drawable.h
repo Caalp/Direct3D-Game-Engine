@@ -14,7 +14,7 @@ public:
 	void Bind(Graphics& gfx) const;
 	
 	void LinkTechnique(RenderGraph& rg);
-	DirectX::XMMATRIX GetTransformation() const { return transformation; };
+	const DirectX::XMMATRIX& GetTransformation() const { return *transformation; };
 	virtual DirectX::XMMATRIX GetTransformation(Graphics& gfx) const { return DirectX::XMMatrixIdentity(); };
 	virtual DirectX::XMMATRIX GetTexTransformXM() const { return DirectX::XMMatrixIdentity(); }
 	void SetTransformationXM(const DirectX::XMMATRIX& xm);
@@ -30,9 +30,10 @@ protected:
 	std::unique_ptr<VertexBuffer> vertexBuffer;
 	std::unique_ptr<PrimitiveTopology> primitiveTopology;
 	std::unique_ptr<IndexBuff> indexBuffer;
+	//std::unique_ptr< TransformationBuffer> transform;
 	std::vector<Technique> techniques;
 protected:
-	DirectX::XMMATRIX transformation;
+	std::shared_ptr<DirectX::XMMATRIX> transformation;
 	float pitch{ 1.0f }, yaw{ 1.0f }, roll{1.0f};
 	float posX{ 0.0f }, posY{ 0.0f }, posZ{0.0f};
 };
