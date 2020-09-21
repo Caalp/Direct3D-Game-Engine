@@ -2,8 +2,8 @@
 
 struct VSOut
 {
-    float4 pos : SV_POSITION;
-    float2 tex : TexCoord;
+	float4 pos : SV_POSITION;
+	float2 tex : TexCoord;
 };
 
 Texture2D tex;

@@ -2,7 +2,7 @@
 #include "RenderGraph.h"
 #include "ClearBufferPass.h"
 #include "DefaultPass.h"
-
+#include "SkyBoxPass.h"
 class TestRenderGraph : public RenderGraph
 {
 public:
@@ -16,6 +16,12 @@ public:
 		{
 			auto pass = std::make_unique<ClearBufferPass>("clearDS");
 			pass->SetSinkLinkage("buffer", "$.depthbuffer");
+			AppendPass(std::move(pass));
+		}
+		{
+			auto pass = std::make_unique<SkyBoxPass>(gfx, "skybox");
+			pass->SetSinkLinkage("depthstencil", "clearDS.buffer");
+			pass->SetSinkLinkage("rendertarget", "clearRT.buffer");
 			AppendPass(std::move(pass));
 		}
 		{

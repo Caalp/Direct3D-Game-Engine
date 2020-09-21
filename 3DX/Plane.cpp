@@ -10,6 +10,7 @@ Plane::Plane(Graphics& gfx, std::string name, UINT numRows, UINT numCols, float 
 	{
 		DirectX::XMFLOAT3 Pos;
 		DirectX::XMFLOAT3 Normal;
+		DirectX::XMFLOAT3 Tanget;
 		DirectX::XMFLOAT2 texCoord;
 	};
 
@@ -56,6 +57,7 @@ Plane::Plane(Graphics& gfx, std::string name, UINT numRows, UINT numCols, float 
 
 
 			vertices[i * numCols + j].Normal = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+			vertices[i * numCols + j].Tanget = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
 
 			//vertexData[i*numCols + j].texCoord = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
 
@@ -152,7 +154,8 @@ void Plane::Utilize(Graphics& gfx)
 			{
 				{"Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
 				{"Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0},
-				{"TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,24u,D3D11_INPUT_PER_VERTEX_DATA,0},
+				{"Tangent",0,DXGI_FORMAT_R32G32B32_FLOAT,0,24u,D3D11_INPUT_PER_VERTEX_DATA,0},
+				{"TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,36u,D3D11_INPUT_PER_VERTEX_DATA,0},
 
 			};
 			s2.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
@@ -174,23 +177,39 @@ void Plane::Utilize(Graphics& gfx)
 		{
 			Step s1{ "default" };
 
-			s1.AddBind(std::make_shared<PixelShader>(gfx, L"PS_TextureMapping.cso"));
-			auto vs = std::make_shared<VertexShader>(gfx, L"VS_TextureMapping.cso");
+			s1.AddBind(std::make_shared<PixelShader>(gfx, L"PS_NormalMap.cso"));
+			auto vs = std::make_shared<VertexShader>(gfx, L"VS_NormalMap.cso");
 			auto vsBlob = vs->GetVBlob();
 			s1.AddBind(std::move(vs));
+			struct MaterialConstantPS
+			{
+
+				DirectX::XMFLOAT4 amb;
+				DirectX::XMFLOAT4 diff;
+				DirectX::XMFLOAT4 spec;
+
+			}matConst;
+
+			matConst.amb = DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+			matConst.diff = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+			matConst.spec = DirectX::XMFLOAT4(0.8f, 0.8f, 0.8f, 32.0f);
+
+			s1.AddBind(std::make_shared<PSConstBuff<MaterialConstantPS>>(gfx, matConst, 1u));
+
 			const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 			{
 				{"Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
 				{"Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0},
-				{"TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,24u,D3D11_INPUT_PER_VERTEX_DATA,0},
+				{"Tangent",0,DXGI_FORMAT_R32G32B32_FLOAT,0,24u,D3D11_INPUT_PER_VERTEX_DATA,0},
+				{"TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,36u,D3D11_INPUT_PER_VERTEX_DATA,0},
 
 			};
 
 			s1.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
 
 			s1.AddBind(std::make_shared<SamplerState>(gfx));
-			s1.AddBind(std::make_shared<Texture>(gfx, "Textures\\checkboard.dds"));
-
+			s1.AddBind(std::make_shared<Texture>(gfx, "Textures\\floor.dds"));
+			s1.AddBind(std::make_shared<Texture>(gfx, "Textures\\floor_nmap.dds",1u));
 			//
 			Entity* entt = SceneRenderer::scene.CreateEntity(this);
 			entt->AddComponent<Transformation>(DirectX::XMMatrixTranslation(0.0f, -3.0f, -14.0f));

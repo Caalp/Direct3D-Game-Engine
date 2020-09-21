@@ -9,8 +9,8 @@ Sphere::Sphere(Graphics& gfx, std::string name, float radius, unsigned int slice
 	struct Vertex
 	{
 		DirectX::XMFLOAT3 Pos;
-		DirectX::XMFLOAT3 Normal;
-		DirectX::XMFLOAT2 texCoord;
+		//DirectX::XMFLOAT3 Normal;
+		//DirectX::XMFLOAT2 texCoord;
 	};
 
 	Vertex v;
@@ -27,8 +27,8 @@ Sphere::Sphere(Graphics& gfx, std::string name, float radius, unsigned int slice
 
 	// Add top pole point and calculate the normal and texCoord 
 	v.Pos = DirectX::XMFLOAT3(0.0f, r, 0.0f);
-	v.Normal = normalize(v.Pos);
-	v.texCoord = DirectX::XMFLOAT2(0.0f, 0.0f);
+	//v.Normal = normalize(v.Pos);
+	//v.texCoord = DirectX::XMFLOAT2(0.0f, 0.0f);
 	// Push it to the vector
 	vertices.push_back(v);
 
@@ -54,12 +54,12 @@ Sphere::Sphere(Graphics& gfx, std::string name, float radius, unsigned int slice
 			v.Pos.z = r * sinf(phi) * sinf(theta);
 
 			//v.Pos = MatHelper::normalize(v.Pos);
-			v.Normal = normalize(v.Pos);
+			//v.Normal = normalize(v.Pos);
 
 			float du = theta / XM_2PI;
 			float dv = phi / XM_PI;
-			v.texCoord.x = du;
-			v.texCoord.y = dv;
+			//v.texCoord.x = du;
+			//v.texCoord.y = dv;
 
 			vertices.push_back(v);
 		}
@@ -68,8 +68,8 @@ Sphere::Sphere(Graphics& gfx, std::string name, float radius, unsigned int slice
 
 	// Push the bottom pole point to the vector
 	v.Pos = DirectX::XMFLOAT3(0.0f, -r, 0.0f);
-	v.Normal = normalize(v.Pos);
-	v.texCoord = DirectX::XMFLOAT2(1.0f, 0.0f);
+	//v.Normal = normalize(v.Pos);
+	//v.texCoord = DirectX::XMFLOAT2(1.0f, 0.0f);
 	vertices.push_back(v);
 
 	// Calculate the triangles in first stack (between nort(top) pole point and first stack vertices
@@ -114,35 +114,35 @@ Sphere::Sphere(Graphics& gfx, std::string name, float radius, unsigned int slice
 	indexBuffer = std::make_unique<IndexBuff>(gfx, indices);
 	primitiveTopology = std::make_unique<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	Utilize(gfx);
+	//Utilize(gfx);
 }
 
-void Sphere::Utilize(Graphics& gfx)
-{
-	Technique textured_object("defaultBox", channel1::defaultChannel);
-	{
-		Step s1{ "default" };
-
-		s1.AddBind(std::make_shared<PixelShader>(gfx, L"PS_TextureMapping.cso"));
-		auto vs = std::make_shared<VertexShader>(gfx, L"VS_TextureMapping.cso");
-		auto vsBlob = vs->GetVBlob();
-		s1.AddBind(std::move(vs));
-		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
-		{
-			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{"Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0},
-			{"TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,24u,D3D11_INPUT_PER_VERTEX_DATA,0},
-
-		};
-
-		s1.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
-
-		s1.AddBind(std::make_shared<SamplerState>(gfx));
-		//s1.AddBind(std::make_shared<Texture>(gfx, "Textures\\WireFence.dds"));
-
-		//s1.AddBind(std::make_shared<TransformationBuffer>(gfx, *this));
-
-		textured_object.AddStep(s1);
-	}
-	AppendTechnique(textured_object);
-}
+//void Sphere::Utilize(Graphics& gfx)
+//{
+//	Technique textured_object("defaultBox", channel1::defaultChannel);
+//	{
+//		Step s1{ "default" };
+//
+//		s1.AddBind(std::make_shared<PixelShader>(gfx, L"PS_TextureMapping.cso"));
+//		auto vs = std::make_shared<VertexShader>(gfx, L"VS_TextureMapping.cso");
+//		auto vsBlob = vs->GetVBlob();
+//		s1.AddBind(std::move(vs));
+//		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
+//		{
+//			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+//			{"Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0},
+//			{"TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,24u,D3D11_INPUT_PER_VERTEX_DATA,0},
+//
+//		};
+//
+//		s1.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
+//
+//		s1.AddBind(std::make_shared<SamplerState>(gfx));
+//		//s1.AddBind(std::make_shared<Texture>(gfx, "Textures\\WireFence.dds"));
+//
+//		//s1.AddBind(std::make_shared<TransformationBuffer>(gfx, *this));
+//
+//		textured_object.AddStep(s1);
+//	}
+//	AppendTechnique(textured_object);
+//}
