@@ -1,5 +1,5 @@
 #include "Keyboard.h"
-
+#include "Events.h"
 bool Keyboard::KeyIsPressed(unsigned char keycode) const noexcept
 {
 	return keystates[keycode];
@@ -70,6 +70,7 @@ bool Keyboard::AutorepeatIsEnabled() const noexcept
 
 void Keyboard::OnKeyPressed(unsigned char keycode) noexcept
 {
+	emgr->QueueEvent(std::shared_ptr<IEventData>(new KeyboardEvent(keycode)));
 	keystates[keycode] = true;
 	keybuffer.push(Keyboard::Event(Keyboard::Event::Type::Press, keycode));
 	TrimBuffer(keybuffer);

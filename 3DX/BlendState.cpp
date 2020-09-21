@@ -3,8 +3,7 @@
 BlendState::BlendState(Graphics & gfx, bool bState, BlendType bType) :isBlendOn(bState)
 {
 	D3D11_BLEND_DESC blendDesc = {0};
-	if (isBlendOn)
-	{
+	
 		if (bType == BlendType::Transparent)
 		{
 			blendDesc.AlphaToCoverageEnable = false;
@@ -58,31 +57,27 @@ BlendState::BlendState(Graphics & gfx, bool bState, BlendType bType) :isBlendOn(
 			blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
 		}
-	}
-	else
-	{
-		//this logic is unneccessary
-		blendDesc = { 0 };
-		blendDesc.AlphaToCoverageEnable = false;
-		blendDesc.IndependentBlendEnable = false;
-
-		blendDesc.RenderTarget[0].BlendEnable = false;
 		
-	}
-
+	
 	GetDevice(gfx)->CreateBlendState(&blendDesc, blendState.GetAddressOf());
 }
 
 //void BlendState::ResetBlendState(Graphics & gfx)
 //{
 //	
-//	GetContext(gfx)->OMSetBlendState(0,0,0xffffffff);
+//	
 //}
 
 void BlendState::Bind(Graphics & gfx)
 {
-	
+	if (isBlendOn)
+	{
 		float blendFactor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 		GetContext(gfx)->OMSetBlendState(blendState.Get(), blendFactor, 0xffffffff);
-	
+	}
+		
+	else
+	{
+		GetContext(gfx)->OMSetBlendState(0, 0, 0xffffffff);
+	}
 }

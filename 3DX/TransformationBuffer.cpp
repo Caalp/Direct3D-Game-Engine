@@ -1,9 +1,9 @@
 #include "TransformationBuffer.h"
 #include "Drawable.h"
+#include "Scene.h"
 
-
-TransformationBuffer::TransformationBuffer(Graphics & gfx, const Drawable & parent):
-	parent(parent)
+TransformationBuffer::TransformationBuffer(Graphics & gfx, const uint32_t& enttID):
+	mEnttID(std::move(enttID))
 	
 		
 {
@@ -15,13 +15,25 @@ TransformationBuffer::TransformationBuffer(Graphics & gfx, const Drawable & pare
 	
 }
 
+
 void TransformationBuffer::UpdateBufferData(Graphics& gfx)
 {
+	
+	Transformation* transform = nullptr;
+	auto view = (Scene::reg).view<Transformation>();
+	for (const entt::entity& e : view)
+	{
+		if ((uint32_t)e == mEnttID)
+		{
+			transform = &view.get<Transformation>(e);
+		}
+		 
+	}
 	_TransformBuffer =
 	{
 		
-		{DirectX::XMMatrixTranspose(parent.GetTransformation())},
-		{DirectX::XMMatrixTranspose(parent.GetTransformation()*gfx.GetCamera())},
+		{DirectX::XMMatrixTranspose(transform->transform)},
+		{DirectX::XMMatrixTranspose(transform->transform*gfx.GetCamera())},
 		{gfx.GetCameraPos()},
 
 	};

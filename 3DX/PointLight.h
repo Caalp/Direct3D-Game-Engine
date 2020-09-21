@@ -18,7 +18,7 @@ private:
 		 DirectX::XMFLOAT4 ambient;
 		 DirectX::XMFLOAT4 diffuse;
 		 DirectX::XMFLOAT4 specular;
-		 DirectX::XMFLOAT3 att;
+		 alignas(16)DirectX::XMFLOAT3 att;
 		 alignas(16)DirectX::XMFLOAT3 pos;
 		 float range;
 		/*alignas(16) DirectX::XMFLOAT3 pos;

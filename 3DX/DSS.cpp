@@ -3,7 +3,16 @@
 DSS::DSS(Graphics & gfx, DSSType dType):dss(dType)
 {
 	D3D11_DEPTH_STENCIL_DESC DSSDesc{ 0 };
-	if (dType == DSSType::Mirror)
+	if (dType == DSSType::Default)
+	{
+		DSSDesc.DepthEnable = true;
+		DSSDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		DSSDesc.DepthFunc = D3D11_COMPARISON_LESS;
+		DSSDesc.StencilEnable = true;
+		DSSDesc.StencilReadMask = 0xff;
+		DSSDesc.StencilWriteMask = 0xff;
+	}
+	else if (dType == DSSType::Mirror)
 	{
 		DSSDesc.DepthEnable = true;
 		DSSDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
@@ -75,18 +84,14 @@ DSS::DSS(Graphics & gfx, DSSType dType):dss(dType)
 
 	}
 	
+	
 	GetDevice(gfx)->CreateDepthStencilState(&DSSDesc, pDSS.GetAddressOf());
 }
 
 void DSS::Bind(Graphics & gfx)
 {
-	if (dss == NoDoubleBlend)
-	{
-		GetContext(gfx)->OMSetDepthStencilState(pDSS.Get(), 0);
-	}
-	else
-	{
-		GetContext(gfx)->OMSetDepthStencilState(pDSS.Get(), 1);
+	
+		GetContext(gfx)->OMSetDepthStencilState(pDSS.Get(), 1u);
 
-	}
+	
 }

@@ -2,6 +2,7 @@
 #include <sstream>
 #include "resource.h"
 
+
 Window::WindowClass Window::WindowClass::wndClass;
 
 const char * Window::WindowClass::GetName() noexcept
@@ -142,9 +143,13 @@ LRESULT WINAPI Window::HandleMsgTh(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lp
 
 		return pWnd->HandleMsg(hWnd, msg, wparam, lparam);
 }
-
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noexcept
 {
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wparam, lparam))
+	{
+		return true;
+	}
 	switch (msg)
 	{
 	case WM_CLOSE:
@@ -154,6 +159,16 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noe
 		kbd.ClearState();
 		break;
 	case WM_KEYDOWN:
+		// Imgui helper demo window 
+		if (wparam == VK_F1 && show_demo_window == false)
+		{
+			show_demo_window = true;
+		}
+		else if (wparam == VK_F1 && show_demo_window == true)
+		{
+			show_demo_window = false;
+		}
+
 		// key handled except system keys
 		kbd.OnKeyPressed(static_cast<unsigned char>(wparam));
 		break;
@@ -167,6 +182,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noe
 		break;
 	case WM_KEYUP:
 		// KeyUp event except system keys such --ALT
+
 		kbd.OnKeyReleased(static_cast<unsigned char>(wparam));
 		break;
 	case WM_SYSKEYUP:
@@ -257,7 +273,9 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noe
 		mouse.OnWheelDelta(pt.x, pt.y, delta);
 		break;
 	}
+	
 	}
+
 	return DefWindowProc(hWnd, msg, wparam, lparam);
 }
 

@@ -1,6 +1,11 @@
 #include "App.h"
 #include "Box.h"
 #include <random>
+#include "Channels.h"
+#include <Xinput.h>
+#include <sstream>
+#include "Events.h"
+#include "StaticTimer.h"
 
 App::App() :
 	wnd(800, 600, "Hello") ,x(0.5f),y(-4.5f),z(0.0f),last_x(0),last_y(0),
@@ -13,21 +18,26 @@ App::App() :
 	
 	cam.SetCameraLens(0.25f*3.1415926535f, 800.0f / 600.0f, 1.0f, 1000.0f);
 
+	//mirror.RotateGeometry(0.0f, -1.5708f, 1.5708f);
+	//mirror.TranslateGeometry(-0.05f, 15.0f, -0.05f);
+	//floor.TranslateGeometry(0.0f, 0.0f, -14.5f);
+	//box0.TranslateGeometry(0.0f, 2.0f, -2.0f);
 	//d1 = new Box(wnd.gfx(), wnd.mouse.GetPosX() / 400.0f - 1.0f, -wnd.mouse.GetPosY() / 300.0f + 1.0f, 1.0f);
 	
-	vb.resize(100);
+
 	
-	box0.LinkBucket(&bucket0);
 	
+	box0.LinkTechnique(rg);
+	//testCube.LinkTechnique(rg);
+	floor.LinkTechnique(rg);
+	box0.LinkTechnique(rgMirror);
+	mirror.LinkTechnique(rgMirror);
 }
 
 App::~App()
 {
 	
-	for (auto& elem : vb)
-	{
-		delete elem;
-	}
+
 }
 
 int App::Go()
@@ -42,6 +52,7 @@ int App::Go()
 		}
 		timer.StopTimer();
 		float a = timer.GetTime() / 1000;
+		
 		Update(a);
 
 
@@ -50,14 +61,50 @@ int App::Go()
 
 void App::Update(float dt)
 {
+
+
+	// Xinput experiment code here
+	static float alpha = dt*10.0f;
+	if (alpha < 1.0f)
+	{
+		alpha -= dt;
+	}
+	
+	
+	//DWORD dwResult;
+	//XINPUT_STATE state{0};
+	//dwResult = XInputGetState(0, &state); // if 0 then connected
+
+	//float LX = state.Gamepad.sThumbLX;
+	//float LY = state.Gamepad.sThumbLY;
+	//
+	//float magnitude = sqrt(LX * LX + LY * LY);
+
+	//float normalizedLX = LX / magnitude;
+	//float normalizedLY = LY / magnitude;
+	//std::ostringstream ss;
+	//ss << normalizedLX << " " << normalizedLY<<std::endl;
+	//std::string s(ss.str());
+	//OutputDebugString(s.c_str());
+	//XINPUT_VIBRATION vibration{0};
+	//vibration.wLeftMotorSpeed = 65000;
+	//XInputSetState(0, &vibration);
+	
+
 	static float v = 70.0f;
 	float dtheta = 0.2f;
+	/*dirLight.Bind(wnd.gfx());
+	pointLight.Bind(wnd.gfx());
+	spotLight.Bind(wnd.gfx());*/
 	
-	wnd.gfx().ClearFrame(0.2f, 0.4f, 0.5f);
 	cam.UpdateViewXM();
 	wnd.gfx().SetCamera(cam.ViewProjXM());
 	wnd.gfx().SetView(cam.GetViewXM());
 	wnd.gfx().SetCameraPos(cam.GetPosition());
+
+	dirLight.Bind(wnd.gfx());
+	pointLight.Bind(wnd.gfx());
+	spotLight.Bind(wnd.gfx());
 		
 	if (wnd.kbd.KeyIsPressed('W'))
 	{
@@ -77,24 +124,7 @@ void App::Update(float dt)
 	}
 
 
-	if (wnd.kbd.KeyIsPressed('Q'))
-	{
-		cam.Pitch((float)-0.1*dtheta);
-	}
 	
-	if (wnd.kbd.KeyIsPressed('E'))
-	{
-		cam.Pitch((float)0.1*dtheta);
-	}
-	if (wnd.kbd.KeyIsPressed('Z'))
-	{
-		cam.RotateY((float)-0.1*dtheta);
-	}
-
-	if (wnd.kbd.KeyIsPressed('C'))
-	{
-		cam.RotateY((float)0.1*dtheta);
-	}
 	if (wnd.mouse.IsInWindow())
 	{
 
@@ -111,21 +141,25 @@ void App::Update(float dt)
 		last_y = (float)wnd.mouse.GetPosY();
 
 	}
-	box0.Update(dt);
-	box0.Bind(wnd.gfx());
+	//box0.Update(0.0f);
+	//mirror.Update(0.0f);
+	box0.Submit(channel1::defaultChannel);
+	floor.Submit(channel1::defaultChannel);
+	mirror.Submit(channel1::defaultChannel);
+	emgr->ProcessEvents();
+	//testScene.UpdateTest(alpha);
+	//testCube.Submit(channel1::defaultChannel); // only submitting this w/o linking technique causing vector error!!!
+	
+	
+	
+	
+	rg.Execute(wnd.gfx());
+	rgMirror.Execute(wnd.gfx());
+	
+	//static bool show_demo_window = false;
 
-	bucket0.ProcessBucket(wnd.gfx());
-	
-	/*dirLight.Bind(wnd.gfx());
-	pointLight.Bind(wnd.gfx());
-	spotLight.Bind(wnd.gfx());*/
-	
-	
-	
-	
-	
-
-	//wnd.gfx().DrawCube(45.0f, wnd.mouse.GetPosX() / 400.0f - 1.0f, -wnd.mouse.GetPosY() / 300.0f + 1.0f);
 	
 	wnd.gfx().EndFrame();
+	rg.Reset();
+	rgMirror.Reset();
 }

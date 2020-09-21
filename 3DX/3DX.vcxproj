@@ -92,7 +92,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <FloatingPointModel>Fast</FloatingPointModel>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(SolutionDir)3DX\assimp\include</AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>
       </AdditionalUsingDirectories>
@@ -102,6 +102,7 @@
       <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>d3dx11d.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)libs;$(SolutionDir)3DX\assimp\bin\x64</AdditionalLibraryDirectories>
+      <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <FxCompile />
     <FxCompile>
@@ -179,34 +180,61 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Bindable.cpp" />
+    <ClCompile Include="BindingPass.cpp" />
     <ClCompile Include="BlendState.cpp" />
+    <ClCompile Include="BlendTransparentPass.cpp" />
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="CommandBucket.cpp" />
-    <ClCompile Include="CommandPacket.cpp" />
+    <ClCompile Include="ClearBufferPass.cpp" />
     <ClCompile Include="CustomException.cpp" />
+    <ClCompile Include="Cylinder.cpp" />
+    <ClCompile Include="DefaultPass.cpp" />
+    <ClCompile Include="DepthStencil.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="DomainShader.cpp" />
     <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="DSS.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Events.cpp" />
     <ClCompile Include="GeometryShader.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="HullShader.cpp" />
+    <ClCompile Include="Icosahedron.cpp" />
+    <ClCompile Include="Imgui\imgui.cpp" />
+    <ClCompile Include="Imgui\imgui_demo.cpp" />
+    <ClCompile Include="Imgui\imgui_draw.cpp" />
+    <ClCompile Include="Imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Imgui\imgui_widgets.cpp" />
     <ClCompile Include="IndexBuff.cpp" />
     <ClCompile Include="InputLayout.cpp" />
+    <ClCompile Include="Job.cpp" />
     <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="MarkMirrorPass.cpp" />
+    <ClCompile Include="MirrorReflectionPass.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Pass.cpp" />
     <ClCompile Include="PixelShader.cpp" />
+    <ClCompile Include="Plane.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PrimitiveTopology.cpp" />
     <ClCompile Include="RasterizerState.cpp" />
+    <ClCompile Include="RenderGraph.cpp" />
+    <ClCompile Include="RenderQueuePass.cpp" />
+    <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="SamplerState.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Sink.cpp" />
+    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="Step.cpp" />
     <ClCompile Include="Surface.cpp" />
+    <ClCompile Include="Technique.cpp" />
     <ClCompile Include="TerrainClass.cpp" />
+    <ClCompile Include="TestCube.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -219,11 +247,22 @@
   <ItemGroup>
     <ClInclude Include="additional_headers.h" />
     <ClInclude Include="Bindable.h" />
+    <ClInclude Include="BindingPass.h" />
     <ClInclude Include="BlendState.h" />
+    <ClInclude Include="BlendTransparentPass.h" />
     <ClInclude Include="Box.h" />
+    <ClInclude Include="BufferResource.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Channels.h" />
+    <ClInclude Include="ClearBufferPass.h" />
+    <ClInclude Include="Command.h" />
     <ClInclude Include="CommandBucket.h" />
     <ClInclude Include="CommandPacket.h" />
+    <ClInclude Include="Components.h" />
+    <ClInclude Include="CyclopsUtils.h" />
+    <ClInclude Include="Cylinder.h" />
+    <ClInclude Include="DefaultPass.h" />
+    <ClInclude Include="DepthStencil.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="DomainShader.h" />
     <ClInclude Include="Drawable.h" />
@@ -231,30 +270,60 @@
     <ClInclude Include="ConstBuffs.h" />
     <ClInclude Include="CustomException.h" />
     <ClInclude Include="DSS.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="Events.h" />
     <ClInclude Include="GeometryShader.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="HullShader.h" />
+    <ClInclude Include="Icosahedron.h" />
+    <ClInclude Include="Imgui\imconfig.h" />
+    <ClInclude Include="Imgui\imgui.h" />
+    <ClInclude Include="Imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="Imgui\imgui_impl_win32.h" />
+    <ClInclude Include="Imgui\imgui_internal.h" />
+    <ClInclude Include="Imgui\imstb_rectpack.h" />
+    <ClInclude Include="Imgui\imstb_textedit.h" />
+    <ClInclude Include="Imgui\imstb_truetype.h" />
     <ClInclude Include="IndexBuff.h" />
     <ClInclude Include="InputLayout.h" />
+    <ClInclude Include="Job.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="MatHelper.h" />
+    <ClInclude Include="MarkMirrorPass.h" />
+    <ClInclude Include="MirrorReflectionPass.h" />
+    <ClInclude Include="MirrorRenderGraph.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="App.h" />
+    <ClInclude Include="Pass.h" />
     <ClInclude Include="PixelShader.h" />
+    <ClInclude Include="Plane.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="PrimitiveTopology.h" />
     <ClInclude Include="RasterizerState.h" />
+    <ClInclude Include="RenderGraph.h" />
+    <ClInclude Include="RenderQueuePass.h" />
+    <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SamplerState.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneRenderer.h" />
+    <ClInclude Include="Sink.h" />
+    <ClInclude Include="Source.h" />
+    <ClInclude Include="Sphere.h" />
     <ClInclude Include="SpotLight.h" />
+    <ClInclude Include="StaticTimer.h" />
     <ClInclude Include="Step.h" />
     <ClInclude Include="Surface.h" />
+    <ClInclude Include="Technique.h" />
     <ClInclude Include="TerrainClass.h" />
+    <ClInclude Include="TestCube.h" />
+    <ClInclude Include="TestRenderGraph.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TransformationBuffer.h" />
+    <ClInclude Include="union_cast.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexShader.h" />
     <ClInclude Include="Window.h" />
