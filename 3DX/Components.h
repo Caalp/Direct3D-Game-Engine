@@ -10,6 +10,11 @@ struct Transformation
 	{
 		transform = transformXM;
 	}
+	DirectX::XMMATRIX GetInverseTransform()
+	{
+		DirectX::XMVECTOR determinant = DirectX::XMMatrixDeterminant(this->transform);
+		return DirectX::XMMatrixInverse(&determinant, transform);
+	}
 	template<typename T>
 	void Update(T object)
 	{

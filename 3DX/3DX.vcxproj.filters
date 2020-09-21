@@ -61,6 +61,15 @@
     <Filter Include="Header Files\Events">
       <UniqueIdentifier>{aeb7510d-45e6-4bc1-8649-23b346477051}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\PS">
+      <UniqueIdentifier>{9a6defe4-fdb3-4417-aa1c-4a609269d6a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\GS">
+      <UniqueIdentifier>{2c8c5cf7-b9eb-4d65-893e-9f51c6daeb07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\VS">
+      <UniqueIdentifier>{bf31917e-2e66-4144-b721-6e4673eed4f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -253,6 +262,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Events.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sky.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyBoxPass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -506,6 +521,12 @@
     <ClInclude Include="StaticTimer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Sky.h">
+      <Filter>Header Files\Drawables</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyBoxPass.h">
+      <Filter>Header Files\Passes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="3DX.rc">
@@ -518,32 +539,44 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="ColorBlenderPS.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="ColorBlenderVS.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="ConstantColorPS.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="PhongLightingPS.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="PhongLightingVS.hlsl">
-      <Filter>Shaders</Filter>
+    <FxCompile Include="PS_CubeMapping.hlsl">
+      <Filter>Shaders\PS</Filter>
     </FxCompile>
     <FxCompile Include="PS_Textured.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="VS_Textured.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\PS</Filter>
     </FxCompile>
     <FxCompile Include="PS_TextureMapping.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_Textured.hlsl">
+      <Filter>Shaders\VS</Filter>
     </FxCompile>
     <FxCompile Include="VS_TextureMapping.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\VS</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_CubeMapping.hlsl">
+      <Filter>Shaders\VS</Filter>
+    </FxCompile>
+    <FxCompile Include="ColorBlenderPS.hlsl">
+      <Filter>Shaders\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="ConstantColorPS.hlsl">
+      <Filter>Shaders\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="PhongLightingPS.hlsl">
+      <Filter>Shaders\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="ColorBlenderVS.hlsl">
+      <Filter>Shaders\VS</Filter>
+    </FxCompile>
+    <FxCompile Include="PhongLightingVS.hlsl">
+      <Filter>Shaders\VS</Filter>
+    </FxCompile>
+    <FxCompile Include="PS_NormalMap.hlsl">
+      <Filter>Shaders\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_NormalMap.hlsl">
+      <Filter>Shaders\VS</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

@@ -6,6 +6,6 @@ class Sphere : public Drawable
 
 public:
 	Sphere(Graphics& gfx,std::string name, float radius, unsigned int sliceCount, unsigned int stackCount);
-	void Utilize(Graphics& gfx);
+	virtual void Utilize(Graphics& gfx) = 0;
 	
 };

@@ -31,8 +31,9 @@ void TransformationBuffer::UpdateBufferData(Graphics& gfx)
 	}
 	_TransformBuffer =
 	{
-		
+
 		{DirectX::XMMatrixTranspose(transform->transform)},
+		{transform->GetInverseTransform()},
 		{DirectX::XMMatrixTranspose(transform->transform*gfx.GetCamera())},
 		{gfx.GetCameraPos()},
 

@@ -3,7 +3,9 @@
 #include "Box.h"
 #include "MatHelper.h"
 #include "TerrainClass.h"
-class SpotLight
+#include "Sphere.h"
+
+class SpotLight : public Sphere
 {
 public:
 
@@ -11,6 +13,10 @@ public:
 	void Bind(Graphics& gfx);
 	void SetSpotLightPosition(dx::XMFLOAT3 v);
 	//void Draw(Graphics& gfx);
+
+
+	virtual void Utilize(Graphics& gfx) override;
+	void DrawLightImgui();
 private:
 
 	struct SpotLightConstBuff

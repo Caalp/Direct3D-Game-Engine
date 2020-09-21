@@ -4,6 +4,7 @@ struct VertexIn
 {
 	float3 PosL : Position;
 	float3 NormalL : Normal;
+	float3 TangentL : Tangent;
 	float2 texCoordinate : TexCoord;
 };
 
@@ -20,7 +21,7 @@ VertexOut main(VertexIn vin)
 {
 	VertexOut vout;
 	vout.PosW = mul(float4(vin.PosL, 1.0f), model);
-	vout.NormalW = mul(vin.NormalL, (float3x3) model);
+	vout.NormalW = mul(vin.NormalL, (float3x3) worldInverseTransform);
 	vout.PosH = mul(float4(vin.PosL, 1.0f), worldViewProj);
 	vout.txCoord = vin.texCoordinate;
 	vout.eyePos = eyePos;

@@ -18,7 +18,7 @@ class Graphics
 	friend class Command;
 public:
 	Graphics(HWND hWnd);
-	~Graphics() = default;
+	~Graphics();
 	Graphics(const Graphics&) = delete;
 	Graphics& operator=(const Graphics&) = delete;
 	HRESULT CompileShader(LPCWSTR pScrData,LPCSTR szentryPoint, LPCSTR shaderModel, ID3DBlob** ppBlobOut);

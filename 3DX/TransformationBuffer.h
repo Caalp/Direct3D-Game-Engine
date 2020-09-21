@@ -17,6 +17,7 @@ private:
 	struct TransformBuffer
 	{
 		DirectX::XMMATRIX world;
+		DirectX::XMMATRIX worldInverseTranspose;
 		DirectX::XMMATRIX worldviewProj;
 		DirectX::XMFLOAT3 eyePos;
 		float padding;

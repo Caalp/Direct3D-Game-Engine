@@ -18,20 +18,16 @@ App::App() :
 	
 	cam.SetCameraLens(0.25f*3.1415926535f, 800.0f / 600.0f, 1.0f, 1000.0f);
 
-	//mirror.RotateGeometry(0.0f, -1.5708f, 1.5708f);
-	//mirror.TranslateGeometry(-0.05f, 15.0f, -0.05f);
-	//floor.TranslateGeometry(0.0f, 0.0f, -14.5f);
-	//box0.TranslateGeometry(0.0f, 2.0f, -2.0f);
-	//d1 = new Box(wnd.gfx(), wnd.mouse.GetPosX() / 400.0f - 1.0f, -wnd.mouse.GetPosY() / 300.0f + 1.0f, 1.0f);
 	
 
 	
-	
+	spotLight.LinkTechnique(rg);
 	box0.LinkTechnique(rg);
 	//testCube.LinkTechnique(rg);
 	floor.LinkTechnique(rg);
 	box0.LinkTechnique(rgMirror);
 	mirror.LinkTechnique(rgMirror);
+	sky.LinkTechnique(rg);
 }
 
 App::~App()
@@ -61,6 +57,10 @@ int App::Go()
 
 void App::Update(float dt)
 {
+
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
 
 
 	// Xinput experiment code here
@@ -141,11 +141,18 @@ void App::Update(float dt)
 		last_y = (float)wnd.mouse.GetPosY();
 
 	}
-	//box0.Update(0.0f);
-	//mirror.Update(0.0f);
+
+	
+	
+
+
+	spotLight.DrawLightImgui();
+	
+	spotLight.Submit(channel1::defaultChannel);
 	box0.Submit(channel1::defaultChannel);
 	floor.Submit(channel1::defaultChannel);
 	mirror.Submit(channel1::defaultChannel);
+	sky.Submit(channel1::defaultChannel);
 	emgr->ProcessEvents();
 	//testScene.UpdateTest(alpha);
 	//testCube.Submit(channel1::defaultChannel); // only submitting this w/o linking technique causing vector error!!!
