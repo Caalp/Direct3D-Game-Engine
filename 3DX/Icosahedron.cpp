@@ -1,6 +1,7 @@
 #include "Icosahedron.h"
 #include "CyclopsUtils.h"
 #include "Channels.h"
+#include "Technique.h"
 
 using namespace Util;
 

@@ -36,6 +36,16 @@ void Technique::Submit(Drawable& d, size_t channel)
 	}
 }
 
+void Technique::SetTechID(uint32_t id)
+{
+	techID = id;
+}
+
+uint32_t Technique::GetTechID() const
+{
+	return techID;
+}
+
 void Technique::AddStep(Step& step)
 {
 	//assert(this->step == nullptr);

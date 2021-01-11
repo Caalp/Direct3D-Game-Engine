@@ -26,6 +26,7 @@ void TransformationBuffer::UpdateBufferData(Graphics& gfx)
 		if ((uint32_t)e == mEnttID)
 		{
 			transform = &view.get<Transformation>(e);
+			break;
 		}
 		 
 	}

@@ -1,17 +1,17 @@
 #pragma once
 #include <memory>
-#include "Scene.h"
+class Scene;
 
 class SceneRenderer
 {
+	friend class Drawable;
 public:
 	void UpdateScene(float dt);
 	
 
 
-public:
+private:
 	static Scene scene;
 };
 
 //std::unique_ptr<Scene> SceneRenderer::scene = std::unique_ptr<Scene>(new Scene());
-Scene SceneRenderer::scene;

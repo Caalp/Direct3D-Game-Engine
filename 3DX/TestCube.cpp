@@ -10,7 +10,7 @@
 #include "Components.h"
 #include "Events.h"
 #include "App.h"
-#include "StaticTimer.h"
+
 
 TestCube::TestCube(Graphics& gfx, float x, float y, float z) : Drawable("testCube")
 {
@@ -171,7 +171,7 @@ TestCube::TestCube(Graphics& gfx, float x, float y, float z) : Drawable("testCub
 			s1.AddBind(std::make_shared<SamplerState>(gfx));
 			s1.AddBind(std::make_shared<Texture>(gfx, "Textures\\WoodCrate01.dds"));
 
-			Entity* entt = SceneRenderer::scene.CreateEntity(this);
+			Entity* entt = GetScene().CreateEntity(this);
 			entt->AddComponent<Transformation>();
 			entt->AddComponent<Player>();
 			//entt->AddComponent<Camera>();
@@ -181,9 +181,11 @@ TestCube::TestCube(Graphics& gfx, float x, float y, float z) : Drawable("testCub
 			entt->AddComponent<Rotation>();
 			uint32_t mID= std::move(entt->GetID());
 			
-			SceneRenderer::scene.GetEntity(entt->GetID());
-			evl.OnEvent<KeyboardEvent>([=](std::shared_ptr<KeyboardEvent> e) {UpdatePos(e->GetEvent(),mID); });
-		
+			GetScene().GetEntity(entt->GetID());
+			//evl.OnEvent<KeyboardEvent>([=](std::shared_ptr<KeyboardEvent> e) {UpdatePos(e->GetEvent(),mID); });
+			
+			
+			
 			
 			// chech valid
 			//bool b = SceneRenderer::scene.reg.valid((entt::entity)mID);
@@ -228,7 +230,7 @@ void TestCube::UpdatePos(unsigned char key,uint32_t id)
 {
 	Position* pos = nullptr;
 	Transformation* transform = nullptr;
-	float dt = timer.GetTime() / 1000;
+	float dt = 0.5f;
 	auto view = (Scene::reg).view<Position, Velocity,Transformation>();
 	for (const entt::entity& e : view)
 	{

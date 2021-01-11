@@ -3,14 +3,21 @@
 #include "Box.h"
 #include "MatHelper.h"
 #include "TerrainClass.h"
-class PointLight
+#include "Sphere.h"
+
+class PointLight : public Sphere
 {
 public:
 
 	PointLight(Graphics& gfx);
 	void Bind(Graphics& gfx);
-	void SetPointLightPosition(dx::XMFLOAT3 v);
-	void Draw(Graphics& gfx);
+	virtual void Utilize(Graphics& gfx) override;
+	void DrawLightImgui(DirectX::XMFLOAT3& pos);
+
+
+
+	void Update();
+
 private:
 
 	struct PointLightConstBuff

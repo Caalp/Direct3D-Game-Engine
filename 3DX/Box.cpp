@@ -1,13 +1,14 @@
 #include "Box.h"
 #include "additional_headers.h"
-#include "Texture.h"
-#include "Surface.h"
 #include "Channels.h"
 #include "Technique.h"
-#include "Step.h"
 #include "Entity.h"
 #include "SceneRenderer.h"
 #include "Components.h"
+#include "DrawCallDispatch.h"
+
+
+
 
 Box::Box(Graphics & gfx, float x, float y, float z) : Drawable("box")
 	/*posX(x), y(y), z(z)*/
@@ -149,8 +150,10 @@ Box::Box(Graphics & gfx, float x, float y, float z) : Drawable("box")
 		Technique textured_object("box",channel1::defaultChannel);
 		{
 			{
+				
 				Step s1{ "default" };
-
+				
+				
 				s1.AddBind(std::make_shared<PixelShader>(gfx, L"PS_TextureMapping.cso"));
 				auto vs = std::make_shared<VertexShader>(gfx, L"VS_TextureMapping.cso");
 				auto vsBlob = vs->GetVBlob();
@@ -163,19 +166,24 @@ Box::Box(Graphics & gfx, float x, float y, float z) : Drawable("box")
 
 				s1.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
 
+				
+
+
 				s1.AddBind(std::make_shared<SamplerState>(gfx));
 				s1.AddBind(std::make_shared<Texture>(gfx, "Textures\\WoodCrate01.dds"));
-				Entity* entt = SceneRenderer::scene.CreateEntity(this);
+				Entity* entt = GetScene().CreateEntity(this);
 				entt->AddComponent<Transformation>(DirectX::XMMatrixTranslation(0.0f, -2.0f, -5.0f));
 				uint32_t mID = std::move(entt->GetID());
 				//
-
+				
+				s1.AddBind(std::make_shared<DrawIndexed>(0, indexBuffer.get()->GetIndexCount()));
 				s1.AddBind(std::make_shared<TransformationBuffer>(gfx, mID));
 				textured_object.AddStep(s1);
 			}
 			{
 				Step s2{ "mirrorReflection" };
-
+				
+				s2.AddBind(std::make_shared<DrawIndexed>(0, indexBuffer.get()->GetIndexCount()));
 				s2.AddBind(std::make_shared<PixelShader>(gfx, L"PS_TextureMapping.cso"));
 				auto vs = std::make_shared<VertexShader>(gfx, L"VS_TextureMapping.cso");
 				auto vsBlob = vs->GetVBlob();
@@ -196,13 +204,16 @@ Box::Box(Graphics & gfx, float x, float y, float z) : Drawable("box")
 				DirectX::XMMATRIX R = DirectX::XMMatrixReflect(mirrorPlane);
 
 
-				Entity* entt = SceneRenderer::scene.CreateEntity(this);
+				Entity* entt = GetScene().CreateEntity(this);
 				entt->AddComponent<Transformation>(DirectX::XMMatrixTranslation(0.0f, -2.0f, -5.0f)*R);
 				uint32_t mID = std::move(entt->GetID());
 				//
 
+				//evl.OnEvent<KeyboardEvent>([=](std::shared_ptr<KeyboardEvent> e) {});
+				//entt->AddComponent<Velocity>(Vec3{ 10.0f,10.0f,10.0f });
+				//entt->AddComponent<Position>();
 				s2.AddBind(std::make_shared<TransformationBuffer>(gfx, mID));
-
+				//evl.OnEvent<KeyboardEvent>([=](std::shared_ptr<KeyboardEvent> e) {UpdatePos(e->GetEvent(), mID); });
 				//SetTransformationXM(DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll)* DirectX::XMMatrixTranslation(x, y, z) * R);
 				textured_object.AddStep(s2);
 			}
@@ -216,6 +227,47 @@ Box::Box(Graphics & gfx, float x, float y, float z) : Drawable("box")
 		
 				
 }
+
+//void Box::UpdatePos(unsigned char key, uint32_t id)
+//{
+//	Position* pos = nullptr;
+//	Transformation* transform = nullptr;
+//	float dt = timer.GetTime() / 1000;
+//	auto view = (Scene::reg).view<Position, Velocity, Transformation>();
+//	for (const entt::entity& e : view)
+//	{
+//		if ((uint32_t)e == id)
+//		{
+//			pos = &view.get<Position>(e);
+//			transform = &view.get<Transformation>(e);
+//			break;
+//		}
+//
+//
+//	}
+//	float v = 100.0f;
+//	switch (key)
+//	{
+//	case 'Q':
+//		pos->position.z += v * dt;
+//		break;
+//	case 'S':
+//		pos->position.z -= v * dt;
+//		break;
+//	case 'A':
+//		pos->position.x -= v * dt;
+//		break;
+//	case 'D':
+//		pos->position.x += v * dt;
+//		break;
+//	default:
+//
+//		break;
+//	}
+//
+//
+//	transform->transform = DirectX::XMMatrixTranslation(pos->position.x, pos->position.y, pos->position.z);
+//}
 
 //void Box::Update(float ft)
 //{

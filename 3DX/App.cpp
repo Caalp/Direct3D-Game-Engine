@@ -6,28 +6,32 @@
 #include <sstream>
 #include "Events.h"
 #include "StaticTimer.h"
+#include <fstream>
+#include "Imgui\\imgui.h"
+
 
 App::App() :
-	wnd(800, 600, "Hello") ,x(0.5f),y(-4.5f),z(0.0f),last_x(0),last_y(0),
-	//(wnd.gfx()),
-	dirLight(wnd.gfx()),spotLight(wnd.gfx()),
+	wnd(800, 600, "Hello"),last_x(0),last_y(0),
+	dirLight(wnd.gfx()),
 	pointLight(wnd.gfx()),
-	mPhi(1.5f*3.1415926535f),mTheta(1.5f*3.1415926535f),mRadius(80.0f)//m(wnd.gfx(),"suzanne.obj")
+	mPhi(1.5f*3.1415926535f),mTheta(1.5f*3.1415926535f),mRadius(80.0f)
 	
 {
 	
 	cam.SetCameraLens(0.25f*3.1415926535f, 800.0f / 600.0f, 1.0f, 1000.0f);
 
-	
 
 	
 	spotLight.LinkTechnique(rg);
+	pointLight.LinkTechnique(rg);
+	chr.LinkTechnique(rg);
 	box0.LinkTechnique(rg);
 	//testCube.LinkTechnique(rg);
 	floor.LinkTechnique(rg);
 	box0.LinkTechnique(rgMirror);
 	mirror.LinkTechnique(rgMirror);
 	sky.LinkTechnique(rg);
+	
 }
 
 App::~App()
@@ -47,21 +51,37 @@ int App::Go()
 			return *error_code;
 		}
 		timer.StopTimer();
+		float b = timer.GetTime();
 		float a = timer.GetTime() / 1000;
-		
+
+		wnd.gfx().BeginFrame();
+
 		Update(a);
 
+		wnd.gfx().EndFrame();
+		
 
 	}
 }
 
 void App::Update(float dt)
 {
+	
 
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
+	ImGui::Begin("Info");
 
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / (1/dt), 1/dt);
+
+	ImGui::End();
+
+
+
+	ImGui::Begin("AnimSpeed");
+
+	ImGui::SliderFloat("dt", &animTimer, 0.0f, 2.0f,"%.5f",2.0f);
+
+	ImGui::End();
 
 	// Xinput experiment code here
 	static float alpha = dt*10.0f;
@@ -91,17 +111,15 @@ void App::Update(float dt)
 	//XInputSetState(0, &vibration);
 	
 
-	static float v = 70.0f;
+	static float v = 30.0f;
 	float dtheta = 0.2f;
-	/*dirLight.Bind(wnd.gfx());
-	pointLight.Bind(wnd.gfx());
-	spotLight.Bind(wnd.gfx());*/
-	
+
 	cam.UpdateViewXM();
 	wnd.gfx().SetCamera(cam.ViewProjXM());
 	wnd.gfx().SetView(cam.GetViewXM());
 	wnd.gfx().SetCameraPos(cam.GetPosition());
-
+	spotLight.Update();
+	pointLight.Update();
 	dirLight.Bind(wnd.gfx());
 	pointLight.Bind(wnd.gfx());
 	spotLight.Bind(wnd.gfx());
@@ -127,8 +145,8 @@ void App::Update(float dt)
 	
 	if (wnd.mouse.IsInWindow())
 	{
-
-		if (wnd.mouse.IsInWindow() && wnd.mouse.LeftIsPressed())
+		//NOTE: Left mouse button and imgui in intereacting fix!!!
+		if (wnd.mouse.IsInWindow() && wnd.mouse.RightIsPressed())
 		{
 
 			float dx = DirectX::XMConvertToRadians(0.25f*static_cast<float>(wnd.mouse.GetPosX() - last_x));
@@ -142,18 +160,30 @@ void App::Update(float dt)
 
 	}
 
+	chr.GetFinalTransforms("defaultAnim_0", animTimer);
+	//chr.GetFinalTransforms("Spider_Armature|Attack", animTimer);
+	//chr.GetFinalTransforms("Walk", 0.5f);
+	//chr.GetFinalTransforms("Salute", animTimer);
+	//chr.GetFinalTransforms("Aim", 0.9f);
+	//chr.GetFinalTransforms("Human Armature|Jump", 0.0f);
 	
 	
-
-
-	spotLight.DrawLightImgui();
+	//chr.GetFinalTransforms("Run", animTimer);
+	//chr.GetFinalTransforms("mixamo.com", 0.05f);
+	//chr.GetFinalTransforms("defaultAnim_0", dt);
+	chr.Update(wnd.gfx());
+	//chr.UpdateXM();
+	
 	
 	spotLight.Submit(channel1::defaultChannel);
+	pointLight.Submit(channel1::defaultChannel);
+	
+	chr.Submit(channel1::defaultChannel);
 	box0.Submit(channel1::defaultChannel);
 	floor.Submit(channel1::defaultChannel);
 	mirror.Submit(channel1::defaultChannel);
 	sky.Submit(channel1::defaultChannel);
-	emgr->ProcessEvents();
+	//emgr->ProcessEvents();
 	//testScene.UpdateTest(alpha);
 	//testCube.Submit(channel1::defaultChannel); // only submitting this w/o linking technique causing vector error!!!
 	
@@ -163,10 +193,9 @@ void App::Update(float dt)
 	rg.Execute(wnd.gfx());
 	rgMirror.Execute(wnd.gfx());
 	
-	//static bool show_demo_window = false;
-
-	
-	wnd.gfx().EndFrame();
 	rg.Reset();
 	rgMirror.Reset();
+	
+	
+	
 }

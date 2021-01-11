@@ -11,7 +11,10 @@ public:
 	void Execute(Graphics& gfx);
 	void Reset() override;
 
+
+
 private:
 	
 	std::vector<Job> jobs;
+	
 };

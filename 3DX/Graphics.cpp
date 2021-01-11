@@ -5,6 +5,8 @@
 #include "Surface.h"
 #include "Camera.h"
 #include "RenderTarget.h"
+#include "Imgui\\imgui_impl_dx11.h"
+#include "Imgui\\imgui_impl_win32.h"
 namespace wrl = Microsoft::WRL;
 
 #pragma comment(lib,"d3d11.lib")
@@ -31,6 +33,17 @@ HRESULT Graphics::CompileShader(LPCWSTR pScrData, LPCSTR entryPoint, LPCSTR shad
 	*ppBlobOut = shaderBlob;
 	return S_OK;
 }
+
+void Graphics::BeginFrame()
+{
+	if (imguiEnabled)
+	{
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+	}
+}
+
 
 Graphics::Graphics(HWND hWnd)
 {
@@ -110,7 +123,7 @@ Graphics::Graphics(HWND hWnd)
 	//pBackBuffer->Release();
 
 	D3D11_VIEWPORT vp;
-	vp.Width = 800.0f;
+	vp.Width =800.0f;
 	vp.Height = 600.0f;
 	vp.MinDepth = 0;
 	vp.MaxDepth = 1.0f;
@@ -121,39 +134,46 @@ Graphics::Graphics(HWND hWnd)
 
 
 	//Imgui setup
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-	ImGui_ImplWin32_Init(hWnd);
+	//IMGUI_CHECKVERSION();
+	//ImGui::CreateContext();
+	//ImGuiIO& io = ImGui::GetIO();
+	//ImGui_ImplWin32_Init(hWnd);
 	ImGui_ImplDX11_Init(this->pDevice.Get(), this->pImmediateContext.Get());
-	ImGui::StyleColorsDark();
+	//ImGui::StyleColorsDark();
 
 }
 
 Graphics::~Graphics()
 {
 	ImGui_ImplDX11_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+
 }
 
 
 
-void Graphics::DrawIndexed(UINT count)
+void Graphics::DrawIndexed(UINT count,uint32_t startIndexLocation, int startVertexLocation)
 {
-	pImmediateContext->DrawIndexed(count, 0u, 0u);
+	pImmediateContext->DrawIndexed(count, startIndexLocation, startVertexLocation);
+}
+
+void Graphics::Draw(UINT vertexCount, UINT vertexStartLocation)
+{
+	pImmediateContext->Draw(vertexCount, vertexStartLocation);
 }
 
 void Graphics::EndFrame()
 {
 	
-	
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	if (imguiEnabled)
+	{
+		ImGui::Render();
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	}
+
 
 	
 	HRESULT hr;
-	hr = pSwapChain->Present(1u, 0u);
+	hr = pSwapChain->Present(0u, 0u);
 }
 
 void Graphics::ClearFrame(float red, float green, float blue)
@@ -222,3 +242,6 @@ const UINT& Graphics::GetHeight() const
 
 
 
+Microsoft::WRL::ComPtr<ID3D11Device> Graphics::pDevice;
+Microsoft::WRL::ComPtr<IDXGISwapChain> Graphics::pSwapChain;
+Microsoft::WRL::ComPtr<ID3D11DeviceContext> Graphics::pImmediateContext;

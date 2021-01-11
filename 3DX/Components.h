@@ -37,6 +37,7 @@ struct Player
 {
 
 };
+
 struct Velocity
 {
 	Velocity() = default;

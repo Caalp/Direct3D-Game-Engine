@@ -5,12 +5,10 @@
 #include <directxmath.h>
 #include <d3dcompiler.h>
 #include "Command.h"
-#include "Imgui\\imgui_impl_dx11.h"
-#include "Imgui\\imgui.h"
-#include "Imgui\\imgui_impl_win32.h"
 
 
-bool show_demo_window = false;
+
+
 class RenderTarget;
 class Graphics
 {
@@ -22,9 +20,12 @@ public:
 	Graphics(const Graphics&) = delete;
 	Graphics& operator=(const Graphics&) = delete;
 	HRESULT CompileShader(LPCWSTR pScrData,LPCSTR szentryPoint, LPCSTR shaderModel, ID3DBlob** ppBlobOut);
-	void DrawTestTriangle();
-	void DrawCube(float angle, float x, float y);
-	void DrawIndexed(UINT count);
+	void BeginFrame();
+
+	void EnableImgui();
+	void DisableImgui();
+	void DrawIndexed(UINT count, uint32_t startIndexLocation = 0u, int startVertexLocation = 0);
+	void Draw(UINT vertexCount, UINT vertexStartLocation);
 	void EndFrame();
 	void ClearFrame(float red,float gren,float blue);
 	std::shared_ptr<RenderTarget> GetTarget();
@@ -46,12 +47,13 @@ public:
 
 
 private:
+	bool imguiEnabled = true;
 	DirectX::XMMATRIX projection;
 	DirectX::XMMATRIX view;
 	DirectX::XMMATRIX camera;
 	DirectX::XMFLOAT3 cameraPos;
 	
-public:
+private:
 	static Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
 	static Microsoft::WRL::ComPtr<IDXGISwapChain> pSwapChain;
 	static Microsoft::WRL::ComPtr<ID3D11DeviceContext> pImmediateContext;
@@ -61,6 +63,3 @@ public:
 	
 };
 
-Microsoft::WRL::ComPtr<ID3D11Device> Graphics::pDevice;
-Microsoft::WRL::ComPtr<IDXGISwapChain> Graphics::pSwapChain;
-Microsoft::WRL::ComPtr<ID3D11DeviceContext> Graphics::pImmediateContext;

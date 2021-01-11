@@ -1,6 +1,6 @@
 #include "VertexShader.h"
 
-VertexShader::VertexShader(Graphics & gfx, LPCWSTR filename)
+VertexShader::VertexShader(Graphics & gfx, LPCWSTR filename):shaderFilename(filename)
 {
 	//gfx.CompileShader(filename, entryPoint, pModel, &pBlob); // compile shader in runtime
 	//Microsoft::WRL::ComPtr<ID3DBlob> pBlob;
@@ -18,4 +18,9 @@ void VertexShader::Bind(Graphics & gfx)
 ID3DBlob * VertexShader::GetVBlob() const
 {
 	return pBlob.Get();
+}
+
+LPCWSTR VertexShader::GetFilename() const
+{
+	return shaderFilename;
 }

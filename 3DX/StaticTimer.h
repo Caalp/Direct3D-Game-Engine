@@ -1,4 +1,4 @@
 #pragma once
 #include "Timer.h"
 
-Timer timer;
+extern Timer timer = Timer();

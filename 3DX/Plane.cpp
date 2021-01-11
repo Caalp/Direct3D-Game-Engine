@@ -3,6 +3,8 @@
 #include "Texture.h"
 #include "Entity.h"
 #include "SceneRenderer.h"
+#include "DrawCallDispatch.h"
+#include "Technique.h"
 
 Plane::Plane(Graphics& gfx, std::string name, UINT numRows, UINT numCols, float dx, float dt, float damping, float texScale) : Drawable(name)
 {
@@ -105,6 +107,8 @@ void Plane::Utilize(Graphics& gfx)
 	{
 		Step s1{ "markMirror" };
 		{
+			
+			s1.AddBind(std::make_shared<DrawIndexed>(0, indexBuffer.get()->GetIndexCount()));
 			s1.AddBind(std::make_shared<PixelShader>(gfx, L"PS_TextureMapping.cso"));
 			auto vs = std::make_shared<VertexShader>(gfx, L"VS_TextureMapping.cso");
 			auto vsBlob = vs->GetVBlob();
@@ -121,7 +125,7 @@ void Plane::Utilize(Graphics& gfx)
 			s1.AddBind(std::make_shared<SamplerState>(gfx));
 			s1.AddBind(std::make_shared<Texture>(gfx, "Textures\\ice.dds"));
 
-			Entity* entt = SceneRenderer::scene.CreateEntity(this);
+			Entity* entt = GetScene().CreateEntity(this);
 			entt->AddComponent<Transformation>(DirectX::XMMatrixRotationRollPitchYaw(0.0f, -1.5708f, 1.5708f) * DirectX::XMMatrixTranslation(0.0f, 0.0f, -3.0f));
 			uint32_t mID = std::move(entt->GetID());
 			s1.AddBind(std::make_shared<TransformationBuffer>(gfx,mID));
@@ -131,7 +135,8 @@ void Plane::Utilize(Graphics& gfx)
 		}
 		{
 			Step s2{ "blendTransparent" };
-
+			
+			s2.AddBind(std::make_shared<DrawIndexed>(0, indexBuffer.get()->GetIndexCount()));
 			s2.AddBind(std::make_shared<PixelShader>(gfx, L"PhongLightingPS.cso"));
 			auto vs = std::make_shared<VertexShader>(gfx, L"PhongLightingVS.cso");
 			auto vsBlob = vs->GetVBlob();
@@ -163,20 +168,24 @@ void Plane::Utilize(Graphics& gfx)
 			s2.AddBind(std::make_shared<SamplerState>(gfx));
 			s2.AddBind(std::make_shared<Texture>(gfx, "Textures\\ice.dds"));
 
-			Entity* entt = SceneRenderer::scene.CreateEntity(this);
+			Entity* entt = GetScene().CreateEntity(this);
 			entt->AddComponent<Transformation>(DirectX::XMMatrixRotationRollPitchYaw(0.0f, -1.5708f, 1.5708f)* DirectX::XMMatrixTranslation(0.0f, 0.0f, -3.0f));
 			uint32_t mID = std::move(entt->GetID());
 			s2.AddBind(std::make_shared<TransformationBuffer>(gfx, mID));
-			
+			mirorObject.SetTechID(mID);
 			mirorObject.AddStep(s2);
 		}
 	}
+	// Note: technique append will look technique name and the object names match for example,
+	// created floor drawable object with name "floor" has to have technique named "floor" in order to be added to the techniques
+	// Step will have to have same name with targeted pass
 	AppendTechnique(mirorObject);
 	Technique textured_object("floor", channel1::defaultChannel);
 	{
 		{
 			Step s1{ "default" };
-
+			
+			s1.AddBind(std::make_shared<DrawIndexed>(0, indexBuffer.get()->GetIndexCount()));
 			s1.AddBind(std::make_shared<PixelShader>(gfx, L"PS_NormalMap.cso"));
 			auto vs = std::make_shared<VertexShader>(gfx, L"VS_NormalMap.cso");
 			auto vsBlob = vs->GetVBlob();
@@ -211,12 +220,13 @@ void Plane::Utilize(Graphics& gfx)
 			s1.AddBind(std::make_shared<Texture>(gfx, "Textures\\floor.dds"));
 			s1.AddBind(std::make_shared<Texture>(gfx, "Textures\\floor_nmap.dds",1u));
 			//
-			Entity* entt = SceneRenderer::scene.CreateEntity(this);
+			Entity* entt = GetScene().CreateEntity(this);
 			entt->AddComponent<Transformation>(DirectX::XMMatrixTranslation(0.0f, -3.0f, -14.0f));
 			uint32_t mID = std::move(entt->GetID());
 			//
 
 			s1.AddBind(std::make_shared<TransformationBuffer>(gfx, mID));
+			textured_object.SetTechID(mID);
 			textured_object.AddStep(s1);
 		}
 		

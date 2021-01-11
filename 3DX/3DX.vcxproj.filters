@@ -46,12 +46,6 @@
     <Filter Include="Source Files\Passes">
       <UniqueIdentifier>{92cb7d8d-0885-44dd-be3d-783e2ef866bb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Imgui">
-      <UniqueIdentifier>{842672bf-8515-46b5-90ca-a4b2845b435e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Imgui">
-      <UniqueIdentifier>{5ff1a495-b37b-4b58-ac25-e708733e6e48}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\RenderGraphs">
       <UniqueIdentifier>{a8f61274-6448-441a-8c71-31b92393825d}</UniqueIdentifier>
     </Filter>
@@ -69,6 +63,18 @@
     </Filter>
     <Filter Include="Shaders\VS">
       <UniqueIdentifier>{bf31917e-2e66-4144-b721-6e4673eed4f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\LoadingGeometry">
+      <UniqueIdentifier>{435261c3-7b80-4d49-b916-b5f7661b2678}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\LoadingGeometry">
+      <UniqueIdentifier>{d1363c19-ea82-4988-aecb-fda60f06b7f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vendor">
+      <UniqueIdentifier>{2a1ffa4a-0910-46c5-bb37-3f635b63875d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vendor\Imgui">
+      <UniqueIdentifier>{6fefcf34-efd2-4da4-9af2-14176fba6118}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -116,9 +122,6 @@
     </ClCompile>
     <ClCompile Include="InputLayout.cpp">
       <Filter>Source Files\Bindables</Filter>
-    </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DirectionalLight.cpp">
       <Filter>Source Files\Lights</Filter>
@@ -213,24 +216,6 @@
     <ClCompile Include="RenderGraph.cpp">
       <Filter>Source Files\RenderQueueItems</Filter>
     </ClCompile>
-    <ClCompile Include="Imgui\imgui_widgets.cpp">
-      <Filter>Source Files\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Imgui\imgui_impl_win32.cpp">
-      <Filter>Source Files\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Imgui\imgui_impl_dx11.cpp">
-      <Filter>Source Files\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Imgui\imgui_draw.cpp">
-      <Filter>Source Files\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Imgui\imgui.cpp">
-      <Filter>Source Files\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Imgui\imgui_demo.cpp">
-      <Filter>Source Files\Imgui</Filter>
-    </ClCompile>
     <ClCompile Include="MarkMirrorPass.cpp">
       <Filter>Source Files\Passes</Filter>
     </ClCompile>
@@ -268,6 +253,45 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SkyBoxPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimatedCharacter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RasterClockwise.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files\LoadingGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>Source Files\LoadingGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files\LoadingGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="ImguiHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\Imgui\imgui.cpp">
+      <Filter>Vendor\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\Imgui\imgui_demo.cpp">
+      <Filter>Vendor\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\Imgui\imgui_draw.cpp">
+      <Filter>Vendor\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\Imgui\imgui_impl_dx11.cpp">
+      <Filter>Vendor\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\Imgui\imgui_impl_win32.cpp">
+      <Filter>Vendor\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Vendor\Imgui\imgui_widgets.cpp">
+      <Filter>Vendor\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -334,9 +358,6 @@
     </ClInclude>
     <ClInclude Include="MatHelper.h">
       <Filter>Header Files\Bindables</Filter>
-    </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VertexShader.h">
       <Filter>Header Files\Bindables</Filter>
@@ -446,30 +467,6 @@
     <ClInclude Include="Technique.h">
       <Filter>Header Files\RenderQueueItems</Filter>
     </ClInclude>
-    <ClInclude Include="Imgui\imconfig.h">
-      <Filter>Header Files\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imgui.h">
-      <Filter>Header Files\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imgui_impl_dx11.h">
-      <Filter>Header Files\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imgui_impl_win32.h">
-      <Filter>Header Files\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imgui_internal.h">
-      <Filter>Header Files\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imstb_rectpack.h">
-      <Filter>Header Files\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imstb_textedit.h">
-      <Filter>Header Files\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Imgui\imstb_truetype.h">
-      <Filter>Header Files\Imgui</Filter>
-    </ClInclude>
     <ClInclude Include="MarkMirrorPass.h">
       <Filter>Header Files\Passes</Filter>
     </ClInclude>
@@ -527,6 +524,51 @@
     <ClInclude Include="SkyBoxPass.h">
       <Filter>Header Files\Passes</Filter>
     </ClInclude>
+    <ClInclude Include="DrawCallDispatch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimatedCharacter.h">
+      <Filter>Header Files\Drawables</Filter>
+    </ClInclude>
+    <ClInclude Include="RasterClockwise.h">
+      <Filter>Header Files\Passes</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files\LoadingGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>Header Files\LoadingGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files\LoadingGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ImguiHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vendor\Imgui\imconfig.h">
+      <Filter>Vendor\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Vendor\Imgui\imgui.h">
+      <Filter>Vendor\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Vendor\Imgui\imgui_impl_dx11.h">
+      <Filter>Vendor\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Vendor\Imgui\imgui_impl_win32.h">
+      <Filter>Vendor\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Vendor\Imgui\imgui_internal.h">
+      <Filter>Vendor\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Vendor\Imgui\imstb_rectpack.h">
+      <Filter>Vendor\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Vendor\Imgui\imstb_textedit.h">
+      <Filter>Vendor\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Vendor\Imgui\imstb_truetype.h">
+      <Filter>Vendor\Imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="3DX.rc">
@@ -576,6 +618,12 @@
       <Filter>Shaders\PS</Filter>
     </FxCompile>
     <FxCompile Include="VS_NormalMap.hlsl">
+      <Filter>Shaders\VS</Filter>
+    </FxCompile>
+    <FxCompile Include="PS_TextureArrayMapping.hlsl">
+      <Filter>Shaders\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_AnimatedCharacter.hlsl">
       <Filter>Shaders\VS</Filter>
     </FxCompile>
   </ItemGroup>
