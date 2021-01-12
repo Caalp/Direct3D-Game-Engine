@@ -99,5 +99,11 @@ private:
 	unsigned char mEvent;
 
 };
-auto emgr = std::shared_ptr<IEventManager>(new EventManager());
-EventListener evl(emgr);
+
+class ImGuiEvent : public IEventData
+{
+public:
+	DECLARE_EVENT(ImGuiEvent);
+	ImGuiEvent() {/** OutputDebugStringA("ImGui Event...");*/ }
+
+};

@@ -1,11 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.271
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30128.74
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3DX", "3DX\3DX.vcxproj", "{A36885CD-39F1-4EB6-8301-325773CB2D7C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Vendor", "Vendor\Vendor.vcxitems", "{155B1C24-520E-447A-99A2-74A607CCF400}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shaders", "Shaders\Shaders.vcxitems", "{C01A28F1-339A-401F-91B7-52F061EE4EC7}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Vendor\Vendor.vcxitems*{155b1c24-520e-447a-99a2-74a607ccf400}*SharedItemsImports = 9
+		Shaders\Shaders.vcxitems*{a36885cd-39f1-4eb6-8301-325773cb2d7c}*SharedItemsImports = 4
+		Vendor\Vendor.vcxitems*{a36885cd-39f1-4eb6-8301-325773cb2d7c}*SharedItemsImports = 4
+		Shaders\Shaders.vcxitems*{c01a28f1-339a-401f-91b7-52f061ee4ec7}*SharedItemsImports = 9
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86

@@ -7,6 +7,7 @@ SamplerState::SamplerState(Graphics & gfx)
 	sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 	sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 	sampler_desc.MaxAnisotropy = D3D11_REQ_MAXANISOTROPY;
+	
 
 	GetDevice(gfx)->CreateSamplerState(&sampler_desc, &pSampler);
 }

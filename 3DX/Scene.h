@@ -26,4 +26,3 @@ public:
 
 };
 
-entt::registry Scene::reg;

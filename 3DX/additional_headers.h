@@ -14,6 +14,7 @@
 #include "DomainShader.h"
 #include "HullShader.h"
 #include "BlendState.h"
+#include "Texture.h"
 
 
 // typedefs and defines

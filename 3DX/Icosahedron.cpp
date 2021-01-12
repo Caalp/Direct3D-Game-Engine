@@ -1,6 +1,7 @@
 #include "Icosahedron.h"
 #include "CyclopsUtils.h"
 #include "Channels.h"
+#include "Technique.h"
 
 using namespace Util;
 
@@ -137,8 +138,8 @@ void Icosahedron::Utilize(Graphics& gfx)
 	{
 		Step s1{ "default" };
 
-		s1.AddBind(std::make_shared<PixelShader>(gfx, L"PS_TextureMapping.cso"));
-		auto vs = std::make_shared<VertexShader>(gfx, L"VS_TextureMapping.cso");
+		s1.AddBind(std::make_shared<PixelShader>(gfx, "PS_TextureMapping.cso"));
+		auto vs = std::make_shared<VertexShader>(gfx, "VS_TextureMapping.cso");
 		auto vsBlob = vs->GetVBlob();
 		s1.AddBind(std::move(vs));
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =

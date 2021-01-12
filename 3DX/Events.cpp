@@ -12,12 +12,14 @@ bool EventManager::AddListener(IEventData::id_t id, EventDelegate proc)
     for (auto i = list.begin(); i != list.end(); i++)
     {
         EventDelegate& func = *i;
-        if (func.target<EventDelegate>() == proc.target<EventDelegate>())
+        // TO DO: If two same function from different object passes to same Event second one eleminated 
+        /*if (func.target<EventDelegate>() == proc.target<EventDelegate>())
         {
             return false;
-        }
+        }*/
     }
     list.push_back(proc);
+    return true;
 }
 
 bool EventManager::RemoveListener(IEventData::id_t id, EventDelegate proc)
@@ -44,7 +46,7 @@ void EventManager::ProcessEvents()
 {
     size_t count = mEventQueue.size();
     for (auto it = mEventQueue.begin(); it != mEventQueue.end(); ++it) {
-        printf("Processing event..\n");
+        //printf("Processing event..\n");
         if (!count) break;
         auto& i = *it;
         auto listeners = mEventListeners.find(i->GetID());
@@ -65,3 +67,5 @@ const unsigned char& KeyboardEvent::GetEvent() const
 {
     return mEvent;
 }
+auto emgr = std::shared_ptr<IEventManager>(new EventManager());
+EventListener evl(emgr);

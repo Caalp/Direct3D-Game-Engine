@@ -1,9 +1,8 @@
 #pragma once
 #include "ConstBuffs.h"
-#include "Box.h"
 #include "MatHelper.h"
-#include "TerrainClass.h"
 #include "Sphere.h"
+
 
 class SpotLight : public Sphere
 {
@@ -11,12 +10,12 @@ public:
 
 	SpotLight(Graphics& gfx);
 	void Bind(Graphics& gfx);
-	void SetSpotLightPosition(dx::XMFLOAT3 v);
-	//void Draw(Graphics& gfx);
-
-
+	
 	virtual void Utilize(Graphics& gfx) override;
-	void DrawLightImgui();
+	void DrawLightImgui(DirectX::XMFLOAT3& pos);
+
+
+	void Update();
 private:
 
 	struct SpotLightConstBuff
@@ -34,8 +33,7 @@ private:
 
 	};
 private:
-	
-	//Box* boxlight;
+
 	SpotLightConstBuff __BufferData;
 	mutable PSConstBuff<SpotLightConstBuff> __buff;
 };

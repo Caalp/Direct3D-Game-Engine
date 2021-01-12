@@ -1,9 +1,12 @@
 #include "Sky.h"
 #include "Channels.h"
 #include "Texture.h"
-#include "Entity.h"
 #include "SceneRenderer.h"
 #include "Sphere.h"
+#include "DrawCallDispatch.h"
+#include "Entity.h"
+#include "Step.h"
+#include "Technique.h"
 
 Sky::Sky(Graphics& gfx, std::string name, float radius, unsigned int sliceCount, unsigned int stackCount) : Sphere(gfx, name, radius, sliceCount, stackCount)
 {
@@ -15,10 +18,12 @@ void Sky::Utilize(Graphics& gfx)
 
 	Technique skySphere("skySphere", channel1::defaultChannel);
 	{
+		
 		Step s1{ "skybox" };
 		
-		s1.AddBind(std::make_shared<PixelShader>(gfx, L"PS_CubeMapping.cso"));
-		auto vs = std::make_shared<VertexShader>(gfx, L"VS_CubeMapping.cso");
+		s1.AddBind(std::make_shared<DrawIndexed>(0, indexBuffer.get()->GetIndexCount()));
+		s1.AddBind(std::make_shared<PixelShader>(gfx, "PS_CubeMapping.cso"));
+		auto vs = std::make_shared<VertexShader>(gfx, "VS_CubeMapping.cso");
 		auto vsBlob = vs->GetVBlob();
 		s1.AddBind(std::move(vs));
 		
@@ -31,10 +36,10 @@ void Sky::Utilize(Graphics& gfx)
 		s1.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
 		
 		s1.AddBind(std::make_shared<SamplerState>(gfx));
-		s1.AddBind(std::make_shared<Texture>(gfx, "Textures\\snowcube1024.dds"));
+		s1.AddBind(std::make_shared<Texture>(gfx, "../Textures/snowcube1024.dds"));
 		
 		//Add shape as entity
-		Entity* entt = SceneRenderer::scene.CreateEntity(this);
+		Entity* entt = GetScene().CreateEntity(this);
 		entt->AddComponent<Transformation>(DirectX::XMMatrixIdentity());
 		uint32_t mID = std::move(entt->GetID());
 		

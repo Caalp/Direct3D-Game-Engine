@@ -8,6 +8,7 @@ void RenderQueuePass::Accept(Job job)
 
 void RenderQueuePass::Execute(Graphics& gfx)
 {
+	
 	BindAll(gfx);
 	for (auto& job : jobs)
 	{
@@ -19,3 +20,4 @@ void RenderQueuePass::Reset()
 {
 	jobs.clear();
 }
+

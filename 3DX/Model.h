@@ -1,77 +1,58 @@
-//#pragma once
-//#include "additional_headers.h"
-//#include "assimp/Importer.hpp"
-//#include "assimp/postprocess.h"
-//#include "assimp/scene.h"
-//#include <string>
-//#include <vector>
-//#include "Drawable.h"
-//
-//
-//struct V
-//{
-//	DirectX::XMFLOAT3 pos;
-//	DirectX::XMFLOAT3 normal;
-//	DirectX::XMFLOAT2 texCoordinates;
-//};
-//struct Texture2
-//{
-//	unsigned int id;
-//	std::string type;
-//	std::string path;
-//};
-//
-//class Mesh : public Drawable
-//{
-//public:
-//	
-//	Mesh(Graphics& gfx,std::vector<std::unique_ptr<Bindable>> Bindable);
-//	void Draw(Graphics& gfx,DirectX::FXMMATRIX acumTrans);
-//	void Update(float dt) override;
-//	DirectX::XMMATRIX GetTransformation() const override;
-//
-//private:
-//	mutable DirectX::XMFLOAT4X4 transformation;
-//	float pitch;
-//	float yaw;
-//	float roll;
-//	DirectX::XMFLOAT3 pos;
-//};
-//class Node
-//{
-//	friend class Model;
-//public:
-//	Node(int id, const std::string& name,std::vector<Mesh*> meshPtrs, const DirectX::XMMATRIX& transform);
-//	void Draw(Graphics& gfx, DirectX::FXMMATRIX acumTrans);
-//	void AddChild(std::unique_ptr<Node> pChild);
-//
-//private:
-//	int id;
-//	std::string name;
-//	DirectX::XMFLOAT4X4 transformation;
-//	DirectX::XMFLOAT4X4 appliedTransform;
-//	std::vector<std::unique_ptr<Node>> childPtrs;
-//	std::vector<Mesh*> meshPtrs;
-//};
-//class Model 
-//{
-//
-//	
-//public:
-//	
-//	Model(Graphics& gfx,const std::string& filename, unsigned int flags = aiProcess_Triangulate | aiProcess_MakeLeftHanded);
-//	void Draw(Graphics& gfx);
-//	/*virtual void SetScene(std::unique_ptr<aiScene>& scene) = 0;;
-//	virtual const aiScene* & GetScene() const;*/
-//	
-//
-//private:
-//	std::unique_ptr<Mesh> ParseMesh(Graphics& gfx, const aiMesh& mesh, const aiMaterial* const* pMaterials);
-//	std::unique_ptr<Node> ParseNode(int& nextId, const aiNode& node);
-//private:
-//	std::unique_ptr<Node> pRootNode;
-//	std::vector<std::unique_ptr<Mesh>> pMesh;
-//
-//	
-//	
-//};
+#pragma once
+#include <string>
+#include <vector>
+#include <memory>
+#include <filesystem>
+#include "Assimp/Importer.hpp"
+#include "Assimp/postprocess.h"
+#include "Assimp/scene.h"
+#include "Node.h"
+#include "Mesh.h"
+
+
+class Graphics;
+struct VertexDataAlignmentInfo
+{
+	uint32_t m_indexCount;
+	uint32_t m_vertexCount;
+	uint32_t m_startIndex;
+	int m_vertexBaseIndex;
+};
+
+
+// Model class corresponds(equivalent of) aiScene node in assimp part 
+class Model
+{
+	friend class AnimatedCharacter;
+	
+public:
+	
+	Model(Graphics& gfx,const std::string& filename,unsigned int flags = aiProcess_Triangulate |aiProcess_JoinIdenticalVertices | aiProcess_GenSmoothNormals|aiProcess_FlipUVs|aiProcess_MakeLeftHanded|aiProcess_FlipWindingOrder| aiProcess_LimitBoneWeights);
+	int GetBoneCount();
+	const std::vector<Mesh>& getMeshData()const {
+		return pMesh;
+	}
+
+	void GetFinalTransforms(std::string clipName, float timePos, Node* node, const DirectX::XMMATRIX& finalTransforms);
+	bool Interpolate(std::string clipName, std::string nodeName, float timePos, DirectX::XMMATRIX& finalTransforms);
+	
+	
+	const std::unique_ptr<Node>& GetRootNode();
+	std::map<int, BoneData> GetBones() const;
+
+private:
+	void LoadBones(uint32_t meshIndex, uint32_t& boneIndex, const aiMesh& pMesh);
+	std::unique_ptr<Node> ParseNode( int& nextId, const aiNode& node,const DirectX::XMMATRIX& parentTransform);
+
+private:
+	std::unique_ptr<Node> pRootNode;
+	std::map<std::string,const Node*> nodes;
+	std::vector<Mesh> pMesh;
+	std::map<std::string,AnimationClip> anims;
+	std::map<int, BoneData> bones;
+	std::map<std::string, int> boneToIndex;
+	std::vector<DirectX::XMMATRIX> finalTransforms;
+;
+
+	
+};

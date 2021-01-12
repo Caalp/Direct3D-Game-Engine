@@ -1,5 +1,6 @@
 #pragma once
 #include "Bindable.h"
+#include <vector>
 template<typename C>
 class ConstBuffs : public Bindable
 {
@@ -17,6 +18,18 @@ public:
 		GetContext(gfx)->Unmap(pConstBuffer.Get(), 0u);
 		
 	}
+	void Update(Graphics& gfx, const C& cb,UINT size)
+	{
+		D3D11_MAPPED_SUBRESOURCE MappedSource;
+		GetContext(gfx)->Map(
+			pConstBuffer.Get(), 0u,
+			D3D11_MAP_WRITE_DISCARD, 0u,
+			&MappedSource
+		);
+		memcpy(MappedSource.pData, cb.data(), sizeof(cb[0])*size);
+		GetContext(gfx)->Unmap(pConstBuffer.Get(), 0u);
+
+	}
 	
 	ConstBuffs(Graphics& gfx, const C& consts, UINT slot = 0u)
 		:
@@ -32,6 +45,22 @@ public:
 
 		D3D11_SUBRESOURCE_DATA csd = {};
 		csd.pSysMem = &consts;
+		GetDevice(gfx)->CreateBuffer(&cbd, &csd, &pConstBuffer);
+	}
+	ConstBuffs(Graphics& gfx, C& consts, UINT size,UINT slot)
+		:
+		slot(slot)
+	{
+		D3D11_BUFFER_DESC cbd;
+		cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		cbd.Usage = D3D11_USAGE_DYNAMIC;
+		cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		cbd.MiscFlags = 0u;
+		cbd.ByteWidth = sizeof(consts[0])*55;
+		cbd.StructureByteStride = 0u;
+
+		D3D11_SUBRESOURCE_DATA csd = {};
+		csd.pSysMem = &consts[0];
 		GetDevice(gfx)->CreateBuffer(&cbd, &csd, &pConstBuffer);
 	}
 	ConstBuffs(Graphics& gfx, UINT slot = 0u)

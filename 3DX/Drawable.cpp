@@ -1,8 +1,12 @@
 #include "Drawable.h"
-
+#include "Scene.h"
 #include "RenderGraph.h"
 #include <sstream>
-Drawable::Drawable(std::string id) : objectID(id)
+#include "SceneRenderer.h"
+#include "Technique.h"
+
+
+Drawable::Drawable(std::string id) : objectName(id)
 {
 }
 
@@ -12,6 +16,12 @@ void Drawable::Bind(Graphics& gfx) const
 	primitiveTopology->Bind(gfx);
 	indexBuffer->Bind(gfx);
 }
+
+Scene Drawable::GetScene()
+{
+	return SceneRenderer::scene;
+}
+
 
 void Drawable::LinkTechnique(RenderGraph& rg)
 {
@@ -43,7 +53,7 @@ void Drawable::TranslateGeometry(float x, float y, float z)
 void Drawable::Update(float ft)
 {
 	std::ostringstream ss;
-	ss << objectID << " :" << "posX: " << posX << " posY: " << posY << " posZ: " << posZ << std::endl;
+	ss << objectName << " :" << "posX: " << posX << " posY: " << posY << " posZ: " << posZ << std::endl;
 	std::string s(ss.str());
 	OutputDebugString(s.c_str());
 	pitch += ft;
@@ -61,7 +71,7 @@ void Drawable::AppendTechnique(const Technique& tech)
 			return;
 		}
 	}
-	if (tech.GetName() == objectID)
+	if (tech.GetName() == objectName)
 	{
 		techniques.push_back(tech);
 	}
@@ -75,9 +85,29 @@ void Drawable::Submit(size_t channel)
 	}
 }
 
+void Drawable::SetName(std::string name)
+{
+	objectName = name;
+}
+
+std::string Drawable::GetName() const
+{
+	return objectName;
+}
+
 UINT Drawable::GetIndexCount() const
 {
 	return indexBuffer->GetIndexCount();
+}
+
+void Drawable::SetID(uint32_t id)
+{
+	m_id = id;
+}
+
+uint32_t Drawable::GetID() const
+{
+	return m_id;
 }
 
 

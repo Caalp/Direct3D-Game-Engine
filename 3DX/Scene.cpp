@@ -28,3 +28,4 @@ Scene::~Scene()
 {
 	//delete entity;
 }
+entt::registry Scene::reg;
