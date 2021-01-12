@@ -1,17 +1,14 @@
 #include "Graphics.h"
-#include "DDSTextureLoader.h"
+#include "DirectXTK/DDSTextureLoader.h"
 #include <sstream>
-#include "DDSTextureLoader.h"
 #include "Surface.h"
 #include "Camera.h"
 #include "RenderTarget.h"
-#include "Imgui\\imgui_impl_dx11.h"
-#include "Imgui\\imgui_impl_win32.h"
+#include "Imgui/imgui_impl_dx11.h"
+#include "Imgui/imgui_impl_win32.h"
 namespace wrl = Microsoft::WRL;
 
-#pragma comment(lib,"d3d11.lib")
-#pragma comment(lib, "D3DCompiler.lib")
-#pragma comment(lib,"DirectXTK.lib")
+
 
 HRESULT Graphics::CompileShader(LPCWSTR pScrData, LPCSTR entryPoint, LPCSTR shaderModel, ID3DBlob** ppBlobOut)
 {

@@ -49,16 +49,16 @@ private:
 	Plane floor{ wnd.gfx(),"floor", 30u, 30u, 1.0f, 0.03f, 0, 4.0f };
 	Box box0{ wnd.gfx(),0.0f,0.0f,0.0f };
 	Sky sky{ wnd.gfx(),"skySphere",5000.0f,30,30 };
-	//AnimatedCharacter chr{ wnd.gfx(),".\\Models\\mouse.fbx","boblamp" };
-	//AnimatedCharacter chr{ wnd.gfx(),".\\Models\\nanosuit.obj","boblamp" };
-	//AnimatedCharacter chr{ wnd.gfx(),".\\Models\\box\\box.obj","boblamp" };
-	//AnimatedCharacter chr{ wnd.gfx(),".\\Models\\silly_dancing\\silly_dancing.fbx","boblamp" };
+	//AnimatedCharacter chr{ wnd.gfx(),"../Models/mouse.fbx","boblamp" };
+	//AnimatedCharacter chr{ wnd.gfx(),"../Models/nanosuit.obj","boblamp" };
+	//AnimatedCharacter chr{ wnd.gfx(),"../Models/box/box.obj","boblamp" };
+	//AnimatedCharacter chr{ wnd.gfx(),"../Models/silly_dancing/silly_dancing.fbx","boblamp" };
 	
 	
-	AnimatedCharacter chr{ wnd.gfx(),".\\Models\\boblamp\\boblampclean.md5mesh","boblamp" };
-	//AnimatedCharacter chr{ wnd.gfx(),".\\Models\\drone\\drone.X","boblamp" };
-	//AnimatedCharacter chr{ wnd.gfx(),".\\Models\\soldier\\soldier.X","boblamp" };
-	//AnimatedCharacter chr{ wnd.gfx(),".\\Models\\TestModel.fbx","boblamp" };
+	AnimatedCharacter chr{ wnd.gfx(),"../Models/boblamp/boblampclean.md5mesh","boblamp" };
+	//AnimatedCharacter chr{ wnd.gfx(),"../Models/drone/drone.X","boblamp" };
+	//AnimatedCharacter chr{ wnd.gfx(),"../Models/soldier/soldier.X","boblamp" };
+	//AnimatedCharacter chr{ wnd.gfx(),"../Models/TestModel.fbx","boblamp" };
 	bool updated = false;
 	
 };

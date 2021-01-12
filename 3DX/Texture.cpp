@@ -1,9 +1,11 @@
 #include "Texture.h"
 #include "Surface.h"
-#include "D3DX11tex.h"
-#include "D3DX11.h"
+#include "DirectXTK/D3DX11tex.h"
+#include "DirectXTK/D3DX11.h"
 #include "TextureLoader.h"
 
+#pragma comment(lib,"DirectXTK/x86/DirectXTK.lib")
+#pragma comment(lib,"DirectXTK/x86/d3dx11d.lib")
 
 Texture::Texture(Graphics& gfx, const std::vector<std::string>& filepath,unsigned int index)
 {

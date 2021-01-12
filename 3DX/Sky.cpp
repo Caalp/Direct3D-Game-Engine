@@ -22,8 +22,8 @@ void Sky::Utilize(Graphics& gfx)
 		Step s1{ "skybox" };
 		
 		s1.AddBind(std::make_shared<DrawIndexed>(0, indexBuffer.get()->GetIndexCount()));
-		s1.AddBind(std::make_shared<PixelShader>(gfx, L"PS_CubeMapping.cso"));
-		auto vs = std::make_shared<VertexShader>(gfx, L"VS_CubeMapping.cso");
+		s1.AddBind(std::make_shared<PixelShader>(gfx, "PS_CubeMapping.cso"));
+		auto vs = std::make_shared<VertexShader>(gfx, "VS_CubeMapping.cso");
 		auto vsBlob = vs->GetVBlob();
 		s1.AddBind(std::move(vs));
 		
@@ -36,7 +36,7 @@ void Sky::Utilize(Graphics& gfx)
 		s1.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
 		
 		s1.AddBind(std::make_shared<SamplerState>(gfx));
-		s1.AddBind(std::make_shared<Texture>(gfx, "Textures\\snowcube1024.dds"));
+		s1.AddBind(std::make_shared<Texture>(gfx, "../Textures/snowcube1024.dds"));
 		
 		//Add shape as entity
 		Entity* entt = GetScene().CreateEntity(this);

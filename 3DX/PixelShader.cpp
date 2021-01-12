@@ -1,10 +1,11 @@
 #include "PixelShader.h"
 
-PixelShader::PixelShader(Graphics & gfx, LPCWSTR filename)
+
+PixelShader::PixelShader(Graphics & gfx, const std::string& filename)
 {
-	
+	std::string fName = SHADER_DIRECTORY + filename;
 	//gfx.CompileShader(filename, entryPoint, pModel, &pBlob); // compile shader in runtime
-	D3DReadFileToBlob(filename, &pBlob);
+	D3DReadFileToBlob(std::wstring(fName.begin(),fName.end()).c_str(), &pBlob);
 
 	GetDevice(gfx)->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader);
 }

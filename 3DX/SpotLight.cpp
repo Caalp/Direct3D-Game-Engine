@@ -5,7 +5,7 @@
 #include "SceneRenderer.h"
 #include "Events.h"
 #include "DrawCallDispatch.h"
-#include "Imgui\\imgui.h"
+#include "Imgui/imgui.h"
 
 SpotLight::SpotLight(Graphics& gfx) : __buff(gfx,3u), Sphere(gfx,"SpotLight",0.5f,30.0f,30.0f)
 {
@@ -39,8 +39,8 @@ void SpotLight::Utilize(Graphics& gfx)
 		{
 			Step s1{ "default" };
 			s1.AddBind(std::make_shared<DrawIndexed>(0, indexBuffer.get()->GetIndexCount()));
-			s1.AddBind(std::make_shared<PixelShader>(gfx, L"ColorBlenderPS.cso"));
-			auto vs = std::make_shared<VertexShader>(gfx, L"ColorBlenderVS.cso");
+			s1.AddBind(std::make_shared<PixelShader>(gfx, "ColorBlenderPS.cso"));
+			auto vs = std::make_shared<VertexShader>(gfx, "ColorBlenderVS.cso");
 			auto vsBlob = vs->GetVBlob();
 			s1.AddBind(std::move(vs));
 			const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =

@@ -156,8 +156,8 @@ TestCube::TestCube(Graphics& gfx, float x, float y, float z) : Drawable("testCub
 		{
 			Step s1{ "default" };
 
-			s1.AddBind(std::make_shared<PixelShader>(gfx, L"PS_TextureMapping.cso"));
-			auto vs = std::make_shared<VertexShader>(gfx, L"VS_TextureMapping.cso");
+			s1.AddBind(std::make_shared<PixelShader>(gfx, "PS_TextureMapping.cso"));
+			auto vs = std::make_shared<VertexShader>(gfx, "VS_TextureMapping.cso");
 			auto vsBlob = vs->GetVBlob();
 			s1.AddBind(std::move(vs));
 			const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
@@ -169,7 +169,7 @@ TestCube::TestCube(Graphics& gfx, float x, float y, float z) : Drawable("testCub
 			s1.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
 
 			s1.AddBind(std::make_shared<SamplerState>(gfx));
-			s1.AddBind(std::make_shared<Texture>(gfx, "Textures\\WoodCrate01.dds"));
+			s1.AddBind(std::make_shared<Texture>(gfx, "../Textures/WoodCrate01.dds"));
 
 			Entity* entt = GetScene().CreateEntity(this);
 			entt->AddComponent<Transformation>();

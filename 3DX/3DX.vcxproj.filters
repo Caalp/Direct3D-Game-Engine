@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{12c19ae7-24df-4bd6-8e77-3b2079ebbbc6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Bindables">
       <UniqueIdentifier>{2b5e3e94-00b5-4027-bf7e-6f114746ceab}</UniqueIdentifier>
     </Filter>
@@ -55,26 +52,11 @@
     <Filter Include="Header Files\Events">
       <UniqueIdentifier>{aeb7510d-45e6-4bc1-8649-23b346477051}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders\PS">
-      <UniqueIdentifier>{9a6defe4-fdb3-4417-aa1c-4a609269d6a2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\GS">
-      <UniqueIdentifier>{2c8c5cf7-b9eb-4d65-893e-9f51c6daeb07}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\VS">
-      <UniqueIdentifier>{bf31917e-2e66-4144-b721-6e4673eed4f9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\LoadingGeometry">
       <UniqueIdentifier>{435261c3-7b80-4d49-b916-b5f7661b2678}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\LoadingGeometry">
       <UniqueIdentifier>{d1363c19-ea82-4988-aecb-fda60f06b7f8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Vendor">
-      <UniqueIdentifier>{2a1ffa4a-0910-46c5-bb37-3f635b63875d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Vendor\Imgui">
-      <UniqueIdentifier>{6fefcf34-efd2-4da4-9af2-14176fba6118}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -272,24 +254,6 @@
     </ClCompile>
     <ClCompile Include="ImguiHandler.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Vendor\Imgui\imgui.cpp">
-      <Filter>Vendor\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Vendor\Imgui\imgui_demo.cpp">
-      <Filter>Vendor\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Vendor\Imgui\imgui_draw.cpp">
-      <Filter>Vendor\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Vendor\Imgui\imgui_impl_dx11.cpp">
-      <Filter>Vendor\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Vendor\Imgui\imgui_impl_win32.cpp">
-      <Filter>Vendor\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Vendor\Imgui\imgui_widgets.cpp">
-      <Filter>Vendor\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="SceneRenderer.cpp">
       <Filter>Source Files</Filter>
@@ -545,30 +509,6 @@
     <ClInclude Include="ImguiHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Vendor\Imgui\imconfig.h">
-      <Filter>Vendor\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Vendor\Imgui\imgui.h">
-      <Filter>Vendor\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Vendor\Imgui\imgui_impl_dx11.h">
-      <Filter>Vendor\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Vendor\Imgui\imgui_impl_win32.h">
-      <Filter>Vendor\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Vendor\Imgui\imgui_internal.h">
-      <Filter>Vendor\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Vendor\Imgui\imstb_rectpack.h">
-      <Filter>Vendor\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Vendor\Imgui\imstb_textedit.h">
-      <Filter>Vendor\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="Vendor\Imgui\imstb_truetype.h">
-      <Filter>Vendor\Imgui</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="3DX.rc">
@@ -579,56 +519,5 @@
     <Image Include="directx.ico">
       <Filter>Resource Files</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="PS_CubeMapping.hlsl">
-      <Filter>Shaders\PS</Filter>
-    </FxCompile>
-    <FxCompile Include="PS_Textured.hlsl">
-      <Filter>Shaders\PS</Filter>
-    </FxCompile>
-    <FxCompile Include="PS_TextureMapping.hlsl">
-      <Filter>Shaders\PS</Filter>
-    </FxCompile>
-    <FxCompile Include="VS_Textured.hlsl">
-      <Filter>Shaders\VS</Filter>
-    </FxCompile>
-    <FxCompile Include="VS_TextureMapping.hlsl">
-      <Filter>Shaders\VS</Filter>
-    </FxCompile>
-    <FxCompile Include="VS_CubeMapping.hlsl">
-      <Filter>Shaders\VS</Filter>
-    </FxCompile>
-    <FxCompile Include="ColorBlenderPS.hlsl">
-      <Filter>Shaders\PS</Filter>
-    </FxCompile>
-    <FxCompile Include="ConstantColorPS.hlsl">
-      <Filter>Shaders\PS</Filter>
-    </FxCompile>
-    <FxCompile Include="PhongLightingPS.hlsl">
-      <Filter>Shaders\PS</Filter>
-    </FxCompile>
-    <FxCompile Include="ColorBlenderVS.hlsl">
-      <Filter>Shaders\VS</Filter>
-    </FxCompile>
-    <FxCompile Include="PhongLightingVS.hlsl">
-      <Filter>Shaders\VS</Filter>
-    </FxCompile>
-    <FxCompile Include="PS_NormalMap.hlsl">
-      <Filter>Shaders\PS</Filter>
-    </FxCompile>
-    <FxCompile Include="VS_NormalMap.hlsl">
-      <Filter>Shaders\VS</Filter>
-    </FxCompile>
-    <FxCompile Include="PS_TextureArrayMapping.hlsl">
-      <Filter>Shaders\PS</Filter>
-    </FxCompile>
-    <FxCompile Include="VS_AnimatedCharacter.hlsl">
-      <Filter>Shaders\VS</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>

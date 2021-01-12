@@ -2,11 +2,13 @@
 #include "MatHelper.h"
 #include <fstream>
 
+#pragma comment(lib,"Assimp/x86/assimp-vc140-mt.lib")
+
 Model::Model(Graphics& gfx,const std::string & filePath,unsigned int flags)
 {
 	std::filesystem::path fp(filePath);
 
-	std::string parentPath = fp.parent_path().string() + "\\";
+	std::string parentPath = fp.parent_path().string() + "/";
 
 	Assimp::Importer importer;
 	const aiScene* pScene = importer.ReadFile(filePath, flags);

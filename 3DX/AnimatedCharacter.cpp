@@ -18,8 +18,8 @@ AnimatedCharacter::AnimatedCharacter(Graphics& gfx, const std::string& filename,
 		printf("Mesh %s initialized\n", e.GetName().c_str());
 		Technique object(e.GetName(), channel1::defaultChannel, true);
 		Step s1{ "default" };
-		s1.AddBind(std::make_shared<PixelShader>(gfx, L"PS_TextureArrayMapping.cso"));
-		auto vs = std::make_shared<VertexShader>(gfx, L"VS_AnimatedCharacter.cso");
+		s1.AddBind(std::make_shared<PixelShader>(gfx, "PS_TextureArrayMapping.cso"));
+		auto vs = std::make_shared<VertexShader>(gfx, "VS_AnimatedCharacter.cso");
 		auto vsBlob = vs->GetVBlob();
 		s1.AddBind(std::move(vs));
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =

@@ -2,7 +2,7 @@
 #include <sstream>
 #include "resource.h"
 #include "Events.h"
-#include "Imgui\\imgui_impl_win32.h"
+#include "Imgui/imgui_impl_win32.h"
 
 Window::WindowClass Window::WindowClass::wndClass;
 

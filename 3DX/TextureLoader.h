@@ -1,8 +1,11 @@
 #pragma once
 
-#include "FreeImage.h"
+#include "FreeImage/FreeImage.h"
 #include <memory>
 #include <filesystem>
+
+#pragma comment(lib,"FreeImage/x86/FreeImage.lib")
+
 class TextureLoader
 {
 public:

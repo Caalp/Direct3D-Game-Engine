@@ -3,11 +3,12 @@
 #include <vector>
 #include <memory>
 #include <filesystem>
-#include "assimp/Importer.hpp"
-#include "assimp/postprocess.h"
-#include "assimp/scene.h"
+#include "Assimp/Importer.hpp"
+#include "Assimp/postprocess.h"
+#include "Assimp/scene.h"
 #include "Node.h"
 #include "Mesh.h"
+
 
 class Graphics;
 struct VertexDataAlignmentInfo

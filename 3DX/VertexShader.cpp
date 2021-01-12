@@ -1,11 +1,12 @@
 #include "VertexShader.h"
 
-VertexShader::VertexShader(Graphics & gfx, LPCWSTR filename):shaderFilename(filename)
+VertexShader::VertexShader(Graphics & gfx, const std::string& filename ):shaderFilename(filename)
 {
 	//gfx.CompileShader(filename, entryPoint, pModel, &pBlob); // compile shader in runtime
 	//Microsoft::WRL::ComPtr<ID3DBlob> pBlob;
 	//gfx.CompileShader(filename, entryPoint, pModel, &pBlob); // compile shader in runtime
-	D3DReadFileToBlob(filename, &pBlob);
+	std::string fullPath = SHADER_DIRECTORY + filename;
+	D3DReadFileToBlob(std::wstring(fullPath.begin(),fullPath.end()).c_str(), &pBlob);
 	GetDevice(gfx)->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader);
 	
 }
@@ -20,7 +21,7 @@ ID3DBlob * VertexShader::GetVBlob() const
 	return pBlob.Get();
 }
 
-LPCWSTR VertexShader::GetFilename() const
+std::string VertexShader::GetFilename() const
 {
 	return shaderFilename;
 }

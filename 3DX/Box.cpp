@@ -154,8 +154,8 @@ Box::Box(Graphics & gfx, float x, float y, float z) : Drawable("box")
 				Step s1{ "default" };
 				
 				
-				s1.AddBind(std::make_shared<PixelShader>(gfx, L"PS_TextureMapping.cso"));
-				auto vs = std::make_shared<VertexShader>(gfx, L"VS_TextureMapping.cso");
+				s1.AddBind(std::make_shared<PixelShader>(gfx, "PS_TextureMapping.cso"));
+				auto vs = std::make_shared<VertexShader>(gfx, "VS_TextureMapping.cso");
 				auto vsBlob = vs->GetVBlob();
 				s1.AddBind(std::move(vs));
 				const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
@@ -170,7 +170,7 @@ Box::Box(Graphics & gfx, float x, float y, float z) : Drawable("box")
 
 
 				s1.AddBind(std::make_shared<SamplerState>(gfx));
-				s1.AddBind(std::make_shared<Texture>(gfx, "Textures\\WoodCrate01.dds"));
+				s1.AddBind(std::make_shared<Texture>(gfx, "../Textures/WoodCrate01.dds"));
 				Entity* entt = GetScene().CreateEntity(this);
 				entt->AddComponent<Transformation>(DirectX::XMMatrixTranslation(0.0f, -2.0f, -5.0f));
 				uint32_t mID = std::move(entt->GetID());
@@ -184,8 +184,8 @@ Box::Box(Graphics & gfx, float x, float y, float z) : Drawable("box")
 				Step s2{ "mirrorReflection" };
 				
 				s2.AddBind(std::make_shared<DrawIndexed>(0, indexBuffer.get()->GetIndexCount()));
-				s2.AddBind(std::make_shared<PixelShader>(gfx, L"PS_TextureMapping.cso"));
-				auto vs = std::make_shared<VertexShader>(gfx, L"VS_TextureMapping.cso");
+				s2.AddBind(std::make_shared<PixelShader>(gfx, "PS_TextureMapping.cso"));
+				auto vs = std::make_shared<VertexShader>(gfx, "VS_TextureMapping.cso");
 				auto vsBlob = vs->GetVBlob();
 				s2.AddBind(std::move(vs));
 				const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
@@ -197,7 +197,7 @@ Box::Box(Graphics & gfx, float x, float y, float z) : Drawable("box")
 				s2.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
 
 				s2.AddBind(std::make_shared<SamplerState>(gfx));
-				s2.AddBind(std::make_shared<Texture>(gfx, "Textures\\WoodCrate01.dds"));
+				s2.AddBind(std::make_shared<Texture>(gfx, "../Textures/WoodCrate01.dds"));
 
 				//s2.AddBind(std::make_shared<TransformationBuffer>(gfx, *this));
 				DirectX::XMVECTOR mirrorPlane = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);

@@ -6,8 +6,11 @@
 #include <d3dcompiler.h>
 #include "Command.h"
 
+#pragma comment(lib,"d3d11.lib")
+#pragma comment(lib, "D3DCompiler.lib")
+#pragma comment(lib,"DirectXTK/x86/DirectXTK.lib")
 
-
+#define SHADER_DIRECTORY "../Shaders/"
 
 class RenderTarget;
 class Graphics

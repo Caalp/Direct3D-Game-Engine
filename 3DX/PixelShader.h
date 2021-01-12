@@ -1,10 +1,11 @@
 #pragma once
 #include "Bindable.h"
+#include <string>
 
 class PixelShader : public Bindable
 {
 public:
-	PixelShader(Graphics& gfx,LPCWSTR filename);
+	PixelShader(Graphics& gfx, const std::string& filename);
 	void Bind(Graphics& gfx);
 
 private:
