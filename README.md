@@ -15,6 +15,9 @@
 
 ## Compilation
 - For compilation please target x86 platform
+- Check working directories if they're set to $(ProjectDir) Please set it to: <br />
+  &nbsp;&nbsp;**$(SolutionDir)Compiled\$(ProjectName)_Build\Bin** respect to the build settings(debug or release) from properties panel
+   
 
 ## Details
 
