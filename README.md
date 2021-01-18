@@ -13,7 +13,8 @@
 ## Introduction
 - DirectX based game engine project. This project is intended to be from zero to functional game engine.
 
-## Getting Started
+## Compilation
+- For compilation please target x86 platform
 
 ## Details
 

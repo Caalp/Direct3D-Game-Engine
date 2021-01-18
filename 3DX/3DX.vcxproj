@@ -85,8 +85,8 @@
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\calpy\source\repos\3DX\3DX\assimp\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Vendor\Vendor;C:\Users\calpy\source\repos\3DX\3DX\libs;C:\Users\calpy\source\repos\3DX\3DX\assimp\bin\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Vendor\Vendor;$(IncludePath);</IncludePath>
+    <LibraryPath>$(SolutionDir)Vendor\Vendor\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Compiled\$(ProjectName)_Build\Bin\</OutDir>
     <IntDir>$(SolutionDir)Compiled\$(ProjectName)_Build\Intermediate\</IntDir>
   </PropertyGroup>
@@ -114,6 +114,7 @@
       <EnableModules>true</EnableModules>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -132,21 +133,25 @@
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Custom</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Vendor\Vendor;%(AdditionalIncludeDirectories);$(SolutionDir)3DX\assimp\include</AdditionalIncludeDirectories>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>$(SolutionDir)Vendor\Vendor;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)Vendor\Vendor;$(SolutionDir)3DX\assimp\bin\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Vendor\Vendor\;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
