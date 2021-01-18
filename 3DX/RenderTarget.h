@@ -20,6 +20,7 @@ public:
 	UINT GetWidth() const;
 	UINT GetHeight() const;
 	void Bind(Graphics& gfx);
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> GetRTV();
 protected:
 	UINT width;
 	UINT height;
@@ -31,14 +32,14 @@ class ShaderViewRenderTarget : public RenderTarget
 {
 
 public:
-	ShaderViewRenderTarget(Graphics& gfx, UINT width, UINT Height, UINT slot);
+	ShaderViewRenderTarget(Graphics& gfx, UINT width, UINT Height, UINT slot=0u);
+
 	void BindAsBuffer(Graphics& gfx) override;
-	
+	ID3D11ShaderResourceView* GetShaderResourceView();
 private:
 	UINT slot;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceView;
 };
-
 
 class BackBuffer : public RenderTarget
 {

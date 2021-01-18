@@ -1,4 +1,5 @@
 #include "Bindable.h"
+#include "RenderTarget.h"
 
 ID3D11Device* Bindable::GetDevice(Graphics & gfx)
 {

@@ -15,7 +15,7 @@ public:
 	void BindAsBuffer(Graphics& gfx, BufferResource* depth) override;
 	void Clear(Graphics& gfx) override;
 
-protected:
+public:
 	UINT width;
 	UINT height;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;

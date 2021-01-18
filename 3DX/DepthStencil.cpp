@@ -34,7 +34,7 @@ DepthStencil::DepthStencil(Graphics& gfx, UINT width, UINT height) : width(width
 	dsv.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsv.Texture2D.MipSlice = 0u;
 	GetDevice(gfx)->CreateDepthStencilView(depthTex.Get(), &dsv, depthStencilView.GetAddressOf());
-	depthTex->Release();
+	//depthTex->Release();
 }
 
 

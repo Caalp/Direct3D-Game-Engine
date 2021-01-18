@@ -1,11 +1,17 @@
 #include "Graphics.h"
-#include "DirectXTK/DDSTextureLoader.h"
+//#include "DirectXTK/DDSTextureLoader.h"
 #include <sstream>
 #include "Surface.h"
 #include "Camera.h"
 #include "RenderTarget.h"
 #include "Imgui/imgui_impl_dx11.h"
 #include "Imgui/imgui_impl_win32.h"
+#include "DirectXTK/ScreenGrab.h"
+#include "DepthStencil.h"
+//#include "DirectXTK/LoaderHelpers.h"
+//#include "DirectXTK/DirectXHelpers.h"
+#include "DirectXTK/pch.h"
+#include "Texture.h"
 namespace wrl = Microsoft::WRL;
 
 
@@ -41,8 +47,18 @@ void Graphics::BeginFrame()
 	}
 }
 
+void Graphics::EnableImgui()
+{
+	imguiEnabled = true;
+}
 
-Graphics::Graphics(HWND hWnd)
+void Graphics::DisableImgui()
+{
+	imguiEnabled = false;
+}
+
+
+Graphics::Graphics(HWND hWnd, uint32_t w, uint32_t h) : width(w),height(h)
 {
 	DXGI_SWAP_CHAIN_DESC scd = {};
 	scd.BufferDesc.Width = 0;
@@ -59,13 +75,16 @@ Graphics::Graphics(HWND hWnd)
 	scd.OutputWindow = hWnd;
 	scd.Windowed = TRUE;
 	scd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-	scd.Flags = 0;
-
+	scd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+	UINT creatingFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
+#if defined(_DEBUG)
+	creatingFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
 	D3D11CreateDeviceAndSwapChain(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
-		0,
+		creatingFlags,
 		nullptr,
 		0,
 		D3D11_SDK_VERSION,
@@ -76,73 +95,50 @@ Graphics::Graphics(HWND hWnd)
 		&pImmediateContext);
 
 	wrl::ComPtr<ID3D11Texture2D> pBackBuffer ;
+	wrl::ComPtr<ID3D11Texture2D> pTexBuffer ;
+	
 	pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &pBackBuffer);
 
-	pTarget = std::shared_ptr<RenderTarget>{ new BackBuffer(*this,pBackBuffer.Get()) };
-	//pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &pTarget);
-	
-	// depth stencil view creation
-	/*D3D11_DEPTH_STENCIL_DESC dsd = {};
-	dsd.DepthEnable = TRUE;
-	dsd.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	dsd.DepthFunc = D3D11_COMPARISON_LESS;
-	wrl::ComPtr<ID3D11DepthStencilState> pDSS;
+	pTarget = std::shared_ptr<RenderTarget>{ new ShaderViewRenderTarget(*this,width,height) };
+	pTarget2 = std::shared_ptr<RenderTarget>{ new BackBuffer(*this,pBackBuffer.Get()) };
+	//D3D11_TEXTURE2D_DESC texDesc;
+	//texDesc.Width = width;
+	//texDesc.Height = height;
+	//texDesc.MipLevels = 0;
+	//texDesc.ArraySize = 1;
+	//texDesc.SampleDesc.Count = 1;
+	//texDesc.SampleDesc.Quality = 0;
+	//texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; //DXGI_FORMAT_D24_UNORM_S8_UINT;
+	//texDesc.Usage = D3D11_USAGE_DEFAULT;
+	//texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	//texDesc.CPUAccessFlags = 0;
+	//texDesc.MiscFlags = 0;
 
-	pDevice->CreateDepthStencilState(&dsd, pDSS.GetAddressOf());
-	pImmediateContext->OMSetDepthStencilState(pDSS.Get(), 1u);*/
-	//wrl::ComPtr<ID3D11DepthStencilView> pdsView;
-	/*wrl::ComPtr<ID3D11Texture2D> depthTex;
-	D3D11_TEXTURE2D_DESC  depthTexDesc;
-	ZeroMemory(&depthTexDesc, sizeof(depthTexDesc));
-	depthTexDesc.Width = 800;
-	depthTexDesc.Height = 600;
-	depthTexDesc.MipLevels = 1;
-	depthTexDesc.ArraySize = 1;
-	depthTexDesc.Format = DXGI_FORMAT_D32_FLOAT;
-	depthTexDesc.SampleDesc.Count = 1;
-	depthTexDesc.SampleDesc.Quality = 0;
-	depthTexDesc.Usage = D3D11_USAGE_DEFAULT;
-	depthTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	depthTexDesc.CPUAccessFlags = 0;
-	depthTexDesc.MiscFlags = 0;*/
-	//pDevice->CreateTexture2D(&depthTexDesc, nullptr, depthTex.GetAddressOf());
+	////Microsoft::WRL::ComPtr<ID3D11Texture2D> rtvTex;
+	//pDevice->CreateTexture2D(&texDesc, 0, texture.GetAddressOf());
 
-	/*D3D11_DEPTH_STENCIL_VIEW_DESC dsv;
-	ZeroMemory(&dsv, sizeof(dsv));
-	dsv.Format = depthTexDesc.Format;
-	dsv.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	dsv.Texture2D.MipSlice = 0;*/
+	//pTarget2 = std::shared_ptr<RenderTarget>{ new BackBuffer(*this,texture.Get()) };
+	//
+	//shaderResourceViewRT = new ShaderViewRenderTarget(*this, 800u, 600u, 0u);
+	pDevice->QueryInterface<ID3D11Debug>(&debug);
+	debug->SetFeatureMask(D3D11_DEBUG_FEATURE_PRESENT_PER_RENDER_OP);
 
-	
-	
-	//pImmediateContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), pdsView.Get());
-	
-	//pBackBuffer->Release();
-
-	D3D11_VIEWPORT vp;
-	vp.Width =800.0f;
-	vp.Height = 600.0f;
-	vp.MinDepth = 0;
-	vp.MaxDepth = 1.0f;
-	vp.TopLeftX = 0.0f;
-	vp.TopLeftY = 0.0f;
-
-	pImmediateContext->RSSetViewports(1u, &vp);
-
-
-	//Imgui setup
-	//IMGUI_CHECKVERSION();
-	//ImGui::CreateContext();
-	//ImGuiIO& io = ImGui::GetIO();
-	//ImGui_ImplWin32_Init(hWnd);
-	ImGui_ImplDX11_Init(this->pDevice.Get(), this->pImmediateContext.Get());
-	//ImGui::StyleColorsDark();
+	if (imguiEnabled)
+	{
+		ImGui_ImplDX11_Init(this->pDevice.Get(), this->pImmediateContext.Get());
+	}
+		
+	CreateViewport(w, h);
 
 }
 
 Graphics::~Graphics()
 {
-	ImGui_ImplDX11_Shutdown();
+	if (imguiEnabled)
+	{
+		ImGui_ImplDX11_Shutdown();
+	}
+		
 
 }
 
@@ -160,17 +156,57 @@ void Graphics::Draw(UINT vertexCount, UINT vertexStartLocation)
 
 void Graphics::EndFrame()
 {
+	//std::string fName = "../SCREENSHOT_"+std::to_string(i)+".JPG";
+	HRESULT hr;
+	//ID3D11Resource* res;
+	//pTarget->GetRTV()->GetResource(&res);
+	//hr = DirectX::SaveWICTextureToFile(pImmediateContext.Get(), res,GUID_ContainerFormatJpeg, std::wstring(fName.begin(),fName.end()).c_str());
+
+
+	
+
+
+	//res->QueryInterface(IID_ID3D11Texture2D, (void**)&tex2d);
+
+	//auto test = pTarget.get();
+	//res->QueryInterface<ID3D11Texture2D>(&res);
+	//if (SUCCEEDED(hr))
+	//{
+	//Texture tx = { *this,"../SCREENSHOT.JPG" };
+	ImGui::Begin("Viewport");
+		//ImGui::BeginChild("GameRender");
+		//ImVec2 wsize = ImGui::GetWindowSize();
+
+		ImGui::Image((void*)dynamic_cast<ShaderViewRenderTarget*>(pTarget.get())->GetShaderResourceView(), ImVec2(800, 600));
+		//ImGui::Image((void*)tx.srv.Get(), ImVec2(800, 600));
+
+		//ImGui::EndChild();
+	ImGui::End();
+	/*hr = DirectX::SaveWICTextureToFile(pImmediateContext.Get(), res,
+		GUID_ContainerFormatJpeg, L"../SCREENSHOT.JPG");
+	
+	res->Release();*/
+	//OutputOnlyDepthBuffer* dpth = new OutputOnlyDepthBuffer(*this);
+
+	//dpth->Clear(*this);
+	//pTarget2->Clear(*this);
+	pImmediateContext->OMSetRenderTargets(1u, pTarget2->GetRTV().GetAddressOf(), nullptr);
 	
 	if (imguiEnabled)
 	{
+		//ImGui_ImplDX11_RenderDrawData((void*)shaderResourceViewRT->GetShaderResourceView());
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
 	}
-
-
-	
-	HRESULT hr;
-	hr = pSwapChain->Present(0u, 0u);
+	//pTarget2->Clear(*this);
+	//pTarget2->GetRTV()->GetResource(&res);
+	//
+	//hr = DirectX::SaveWICTextureToFile(pImmediateContext.Get(), res,GUID_ContainerFormatJpeg, std::wstring(fName.begin(), fName.end()).c_str());
+	//i++;
+	//
+	hr = pSwapChain->Present(1u, 0u);
 }
 
 void Graphics::ClearFrame(float red, float green, float blue)
@@ -182,6 +218,11 @@ void Graphics::ClearFrame(float red, float green, float blue)
 std::shared_ptr<RenderTarget> Graphics::GetTarget()
 {
 	return pTarget;
+}
+
+bool Graphics::IsImguiEnabled() const
+{
+	return imguiEnabled;
 }
 
 DirectX::XMMATRIX Graphics::GetView() const
@@ -224,17 +265,32 @@ DirectX::XMFLOAT3 Graphics::GetCameraPos() const
 	return cameraPos;
 }
 
+void Graphics::CreateViewport(float w, float h, float maxDepth, float minDepth, float leftX, float leftY)
+{
+
+	D3D11_VIEWPORT vp;
+	vp.Width = w;
+	vp.Height = h;
+	vp.MinDepth = minDepth;
+	vp.MaxDepth = maxDepth;
+	vp.TopLeftX = leftX;
+	vp.TopLeftY = leftY;
+
+	pImmediateContext->RSSetViewports(1u, &vp);
+}
+
 const UINT& Graphics::GetWidth() const
 {
 	// TODO: insert return statement here
-	return 800u;
+	return width;
 }
 
 const UINT& Graphics::GetHeight() const
 {
 	// TODO: insert return statement here
-	return 600u;
+	return height;
 }
+
 
 
 

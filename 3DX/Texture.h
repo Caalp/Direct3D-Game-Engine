@@ -15,7 +15,7 @@ public:
 	Texture(Graphics& gfx, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> paramSrv, unsigned int bufferSlot = 0u);
 	void Bind(Graphics& gfx) override;
 
-protected:
+public:
 	UINT bufferSlot;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> srv;
 };

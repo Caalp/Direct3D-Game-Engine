@@ -85,6 +85,17 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\version.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\Vertex.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\XMLTools.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\D3DX11.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\D3DX11async.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\D3DX11core.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\D3DX11tex.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\DDS.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\DDSTextureLoader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\DirectXHelpers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\LoaderHelpers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\pch.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\PlatformHelpers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\ScreenGrab.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\entt\entt.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\entt\fwd.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\FreeImage\FreeImage.h" />
@@ -98,11 +109,16 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\DDSTextureLoader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\DirectXHelpers.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\pch.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\ScreenGrab.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui_demo.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui_draw.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui_impl_dx11.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui_tables.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>

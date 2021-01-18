@@ -16,6 +16,9 @@
 #include "Sky.h"
 #include "AnimatedCharacter.h"
 
+//#include "DirectXTK/PlatformHelpers.h"
+//#include "DirectXTK/DDS.h"
+
 
 class App
 {
@@ -28,6 +31,12 @@ private:
 	void Update(float dt);
 private:
 	float animTimer = 0.0288f;
+	float width = 800.0f;
+	float height = 600.0f;
+	float minDepth = 0.0f;
+	float maxDepth = 1.0f;
+	float topXPos = 400.0f;
+	float topYPos = 0.0f;
 	//Scene testScene;
 	ImguiHandler imguiHandler;
 	Window wnd;

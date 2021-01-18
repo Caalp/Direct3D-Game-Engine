@@ -77,15 +77,33 @@ Window::Window(int width, int height,  const char* name) noexcept : width(width)
 						nullptr, 
 						WindowClass::GetInstance(), this);
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
-	ImGui_ImplWin32_Init(hWnd);
-	p_gfx = std::make_unique<Graphics>(hWnd);
+
+
+	
+	//Create gfx object to be used across the app
+	p_gfx = std::make_unique<Graphics>(hWnd,width,height);
+	//p_gfx.get()->DisableImgui();
+	if (p_gfx.get()->IsImguiEnabled())
+	{
+		ImGui_ImplWin32_Init(hWnd);
+	}
+	
+	
+	
+	
+
+	
 }
 
 
 
 Window::~Window()
 {
-	ImGui_ImplWin32_Shutdown();
+	if (p_gfx.get()->IsImguiEnabled())
+	{
+		ImGui_ImplWin32_Shutdown();
+	}
+	
 	DestroyWindow(hWnd);
 }
 

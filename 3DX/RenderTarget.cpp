@@ -32,6 +32,32 @@ RenderTarget::RenderTarget(Graphics& gfx, UINT w, UINT h) : width(w),height(h)
 
 RenderTarget::RenderTarget(Graphics& gfx, ID3D11Texture2D* texture)
 {
+	//D3D11_TEXTURE2D_DESC textureDesc;
+	//textureDesc.Width = 1600;
+	//textureDesc.Height = 1061;
+	//textureDesc.MipLevels = 0;
+	//textureDesc.ArraySize = 1;
+	//textureDesc.SampleDesc.Count = 1;
+	//textureDesc.SampleDesc.Quality = 0;
+	//textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	//textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	//textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	//textureDesc.CPUAccessFlags = 0;
+	//textureDesc.MiscFlags = 0;
+
+
+	//GetDevice(gfx)->CreateTexture2D(&textureDesc, 0, &texture);
+
+	////width = textureDesc.Width;
+	////height = textureDesc.Height;
+
+
+	//D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+	//rtvDesc.Format = textureDesc.Format;
+	//rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	//rtvDesc.Texture2D.MipSlice = 0u;
+
+	//GetDevice(gfx)->CreateRenderTargetView(texture, &rtvDesc, renderTargetView.GetAddressOf());
 	D3D11_TEXTURE2D_DESC textureDesc;
 	texture->GetDesc(&textureDesc);
 	width = textureDesc.Width;
@@ -90,6 +116,11 @@ void RenderTarget::Bind(Graphics& gfx)
 {
 }
 
+Microsoft::WRL::ComPtr<ID3D11RenderTargetView> RenderTarget::GetRTV()
+{
+	return renderTargetView;
+}
+
 
 ShaderViewRenderTarget::ShaderViewRenderTarget(Graphics& gfx, UINT width, UINT height, UINT slot) : RenderTarget(gfx,width,height),slot(slot)
 {
@@ -109,6 +140,11 @@ ShaderViewRenderTarget::ShaderViewRenderTarget(Graphics& gfx, UINT width, UINT h
 void ShaderViewRenderTarget::BindAsBuffer(Graphics& gfx)
 {
 	GetContext(gfx)->PSSetShaderResources(1u, 1u, shaderResourceView.GetAddressOf());
+}
+
+ID3D11ShaderResourceView* ShaderViewRenderTarget::GetShaderResourceView()
+{
+	return shaderResourceView.Get();
 }
 
 

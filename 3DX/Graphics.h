@@ -10,15 +10,17 @@
 #pragma comment(lib, "D3DCompiler.lib")
 #pragma comment(lib,"DirectXTK/x86/DirectXTK.lib")
 
+
 #define SHADER_DIRECTORY "../Shaders/"
 
 class RenderTarget;
+class ShaderViewRenderTarget;
 class Graphics
 {
 	friend class Bindable;
-	friend class Command;
+
 public:
-	Graphics(HWND hWnd);
+	Graphics(HWND hWnd,uint32_t w,uint32_t h);
 	~Graphics();
 	Graphics(const Graphics&) = delete;
 	Graphics& operator=(const Graphics&) = delete;
@@ -32,8 +34,7 @@ public:
 	void EndFrame();
 	void ClearFrame(float red,float gren,float blue);
 	std::shared_ptr<RenderTarget> GetTarget();
-	//friend class Box;
-
+	bool IsImguiEnabled() const;
 	DirectX::XMMATRIX GetView() const;
 	void SetProjection(DirectX::FXMMATRIX proj) noexcept;
 	void SetView(DirectX::FXMMATRIX view);
@@ -42,25 +43,32 @@ public:
 	DirectX::XMMATRIX GetCamera() const;
 	void SetCameraPos(const DirectX::XMFLOAT3& pos);
 	DirectX::XMFLOAT3 GetCameraPos() const;
-
+	void CreateViewport(float w, float h, float maxDepth=1.0f, float minDepth= 0.0f, float leftX = 0.0f, float leftY = 0.0f);
 
 	// These functions need definition
 	const UINT& GetWidth() const;
 	const UINT& GetHeight() const;
 
 
+
 private:
+	uint32_t width;
+	uint32_t height;
 	bool imguiEnabled = true;
 	DirectX::XMMATRIX projection;
 	DirectX::XMMATRIX view;
 	DirectX::XMMATRIX camera;
 	DirectX::XMFLOAT3 cameraPos;
-	
-private:
+public:
+	int i = 0;
 	static Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
 	static Microsoft::WRL::ComPtr<IDXGISwapChain> pSwapChain;
 	static Microsoft::WRL::ComPtr<ID3D11DeviceContext> pImmediateContext;
+	Microsoft::WRL::ComPtr <ID3D11Debug> debug;
 	std::shared_ptr<RenderTarget> pTarget;
+	std::shared_ptr<RenderTarget> pTarget2;
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
+	ShaderViewRenderTarget* shaderResourceViewRT;
 	
 
 	

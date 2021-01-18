@@ -114,6 +114,7 @@ Texture::Texture(Graphics & gfx, const char * filePath, unsigned int bufferSlot)
 	
 	
 	hr = D3DX11CreateShaderResourceViewFromFile(GetDevice(gfx), filePath, 0, 0, &srv, 0);
+	
 	if (FAILED(hr))
 	{
 		MessageBox(0, "Loading from file to SRV failed!", "ERROR", 0);
