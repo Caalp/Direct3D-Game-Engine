@@ -1,13 +1,11 @@
- DirectX based Game Engine
+ DirectX11 based Game Engine
 ## Contents
 
 [Introduction](#Introduction)
 
-[Getting Started](#Getting-Started)
+[Compilation](#Compilation)
 
-[Details](#Details)
-
-[Contributing](#Contributing)
+[Goals by end of 2021](#Goalsbyendof2021)
 
 
 ## Introduction
@@ -19,6 +17,13 @@
   &nbsp;&nbsp;**$(SolutionDir)Compiled\$(ProjectName)_Build\Bin** respect to the build settings(debug or release) from properties panel
    
 
-## Details
-
-## Contributing
+## Goals by end of 2021
+ I have listed features that I would like to add to my framework by end of 2021.       
+ 
+        1. Enable ImGui's docking feature.
+        2. Add shadow mapping and partical systems.
+        3. Advance render graph system.
+        4. Support for gamepads along with better input handling strategy.
+        5. Serialization for creation of objects.
+        6. Animation blending.
+        7. Basic implementation of PhysX physics engine.
