@@ -28,8 +28,10 @@ void BindingPass::BindBufferResources(Graphics& gfx)
 	{
 		renderTarget->BindAsBuffer(gfx, &(*depthStencil));
 	}
-	else
+	else if (depthStencil)
 	{
+		//Create and bind default depth
+		//auto& a = GetSinkByName("depthbuffer");
 		// only set the depth-stencil itself
 		depthStencil->BindAsBuffer(gfx);
 	}

@@ -13,6 +13,7 @@ public:
 	RenderTarget(Graphics& gfx, ID3D11Texture2D* texture);
 	void BindAsBuffer(Graphics& gfx) override;
 	void BindAsBuffer(Graphics& gfx, BufferResource* depth) override;
+	void GetResource(ID3D11Resource** resource) override  { }
 	// For view count new parameter can be added
 	void BindAsBuffer(Graphics& gfx, DepthStencil* depth);
 	void Clear(Graphics& gfx) override;
@@ -35,6 +36,7 @@ public:
 	ShaderViewRenderTarget(Graphics& gfx, UINT width, UINT Height, UINT slot=0u);
 
 	void BindAsBuffer(Graphics& gfx) override;
+	void GetResource(ID3D11Resource** resource) override;
 	ID3D11ShaderResourceView* GetShaderResourceView();
 private:
 	UINT slot;

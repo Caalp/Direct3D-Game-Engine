@@ -18,6 +18,7 @@
 
 #include <d3d11_1.h>
 #include <stdint.h>
+
 enum DDS_ALPHA_MODE
 {
 	DDS_ALPHA_MODE_UNKNOWN = 0,
@@ -26,7 +27,6 @@ enum DDS_ALPHA_MODE
 	DDS_ALPHA_MODE_OPAQUE = 3,
 	DDS_ALPHA_MODE_CUSTOM = 4,
 };
-
 namespace DirectX
 {
 

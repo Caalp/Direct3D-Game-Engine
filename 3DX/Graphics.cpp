@@ -1,5 +1,5 @@
 #include "Graphics.h"
-//#include "DirectXTK/DDSTextureLoader.h"
+#include "DirectXTK/DDSTextureLoader.h"
 #include <sstream>
 #include "Surface.h"
 #include "Camera.h"
@@ -8,11 +8,10 @@
 #include "Imgui/imgui_impl_win32.h"
 #include "DirectXTK/ScreenGrab.h"
 #include "DepthStencil.h"
-//#include "DirectXTK/LoaderHelpers.h"
-//#include "DirectXTK/DirectXHelpers.h"
 #include "DirectXTK/pch.h"
 #include "Texture.h"
 namespace wrl = Microsoft::WRL;
+
 
 
 
@@ -77,9 +76,9 @@ Graphics::Graphics(HWND hWnd, uint32_t w, uint32_t h) : width(w),height(h)
 	scd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	scd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	UINT creatingFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
-#if defined(_DEBUG)
-	creatingFlags |= D3D11_CREATE_DEVICE_DEBUG;
-#endif
+//#if defined(_DEBUG)
+//	creatingFlags |= D3D11_CREATE_DEVICE_DEBUG;
+//#endif
 	D3D11CreateDeviceAndSwapChain(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
@@ -99,8 +98,7 @@ Graphics::Graphics(HWND hWnd, uint32_t w, uint32_t h) : width(w),height(h)
 	
 	pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &pBackBuffer);
 
-	pTarget = std::shared_ptr<RenderTarget>{ new ShaderViewRenderTarget(*this,width,height) };
-	pTarget2 = std::shared_ptr<RenderTarget>{ new BackBuffer(*this,pBackBuffer.Get()) };
+	pTarget = std::shared_ptr<RenderTarget>{ new BackBuffer(*this,pBackBuffer.Get()) };
 	//D3D11_TEXTURE2D_DESC texDesc;
 	//texDesc.Width = width;
 	//texDesc.Height = height;
@@ -120,8 +118,9 @@ Graphics::Graphics(HWND hWnd, uint32_t w, uint32_t h) : width(w),height(h)
 	//pTarget2 = std::shared_ptr<RenderTarget>{ new BackBuffer(*this,texture.Get()) };
 	//
 	//shaderResourceViewRT = new ShaderViewRenderTarget(*this, 800u, 600u, 0u);
-	pDevice->QueryInterface<ID3D11Debug>(&debug);
-	debug->SetFeatureMask(D3D11_DEBUG_FEATURE_PRESENT_PER_RENDER_OP);
+	/*pDevice->QueryInterface<ID3D11Debug>(&debug);
+	debug->SetFeatureMask(D3D11_DEBUG_FEATURE_PRESENT_PER_RENDER_OP);*/
+	
 
 	if (imguiEnabled)
 	{
@@ -156,57 +155,22 @@ void Graphics::Draw(UINT vertexCount, UINT vertexStartLocation)
 
 void Graphics::EndFrame()
 {
-	//std::string fName = "../SCREENSHOT_"+std::to_string(i)+".JPG";
 	HRESULT hr;
-	//ID3D11Resource* res;
-	//pTarget->GetRTV()->GetResource(&res);
-	//hr = DirectX::SaveWICTextureToFile(pImmediateContext.Get(), res,GUID_ContainerFormatJpeg, std::wstring(fName.begin(),fName.end()).c_str());
+	ID3D11Resource* res;
 
 
-	
-
-
-	//res->QueryInterface(IID_ID3D11Texture2D, (void**)&tex2d);
-
-	//auto test = pTarget.get();
-	//res->QueryInterface<ID3D11Texture2D>(&res);
-	//if (SUCCEEDED(hr))
-	//{
-	//Texture tx = { *this,"../SCREENSHOT.JPG" };
-	ImGui::Begin("Viewport");
-		//ImGui::BeginChild("GameRender");
-		//ImVec2 wsize = ImGui::GetWindowSize();
-
-		ImGui::Image((void*)dynamic_cast<ShaderViewRenderTarget*>(pTarget.get())->GetShaderResourceView(), ImVec2(800, 600));
-		//ImGui::Image((void*)tx.srv.Get(), ImVec2(800, 600));
-
-		//ImGui::EndChild();
-	ImGui::End();
-	/*hr = DirectX::SaveWICTextureToFile(pImmediateContext.Get(), res,
-		GUID_ContainerFormatJpeg, L"../SCREENSHOT.JPG");
-	
-	res->Release();*/
-	//OutputOnlyDepthBuffer* dpth = new OutputOnlyDepthBuffer(*this);
-
-	//dpth->Clear(*this);
-	//pTarget2->Clear(*this);
-	pImmediateContext->OMSetRenderTargets(1u, pTarget2->GetRTV().GetAddressOf(), nullptr);
 	
 	if (imguiEnabled)
 	{
-		//ImGui_ImplDX11_RenderDrawData((void*)shaderResourceViewRT->GetShaderResourceView());
+	
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
 	}
-	//pTarget2->Clear(*this);
-	//pTarget2->GetRTV()->GetResource(&res);
-	//
-	//hr = DirectX::SaveWICTextureToFile(pImmediateContext.Get(), res,GUID_ContainerFormatJpeg, std::wstring(fName.begin(), fName.end()).c_str());
-	//i++;
-	//
+
 	hr = pSwapChain->Present(1u, 0u);
+	
 }
 
 void Graphics::ClearFrame(float red, float green, float blue)

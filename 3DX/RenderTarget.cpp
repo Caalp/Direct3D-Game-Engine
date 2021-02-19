@@ -1,6 +1,7 @@
 #include "RenderTarget.h"
 #include "DepthStencil.h"
-
+#include "DirectXTK/ScreenGrab.h"
+#include "DirectXTK/pch.h"
 RenderTarget::RenderTarget(Graphics& gfx, UINT w, UINT h) : width(w),height(h)
 {
 	D3D11_TEXTURE2D_DESC texDesc;
@@ -140,6 +141,11 @@ ShaderViewRenderTarget::ShaderViewRenderTarget(Graphics& gfx, UINT width, UINT h
 void ShaderViewRenderTarget::BindAsBuffer(Graphics& gfx)
 {
 	GetContext(gfx)->PSSetShaderResources(1u, 1u, shaderResourceView.GetAddressOf());
+}
+
+void ShaderViewRenderTarget::GetResource(ID3D11Resource** resource)
+{
+	this->shaderResourceView.Get()->GetResource(resource);
 }
 
 ID3D11ShaderResourceView* ShaderViewRenderTarget::GetShaderResourceView()

@@ -2,7 +2,7 @@
 #include "MatHelper.h"
 #include <fstream>
 
-#pragma comment(lib,"Assimp/x86/assimp-vc140-mt.lib")
+#pragma comment(lib,"Assimp/x86/assimp-vc141-mt.lib")
 
 Model::Model(Graphics& gfx,const std::string & filePath,unsigned int flags)
 {

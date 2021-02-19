@@ -17,8 +17,11 @@ void Technique::Link(RenderGraph& rg)
 	
 		for (auto& s : steps)
 		{
+			if (s.isLinked() == false)
+			{
+				s.Link(rg);
+			}
 			
-			s.Link(rg);
 			
 		}
 	

@@ -10,11 +10,11 @@
 #include "CommandBucket.h"
 #include "TestRenderGraph.h"
 #include "Plane.h"
-#include "MirrorRenderGraph.h"
 #include "SceneRenderer.h"
 #include "TestCube.h"
 #include "Sky.h"
 #include "AnimatedCharacter.h"
+#include "RenderGraph.h"
 
 //#include "DirectXTK/PlatformHelpers.h"
 //#include "DirectXTK/DDS.h"
@@ -29,16 +29,17 @@ public:
 	int Go();
 private:
 	void Update(float dt);
+	void ImguiStatistic();
 private:
 	float animTimer = 0.0288f;
+	ImguiHandler& imguiHandler;
 	float width = 800.0f;
 	float height = 600.0f;
 	float minDepth = 0.0f;
 	float maxDepth = 1.0f;
 	float topXPos = 400.0f;
 	float topYPos = 0.0f;
-	//Scene testScene;
-	ImguiHandler imguiHandler;
+
 	Window wnd;
 	Camera cam;
 	
@@ -51,8 +52,7 @@ private:
 	float last_x;
 	float last_y;
 	float mPhi, mTheta,mRadius;
-	TestRenderGraph rg{ wnd.gfx() };
-	MirrorRenderGraph rgMirror{ wnd.gfx() };
+	TestRenderGraph rgTest{ wnd.gfx()};
 	TestCube testCube{ wnd.gfx(),0.0f,0.0f,10.0f };
 	Plane mirror { wnd.gfx(),"mirror",10u, 10u, 1.0f, 0.03f, 0.0f, 1.0f };
 	Plane floor{ wnd.gfx(),"floor", 30u, 30u, 1.0f, 0.03f, 0, 4.0f };

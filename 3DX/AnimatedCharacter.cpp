@@ -43,7 +43,7 @@ AnimatedCharacter::AnimatedCharacter(Graphics& gfx, const std::string& filename,
 		Entity* entt = e.db.GetScene().CreateEntity(&e.db);
 		//auto tt = up_model.get()->nodes["body"]->toRootTransform;
 		//entt->AddComponent<Transformation>(tt* DirectX::XMMatrixScaling(10.5f, 10.5f, 10.5f) * DirectX::XMMatrixTranslation(0.0f, 0.0f, -15.0f));
-		entt->AddComponent<Transformation>(DirectX::XMMatrixScaling(0.5f, 0.5f, 0.5f)*DirectX::XMMatrixTranslation(0.0f,-2.0f,-15.0f));
+		entt->AddComponent<Transformation>(DirectX::XMMatrixScaling(0.05f, 0.05f, 0.05f)*DirectX::XMMatrixTranslation(0.0f,-2.0f,-15.0f));
 
 		uint32_t mID = std::move(entt->GetID());
 

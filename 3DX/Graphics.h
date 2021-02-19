@@ -66,7 +66,6 @@ public:
 	static Microsoft::WRL::ComPtr<ID3D11DeviceContext> pImmediateContext;
 	Microsoft::WRL::ComPtr <ID3D11Debug> debug;
 	std::shared_ptr<RenderTarget> pTarget;
-	std::shared_ptr<RenderTarget> pTarget2;
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
 	ShaderViewRenderTarget* shaderResourceViewRT;
 	

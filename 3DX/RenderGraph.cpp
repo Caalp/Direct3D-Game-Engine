@@ -10,7 +10,9 @@
 
 
 
-RenderGraph::RenderGraph(Graphics& gfx) : backBuffer(gfx.GetTarget()),depthBuffer(std::make_shared<OutputOnlyDepthBuffer>(gfx))
+RenderGraph::RenderGraph(Graphics& gfx) : 
+backBuffer(gfx.GetTarget()), // Get reference of render target which created in Graphics
+depthBuffer(std::make_shared<OutputOnlyDepthBuffer>(gfx)) // Create depth buffer here
 {
     AddGlobalSink(DirectBufferSink<RenderTarget>::Make("backbuffer",backBuffer));
     AddGlobalSource(DirectBufferSource<RenderTarget>::Make("backbuffer",backBuffer));
@@ -138,5 +140,28 @@ void RenderGraph::Reset()
     {
         p->Reset();
     }
+}
+
+// Set given render target as current render target
+void RenderGraph::SetRenderTarget(std::shared_ptr<RenderTarget> rt)
+{
+    backBuffer = std::move(rt);
+}
+
+//Reset render target back to main one from graphics.h and bind it to pipeline
+void RenderGraph::ResetRenderTarget(Graphics& gfx)
+{
+
+    backBuffer = gfx.pTarget;
+    if (depthBuffer)
+    {
+        backBuffer.get()->BindAsBuffer(gfx, depthBuffer.get());
+    }
+}
+
+const std::shared_ptr<RenderTarget>& RenderGraph::GetRenderTarget()
+{
+    return backBuffer;
+
 }
 

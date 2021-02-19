@@ -1,8 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imconfig.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui_impl_dx11.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui_impl_win32.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui_internal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imstb_rectpack.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imstb_textedit.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imstb_truetype.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\FreeImage\FreeImage.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\entt\entt.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\entt\fwd.hpp" />
@@ -77,36 +83,40 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\version.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\Vertex.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\XMLTools.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imconfig.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui_internal.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imstb_rectpack.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imstb_textedit.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imstb_truetype.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\aabb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\ColladaMetaData.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\commonMetaData.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\Compiler\poppack1.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\Compiler\pstdint.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\Compiler\pushpack1.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\port\AndroidJNI\AndroidJNIIOSystem.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\SmallVector.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\XmlParser.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\ZipArchiveIOSystem.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\D3DX11.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\D3DX11async.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\D3DX11core.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\D3DX11tex.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\DDS.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\DDSTextureLoader.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\ScreenGrab.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\DirectXHelpers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\LoaderHelpers.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\pch.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\DDS.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\PlatformHelpers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\ScreenGrab.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui_demo.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui_draw.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui_tables.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui_widgets.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\Imgui\imgui_tables.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\DDSTextureLoader.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\ScreenGrab.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\DirectXHelpers.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\pch.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\ScreenGrab.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Vendor\Assimp\.editorconfig" />
@@ -119,5 +129,13 @@
     <None Include="$(MSBuildThisFileDirectory)Vendor\Assimp\SmoothingGroups.inl" />
     <None Include="$(MSBuildThisFileDirectory)Vendor\Assimp\vector2.inl" />
     <None Include="$(MSBuildThisFileDirectory)Vendor\Assimp\vector3.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="$(MSBuildThisFileDirectory)Vendor\Assimp\x86\assimp-vc141-mt.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\x86\d3dx11.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\x86\d3dx11d.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\x86\DirectXTK.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\x86\Effects11.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\x86\Effects11d.lib" />
   </ItemGroup>
 </Project>

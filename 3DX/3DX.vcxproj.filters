@@ -195,9 +195,6 @@
     <ClCompile Include="RenderQueuePass.cpp">
       <Filter>Source Files\RenderQueueItems</Filter>
     </ClCompile>
-    <ClCompile Include="RenderGraph.cpp">
-      <Filter>Source Files\RenderQueueItems</Filter>
-    </ClCompile>
     <ClCompile Include="MarkMirrorPass.cpp">
       <Filter>Source Files\Passes</Filter>
     </ClCompile>
@@ -256,6 +253,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SceneRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderOffScreenPass.cpp">
+      <Filter>Source Files\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderGraph.cpp">
+      <Filter>Source Files\RenderQueueItems</Filter>
+    </ClCompile>
+    <ClCompile Include="TestRenderGraph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MirrorRenderGraph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ResetRenderTargetPass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -416,9 +428,6 @@
     <ClInclude Include="Pass.h">
       <Filter>Header Files\RenderQueueItems</Filter>
     </ClInclude>
-    <ClInclude Include="RenderGraph.h">
-      <Filter>Header Files\RenderQueueItems</Filter>
-    </ClInclude>
     <ClInclude Include="RenderQueuePass.h">
       <Filter>Header Files\RenderQueueItems</Filter>
     </ClInclude>
@@ -441,9 +450,6 @@
       <Filter>Header Files\Passes</Filter>
     </ClInclude>
     <ClInclude Include="TestRenderGraph.h">
-      <Filter>Header Files\RenderGraphs</Filter>
-    </ClInclude>
-    <ClInclude Include="MirrorRenderGraph.h">
       <Filter>Header Files\RenderGraphs</Filter>
     </ClInclude>
     <ClInclude Include="Sphere.h">
@@ -508,6 +514,12 @@
     </ClInclude>
     <ClInclude Include="ImguiHandler.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderGraph.h">
+      <Filter>Header Files\RenderQueueItems</Filter>
+    </ClInclude>
+    <ClInclude Include="ResetRenderTargetPass.h">
+      <Filter>Header Files\Passes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

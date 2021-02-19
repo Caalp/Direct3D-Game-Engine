@@ -199,10 +199,10 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noe
 		
 
 	case WM_SYSKEYDOWN:
-		if (imio.WantCaptureKeyboard)
+	/*	if (imio.WantCaptureKeyboard)
 		{
 			break;
-		}
+		}*/
 		if (!(lparam & 0x40000000) || kbd.AutorepeatIsEnabled()) //
 		{
 			kbd.OnKeyPressed(static_cast<unsigned char>(wparam));
@@ -210,11 +210,11 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noe
 		break;
 	case WM_KEYUP:
 
-		// KeyUp event except system keys such --ALT
-		if (imio.WantCaptureKeyboard)
-		{
-			break;
-		}
+		//// KeyUp event except system keys such --ALT
+		//if (imio.WantCaptureKeyboard)
+		//{
+		//	break;
+		//}
 		kbd.OnKeyReleased(static_cast<unsigned char>(wparam));
 		break;
 	case WM_SYSKEYUP:
@@ -252,40 +252,40 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noe
 				mouse.OnMouseLeave();
 			}
 		}
-		if (imio.WantCaptureMouse)
+	/*	if (imio.WantCaptureMouse)
 		{
 			break;
-		}
+		}*/
 		break;
 	}
 	case WM_LBUTTONDOWN:
 	{
-		if (imio.WantCaptureMouse)
-		{
-			break;
-		}
+		//if (imio.WantCaptureMouse)
+		//{
+		//	break;
+		//}
 		const POINTS pt = MAKEPOINTS(lparam);
 		mouse.OnLeftPressed(pt.x, pt.y);
 		break;
 	}
 	case WM_RBUTTONDOWN:
 	{
-		if (imio.WantCaptureMouse)
+	/*	if (imio.WantCaptureMouse)
 		{
 			break;
 		}
-		
+		*/
 		const POINTS pt = MAKEPOINTS(lparam);
 		mouse.OnRightPressed(pt.x, pt.y);
 		break;
 	}
 	case WM_LBUTTONUP:
 	{
-		if (imio.WantCaptureMouse)
+	/*	if (imio.WantCaptureMouse)
 		{
 			break;
 		}
-				
+		*/		
 		const POINTS pt = MAKEPOINTS(lparam);
 		mouse.OnLeftReleased(pt.x, pt.y);
 		// release mouse if outside of window
@@ -299,10 +299,10 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noe
 	case WM_RBUTTONUP:
 	{
 		
-		if (imio.WantCaptureMouse)
-		{
-			break;
-		}
+		//if (imio.WantCaptureMouse)
+		//{
+		//	break;
+		//}
 		const POINTS pt = MAKEPOINTS(lparam);
 		mouse.OnRightReleased(pt.x, pt.y);
 		// release mouse if outside of window
@@ -315,10 +315,10 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noe
 	}
 	case WM_MOUSEWHEEL:
 	{
-		if (imio.WantCaptureMouse)
+	/*	if (imio.WantCaptureMouse)
 		{
 			break;
-		}
+		}*/
 		const POINTS pt = MAKEPOINTS(lparam);
 		const int delta = GET_WHEEL_DELTA_WPARAM(wparam);
 		mouse.OnWheelDelta(pt.x, pt.y, delta);

@@ -13,6 +13,7 @@ MarkMirrorPass::MarkMirrorPass(Graphics& gfx, std::string passName) : RenderQueu
 
 void MarkMirrorPass::Execute(Graphics& gfx)
 {
+	//depthStencil->Clear(gfx);
 	RenderQueuePass::Execute(gfx);
 }
 

@@ -14,6 +14,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\aabb.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\ai_assert.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\anim.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\BaseImporter.h" />
@@ -24,7 +25,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\cexport.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\cfileio.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\cimport.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\ColladaMetaData.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\color4.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\commonMetaData.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\Compiler\poppack1.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\Compiler\pstdint.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\Compiler\pushpack1.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\config.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\CreateAnimMesh.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\DefaultIOStream.h" />
@@ -59,6 +65,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\NullLogger.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\ParsingUtils.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\pbrmaterial.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\port\AndroidJNI\AndroidJNIIOSystem.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\postprocess.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\Profiler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\ProgressHandler.hpp" />
@@ -69,6 +76,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\SceneCombiner.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\SGSpatialSort.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\SkeletonMeshBuilder.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\SmallVector.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\SmoothingGroups.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\SpatialSort.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\StandardShapes.h" />
@@ -84,7 +92,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\vector3.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\version.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\Vertex.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\XmlParser.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\XMLTools.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\Assimp\ZipArchiveIOSystem.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\D3DX11.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\D3DX11async.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\D3DX11core.h" />
@@ -132,5 +142,13 @@
     <None Include="$(MSBuildThisFileDirectory)Vendor\Assimp\SmoothingGroups.inl" />
     <None Include="$(MSBuildThisFileDirectory)Vendor\Assimp\vector2.inl" />
     <None Include="$(MSBuildThisFileDirectory)Vendor\Assimp\vector3.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="$(MSBuildThisFileDirectory)Vendor\Assimp\x86\assimp-vc141-mt.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\x86\d3dx11.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\x86\d3dx11d.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\x86\DirectXTK.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\x86\Effects11.lib" />
+    <Library Include="$(MSBuildThisFileDirectory)Vendor\DirectXTK\x86\Effects11d.lib" />
   </ItemGroup>
 </Project>

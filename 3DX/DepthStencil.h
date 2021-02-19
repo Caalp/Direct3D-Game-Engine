@@ -10,6 +10,7 @@ public:
 	DepthStencil(Graphics& gfx);
 	DepthStencil(Graphics& gfx,UINT width,UINT height);
 	DepthStencil(Graphics& gfx, UINT width, UINT height,UINT state);
+	void GetResource(ID3D11Resource** resource) override {}
 	DepthStencil(Graphics& gfx, ID3D11Texture2D* tex, UINT state);
 	void BindAsBuffer(Graphics& gfx) override;
 	void BindAsBuffer(Graphics& gfx, BufferResource* depth) override;

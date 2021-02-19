@@ -26,24 +26,36 @@ void Step::AddBind(const std::shared_ptr<IBackendDispatch>& drawFunc)
 
 void Step::Submit(Drawable& d)
 {
-	targetPass->Accept(Job{ *this,d });
+	if (targetPass)
+	{
+		targetPass->Accept(Job{ *this,d });
+	}
+	else
+	{
+		printf("TargetPass is not linked for drawable %s", d.GetName().c_str());
+		assert(targetPass != NULL, "TargetPass is not linked for drawable");
+	}
+	
 }
 
 void Step::Link(RenderGraph& rg)
 {
-	// Check if targetPass is already linked
-	//assert(targetPass == nullptr);
-	// Get the renderQueuePass from argument RenderQueue
+	// targetPass can be linked only once
 	if (!targetPass)
 	{
 		targetPass = rg.GetRenderQueuePass(targetPassName);
+		
+		// targetPass may not be initialized if given RenderGraph doesn't have the targetPass
+		// According to the result assign the linked's value
+		linked = (targetPass) ? true : false;
 	}
-	/*if (!targetPass)
+	else
 	{
-		printf("[ERROR]-Attempt linking against target pass %s failed!\n", targetPassName.c_str());
-	}*/
-	
-	
+		printf("Trying to re-link already initialized targetPass %s", this->targetPassName.c_str());
+		assert(targetPass == nullptr);
+		
+	}
+
 }
 
 void Step::Bind(Graphics & gfx) const 

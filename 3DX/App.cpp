@@ -13,24 +13,28 @@ App::App() :
 	wnd(1600, 1200, "Hello"),last_x(0),last_y(0),
 	dirLight(wnd.gfx()),
 	pointLight(wnd.gfx()),
-	mPhi(1.5f*3.1415926535f),mTheta(1.5f*3.1415926535f),mRadius(80.0f)
+	mPhi(1.5f*3.1415926535f),mTheta(1.5f*3.1415926535f),mRadius(80.0f), imguiHandler(ImguiHandler::GetInstance())
 	
 {
 	
 	cam.SetCameraLens(0.25f*3.1415926535f, 800.0f / 600.0f, 1.0f, 1000.0f);
 
+	imguiHandler.BindCallback<App, &App::ImguiStatistic>(this);
 
 	
-	spotLight.LinkTechnique(rg);
-	pointLight.LinkTechnique(rg);
-	chr.LinkTechnique(rg);
-	box0.LinkTechnique(rg);
-	//testCube.LinkTechnique(rg);
-	floor.LinkTechnique(rg);
-	box0.LinkTechnique(rgMirror);
-	mirror.LinkTechnique(rgMirror);
-	sky.LinkTechnique(rg);
+
 	
+	
+	spotLight.LinkTechnique(rgTest);
+	pointLight.LinkTechnique(rgTest);
+	chr.LinkTechnique(rgTest);
+	box0.LinkTechnique(rgTest);
+	//testCube.LinkTechnique(rg);
+	floor.LinkTechnique(rgTest);
+	//box0.LinkTechnique(rgMirror);
+	mirror.LinkTechnique(rgTest);
+	sky.LinkTechnique(rgTest);
+
 }
 
 App::~App()
@@ -54,14 +58,34 @@ int App::Go()
 		float a = timer.GetTime() / 1000;
 
 		wnd.gfx().BeginFrame();
-
+		// Enable dockspace before everything get processed
+		imguiHandler.EnableDockspace();
 		Update(a);
+		//wnd.gfx().pTarget->BindAsBuffer(wnd.gfx());
+		//fg.ResetRenderTarget(wnd.gfx());
+		
+		
+		//ImGui::End();
+		//wnd.gfx().pImmediateContext->OMSetRenderTargets(1u, wnd.gfx().pTarget->GetRTV().GetAddressOf(), nullptr);
+		imguiHandler.ProcessImguiCalls();
+		
 		
 		wnd.gfx().EndFrame();
 		
 		
 
 	}
+}
+void App::ImguiStatistic()
+{
+	ImGui::Begin("Info");
+
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+	ImGui::End();
+
+
+
 }
 
 void App::Update(float dt)
@@ -173,146 +197,48 @@ void App::Update(float dt)
 	//testScene.UpdateTest(alpha);
 	//testCube.Submit(channel1::defaultChannel); // only submitting this w/o linking technique causing vector error!!!
 	
+	if (ImGui::BeginMainMenuBar())
+	{
+		
+		if (ImGui::MenuItem("Screenshot"))
+		{
+			rgTest.SaveBufferToFile(wnd.gfx(), "imgui_ss", "");
+			printf("Screenshot Clicked!\n");
+			//ImGui::End();
+			//return;
+		}
+		ImGui::EndMainMenuBar();
+	}
 	
-
 	
-	rg.Execute(wnd.gfx());
-	rgMirror.Execute(wnd.gfx());
-	
-	/*Reset back to default render target*/
-	//wnd.gfx().pTarget->BindAsBuffer(wnd.gfx());
-
+	rgTest.Execute(wnd.gfx());
+	//rgTest.ResetRenderTarget(wnd.gfx());
+	static bool demoWnd = true;
+	ImGui::ShowDemoWindow(&demoWnd);
 
 	/* Do Imgui stuff */
 	if (wnd.gfx().IsImguiEnabled())
 	{
 
-
-		// Note: Switch this to true to enable dockspace
-		static bool dockspaceOpen = true;
-		static bool opt_fullscreen_persistant = true;
-		bool opt_fullscreen = opt_fullscreen_persistant;
-		static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
-
-		// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
-		// because it would be confusing to have two docking targets within each others.
-		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-		if (opt_fullscreen)
-		{
-			ImGuiViewport* viewport = ImGui::GetMainViewport();
-			ImGui::SetNextWindowPos(viewport->Pos);
-			ImGui::SetNextWindowSize(viewport->Size);
-			ImGui::SetNextWindowViewport(viewport->ID);
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-			window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-			window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-		}
-
-		// When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background and handle the pass-thru hole, so we ask Begin() to not render a background.
-		//if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-			//window_flags |= ImGuiWindowFlags_NoBackground;
-
-		// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
-		// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive, 
-		// all active windows docked into it will lose their parent and become undocked.
-		// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise 
-		// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-		ImGui::Begin("DockSpace Demo", &dockspaceOpen, window_flags);
-		ImGui::PopStyleVar();
-
-		if (opt_fullscreen)
-			ImGui::PopStyleVar(2);
-
-		// DockSpace
-		ImGuiIO& io = ImGui::GetIO();
-		ImGuiStyle& style = ImGui::GetStyle();
-		float minWinSizeX = style.WindowMinSize.x;
-		style.WindowMinSize.x = 370.0f;
-		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
-		{
-			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-		}
-
-
-		/*{
-			ImVec2 vMin = ImGui::GetWindowContentRegionMin();
-			ImVec2 vMax = ImGui::GetWindowContentRegionMax();
-
-			vMin.x += ImGui::GetWindowPos().x;
-			vMin.y += ImGui::GetWindowPos().y;
-			vMax.x += ImGui::GetWindowPos().x;
-			vMax.y += ImGui::GetWindowPos().y;
-
-			ImGui::GetForegroundDrawList()->AddRect(vMin, vMax, IM_COL32(255, 255, 0, 255));
-		}*/
-
-		//ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-		//float windowWidth = (float)ImGui::GetWindowWidth();
-		//float windowHeight = (float)ImGui::GetWindowHeight();
-
-
-		style.WindowMinSize.x = minWinSizeX;
-
-		if (ImGui::BeginMenuBar())
-		{
-			if (ImGui::BeginMenu("File"))
-			{
-				// Disabling fullscreen would allow the window to be moved to the front of other windows, 
-				// which we can't undo at the moment without finer window depth/z control.
-				//ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);1
-				if (ImGui::MenuItem("New", "Ctrl+N"))
-					return;
-				//NewScene();
-
-				if (ImGui::MenuItem("Open...", "Ctrl+O"))
-					return;
-				//OpenScene();
-
-				if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
-					return;
-				//SaveSceneAs();
-
-			//if (ImGui::MenuItem("Exit")) Application::Get().Close();
-				ImGui::EndMenu();
-			}
-
-			ImGui::EndMenuBar();
-		}
-
-
-		/*-----------------------------------------------------------------------------------------------------------*/
-
-		//const char* items[] = { "AAAA", "BBBB", "CCCC", "DDDD"};
-		//static int item_current_idx = 0;                    // Here our selection data is an index.
-		//const char* combo_label = items[item_current_idx];
-		//if (ImGui::BeginCombo("Combo Test", combo_label, ImGuiComboFlags_PopupAlignLeft))
+		//if (ImGui::BeginMainMenuBar())
 		//{
-		//	for (int n = 0; n < 4; n++)
+		//	if (ImGui::BeginMenu("File"))
 		//	{
-		//		const bool is_selected = (item_current_idx == n);
-		//		if (ImGui::Selectable(items[n], is_selected))
-		//			item_current_idx = n;
-
-		//		// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-		//		if (is_selected)
-		//			ImGui::SetItemDefaultFocus();
+		//		//ShowExampleMenuFile();
+		//		ImGui::EndMenu();
 		//	}
-		//	ImGui::EndCombo();
+		//	if (ImGui::BeginMenu("Edit"))
+		//	{
+		//		if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
+		//		if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
+		//		ImGui::Separator();
+		//		if (ImGui::MenuItem("Cut", "CTRL+X")) {}
+		//		if (ImGui::MenuItem("Copy", "CTRL+C")) {}
+		//		if (ImGui::MenuItem("Paste", "CTRL+V")) {}
+		//		ImGui::EndMenu();
+		//	}
+		//	ImGui::EndMainMenuBar();
 		//}
-
-		//static bool showDemoWindow = true;
-		//ImGui::ShowDemoWindow(&showDemoWindow);
-		ImGui::Begin("Info");
-		//ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-		ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / (1 / dt), 1 / dt);
-		ImGui::End();
-		ImGui::End();
-		
-		//wnd.gfx().CreateViewport(width, height, maxDepth, minDepth, topXPos, topYPos);
-
 		ImGui::Begin("AnimSpeed");
 
 		ImGui::SliderFloat("dt", &animTimer, 0.0f, 2.0f, "%.5f", 1.0f);
@@ -320,15 +246,9 @@ void App::Update(float dt)
 		ImGui::End();
 	}
 	
-	//Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
-	//HRESULT hr = wnd.gfx().pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
-	//	reinterpret_cast<LPVOID*>(backBuffer.GetAddressOf()));
-	
-	//DX::ThrowIfFailed(hr);
-	
-	rg.Reset();
-	rgMirror.Reset();
-	
+
+	rgTest.Reset();
+
 	
 	
 }

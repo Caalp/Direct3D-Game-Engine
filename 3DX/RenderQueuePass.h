@@ -14,7 +14,5 @@ public:
 
 
 private:
-	
-	std::vector<Job> jobs;
-	
+	std::vector<Job> jobs;	
 };

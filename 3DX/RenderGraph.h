@@ -4,7 +4,6 @@
 #include "Source.h"
 #include "Graphics.h"
 #include "DepthStencil.h"
-#include "RenderGraph.h"
 #include "Pass.h"
 
 
@@ -16,17 +15,7 @@ class RenderGraph
 {
 	
 public:
-	//void AddPass(std::unique_ptr<Pass> pass, std::string passName)
-	//{
-	//	for (const auto& p : passes)
-	//	{
-	//		if (p->GetPassName() == passName)
-	//		{
-	//			assert("pass is already exist");
-	//		}
-	//	}
-	//	passes.push_back(std::move(pass));
-	//}
+
 	RenderGraph(Graphics& gfx);
 	RenderQueuePass* GetRenderQueuePass(const std::string& techName);
 	void AddGlobalSource(std::unique_ptr<Source> source);
@@ -36,6 +25,11 @@ public:
 	void AppendPass(std::unique_ptr<Pass> pass);
 	void Execute(Graphics& gfx);
 	void Reset();
+	void SetRenderTarget(std::shared_ptr<RenderTarget> rt);
+	void ResetRenderTarget(Graphics& gfx);
+	const std::shared_ptr<RenderTarget>& GetRenderTarget();
+	
+
 private:
 	std::shared_ptr<RenderTarget> backBuffer;
 	std::shared_ptr<DepthStencil> depthBuffer;

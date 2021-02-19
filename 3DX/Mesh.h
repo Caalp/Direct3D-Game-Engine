@@ -47,10 +47,10 @@ public:
 	void ParseMesh(const aiMesh& mesh, const aiMaterial* const* pMaterials, std::string texIncludeDir);
 	void InitDrawable(Graphics& gfx,const Technique& tech, std::string name,uint32_t id);
 	void Submit(size_t channel);
-	void LinkTechnique(RenderGraph& rg);
+	void LinkTechnique(RenderGraph& fg);
 	void SetName(std::string name);
 	std::string GetName() const;
-
+	void ImguiLoadTexture();
 private:
 	void InitBuffers(Graphics& gfx);
 public:

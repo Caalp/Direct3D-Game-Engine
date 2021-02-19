@@ -231,6 +231,7 @@
     <ClCompile Include="MarkMirrorPass.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MirrorReflectionPass.cpp" />
+    <ClCompile Include="MirrorRenderGraph.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="App.cpp" />
@@ -243,8 +244,10 @@
     <ClCompile Include="RasterClockwise.cpp" />
     <ClCompile Include="RasterizerState.cpp" />
     <ClCompile Include="RenderGraph.cpp" />
+    <ClCompile Include="RenderOffScreenPass.cpp" />
     <ClCompile Include="RenderQueuePass.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="ResetRenderTargetPass.cpp" />
     <ClCompile Include="SamplerState.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneRenderer.cpp" />
@@ -259,6 +262,7 @@
     <ClCompile Include="Technique.cpp" />
     <ClCompile Include="TerrainClass.cpp" />
     <ClCompile Include="TestCube.cpp" />
+    <ClCompile Include="TestRenderGraph.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -311,7 +315,6 @@
     <ClInclude Include="MarkMirrorPass.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MirrorReflectionPass.h" />
-    <ClInclude Include="MirrorRenderGraph.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="App.h" />
@@ -326,6 +329,7 @@
     <ClInclude Include="RenderGraph.h" />
     <ClInclude Include="RenderQueuePass.h" />
     <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="ResetRenderTargetPass.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SamplerState.h" />
     <ClInclude Include="Scene.h" />

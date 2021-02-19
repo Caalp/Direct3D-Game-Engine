@@ -462,7 +462,6 @@ bool    ImGui_ImplDX11_CreateDeviceObjects()
         desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
         desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
         g_pd3dDevice->CreateBlendState(&desc, &g_pBlendState);
-        
     }
 
     // Create the rasterizer state

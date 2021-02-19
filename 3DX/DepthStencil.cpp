@@ -59,7 +59,7 @@ DepthStencil::DepthStencil(Graphics& gfx, ID3D11Texture2D* texture, UINT state)
 
 void DepthStencil::BindAsBuffer(Graphics& gfx)
 {
-	// Set the depth State;
+	GetContext(gfx)->OMSetRenderTargets(0, nullptr, depthStencilView.Get());
 }
 
 void DepthStencil::BindAsBuffer(Graphics& gfx, BufferResource* depth)
