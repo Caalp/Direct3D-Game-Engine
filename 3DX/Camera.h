@@ -5,9 +5,14 @@
 
 class Camera 
 {
-	
 public:
-	Camera();
+	enum CameraType
+	{
+		CAM_PERSPECTIVE,
+		CAM_ORTO
+	};
+public:
+	Camera(const CameraType& camType = CameraType::CAM_PERSPECTIVE);
 	Camera(const Camera&) = delete;
 	// Getter and setters for camera position
 	DirectX::XMVECTOR GetPositionXM() const;
@@ -15,7 +20,7 @@ public:
 	void SetPosition(float, float, float);
 	void SetPosition(DirectX::XMFLOAT3& v);
 	
-
+	void SetCamType(CameraType type);
 	// Camera base vectors
 	DirectX::XMVECTOR GetRightXM() const;
 	DirectX::XMFLOAT3 GetRight() const;
@@ -35,7 +40,8 @@ public:
 	float GetFarPlaneWidth() const;
 	float GetFarPlaneHeight() const;
 
-
+	void InitOrtoProjXM();
+	CameraType GetCamType() const;
 	void SetCameraLens(float fY, float aspectRatio, float zn, float zf);
 
 	void LookAt(DirectX::FXMVECTOR pos, DirectX::FXMVECTOR target, DirectX::FXMVECTOR worldUp);
@@ -62,6 +68,7 @@ public:
 	
 
 private:
+	CameraType m_camType;
 	DirectX::XMFLOAT3 cam_pos;
 	DirectX::XMFLOAT3 cam_right;
 	DirectX::XMFLOAT3 cam_up;
@@ -79,6 +86,7 @@ private:
 	// Matrices
 	DirectX::XMFLOAT4X4 ViewXM;
 	DirectX::XMFLOAT4X4 ProjXM;
+
 
 	
 	

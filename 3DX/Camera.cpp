@@ -1,12 +1,12 @@
 #include "Camera.h"
 
-Camera::Camera() :
+Camera::Camera(const CameraType& camType) : m_camType(camType),
 	cam_pos(0.0f,0.0f,-30.0f),
 	cam_right(1.0f,0.0f,0.0f),
 	cam_up(0.0f,1.0f,0.0f),
 	cam_look(0.0f,0.0f,1.0f)
 {
-	//Entity* entt = SceneRenderer::scene.CreateEntity(this);
+
 }
 
 DirectX::XMVECTOR Camera::GetPositionXM() const
@@ -27,6 +27,23 @@ void Camera::SetPosition(float x, float y, float z)
 void Camera::SetPosition(DirectX::XMFLOAT3 & v)
 {
 	cam_pos = v;
+}
+
+void Camera::SetCamType(CameraType type)
+{
+	m_camType = type;
+	switch (type)
+	{
+	case CameraType::CAM_PERSPECTIVE:
+		// Set as is for now ...
+		SetCameraLens(0.25f * 3.1415926535f, 800.0f / 600.0f, 1.0f, 1000.0f);
+		break;
+	case CameraType::CAM_ORTO:
+		InitOrtoProjXM();
+		break;
+	default:
+		break;
+	}
 }
 
 
@@ -106,6 +123,37 @@ float Camera::GetFarPlaneHeight() const
 	return FarPlaneHeight;
 }
 
+void Camera::InitOrtoProjXM()
+{
+	DirectX::XMFLOAT4X4 ortographicXM;
+	ortographicXM(0, 0) = 2.0f / NearPlaneWidth;
+	ortographicXM(0, 1) = 0.0f;
+	ortographicXM(0, 2) = 0.0f;
+	ortographicXM(0, 3) = 0.0f;
+
+	ortographicXM(1, 0) = 0.0f;
+	ortographicXM(1, 1) = 2.0f / NearPlaneHeight;
+	ortographicXM(1, 2) = 0.0f;
+	ortographicXM(1, 3) = 0.0f;
+
+	ortographicXM(2, 0) = 0.0f;
+	ortographicXM(2, 1) = 0.0f;
+	ortographicXM(2, 2) = 1.0f / FarZ - NearZ;
+	ortographicXM(2, 3) = 0.0f;
+
+	ortographicXM(3, 0) = 0.0f;
+	ortographicXM(3, 1) = 0.0f;
+	ortographicXM(3, 2) = NearZ / NearZ - FarZ;
+	ortographicXM(3, 3) = 1;
+	//ProjXM = ortographicXM;
+	DirectX::XMLoadFloat4x4(&ProjXM);
+}
+
+Camera::CameraType Camera::GetCamType() const
+{
+	return m_camType;
+}
+
 void Camera::SetCameraLens(float fY, float aspectRatio, float zn, float zf)
 {
 	FovY = fY;
@@ -155,7 +203,8 @@ DirectX::XMMATRIX Camera::GetProjXM() const
 
 DirectX::XMMATRIX Camera::ViewProjXM() const
 {
-	return DirectX::XMMatrixMultiply(GetViewXM(),GetProjXM());
+
+	return DirectX::XMMatrixMultiply(GetViewXM(),GetProjXM() );
 }
 
 void Camera::Walk(float d)

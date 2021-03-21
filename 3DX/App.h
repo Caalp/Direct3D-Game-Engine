@@ -52,12 +52,13 @@ private:
 	float last_x;
 	float last_y;
 	float mPhi, mTheta,mRadius;
-	TestRenderGraph rgTest{ wnd.gfx()};
+	TestRenderGraph rgTest{ wnd.gfx(),cam};
 	TestCube testCube{ wnd.gfx(),0.0f,0.0f,10.0f };
 	Plane mirror { wnd.gfx(),"mirror",10u, 10u, 1.0f, 0.03f, 0.0f, 1.0f };
 	Plane floor{ wnd.gfx(),"floor", 30u, 30u, 1.0f, 0.03f, 0, 4.0f };
-	Box box0{ wnd.gfx(),0.0f,0.0f,0.0f };
+	Box box0{ wnd.gfx(),0.0f,0.0f,-12.0f };
 	Sky sky{ wnd.gfx(),"skySphere",5000.0f,30,30 };
+	Sphere centerSphere{wnd.gfx(),"centerSphere",3.0f,20,20};
 	//AnimatedCharacter chr{ wnd.gfx(),"../Models/mouse.fbx","boblamp" };
 	//AnimatedCharacter chr{ wnd.gfx(),"../Models/nanosuit.obj","boblamp" };
 	//AnimatedCharacter chr{ wnd.gfx(),"../Models/box/box.obj","boblamp" };

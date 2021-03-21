@@ -27,8 +27,10 @@ public:
 	void Reset();
 	void SetRenderTarget(std::shared_ptr<RenderTarget> rt);
 	void ResetRenderTarget(Graphics& gfx);
+	void ResetDepthBuffer(Graphics& gfx);
 	const std::shared_ptr<RenderTarget>& GetRenderTarget();
-	
+public:
+	const std::unique_ptr<Source>& GetGlobalSource(const std::string& gSourceName);
 
 private:
 	std::shared_ptr<RenderTarget> backBuffer;

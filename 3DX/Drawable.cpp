@@ -71,10 +71,10 @@ void Drawable::AppendTechnique(const Technique& tech)
 			return;
 		}
 	}
-	if (tech.GetName() == objectName)
-	{
+	
+	
 		techniques.push_back(tech);
-	}
+	
 }
 
 void Drawable::Submit(size_t channel)

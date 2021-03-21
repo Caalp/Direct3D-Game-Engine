@@ -2,7 +2,7 @@
 
 DSS::DSS(Graphics & gfx, DSSType dType):dss(dType)
 {
-	D3D11_DEPTH_STENCIL_DESC DSSDesc{ 0 };
+	D3D11_DEPTH_STENCIL_DESC DSSDesc = CD3D11_DEPTH_STENCIL_DESC{ CD3D11_DEFAULT{} };
 	if (dType == DSSType::Default)
 	{
 		DSSDesc.DepthEnable = true;
@@ -81,6 +81,35 @@ DSS::DSS(Graphics & gfx, DSSType dType):dss(dType)
 		DSSDesc.DepthEnable = true;
 		DSSDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 		DSSDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+
+	}
+	else if (dType == Mask)
+	{
+		DSSDesc.DepthEnable = true;
+		//DSSDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+		DSSDesc.DepthFunc = D3D11_COMPARISON_LESS;
+		DSSDesc.StencilEnable = true;
+		DSSDesc.StencilReadMask = 0xff;
+		DSSDesc.StencilWriteMask = 0xff;
+
+		DSSDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		DSSDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_REPLACE;
+		DSSDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+		DSSDesc.FrontFace.StencilFunc = D3D11_COMPARISON_GREATER;
+
+
+	}
+	else if (dType == Write)
+	{
+
+
+		DSSDesc.DepthEnable = false;
+		DSSDesc.StencilEnable = true;
+		DSSDesc.StencilReadMask = 0xff;
+		DSSDesc.StencilWriteMask = 0xff;
+
+		DSSDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+		DSSDesc.FrontFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
 
 	}
 	

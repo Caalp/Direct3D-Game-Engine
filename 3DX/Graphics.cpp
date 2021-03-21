@@ -118,8 +118,11 @@ Graphics::Graphics(HWND hWnd, uint32_t w, uint32_t h) : width(w),height(h)
 	//pTarget2 = std::shared_ptr<RenderTarget>{ new BackBuffer(*this,texture.Get()) };
 	//
 	//shaderResourceViewRT = new ShaderViewRenderTarget(*this, 800u, 600u, 0u);
-	/*pDevice->QueryInterface<ID3D11Debug>(&debug);
-	debug->SetFeatureMask(D3D11_DEBUG_FEATURE_PRESENT_PER_RENDER_OP);*/
+//#if defined(_DEBUG)
+//	pDevice->QueryInterface<ID3D11Debug>(&debug);
+//	debug->SetFeatureMask(D3D11_DEBUG_FEATURE_PRESENT_PER_RENDER_OP);
+//
+//#endif
 	
 
 	if (imguiEnabled)
@@ -127,7 +130,7 @@ Graphics::Graphics(HWND hWnd, uint32_t w, uint32_t h) : width(w),height(h)
 		ImGui_ImplDX11_Init(this->pDevice.Get(), this->pImmediateContext.Get());
 	}
 		
-	CreateViewport(w, h);
+	CreateViewport((float)w, (float)h);
 
 }
 
@@ -156,10 +159,6 @@ void Graphics::Draw(UINT vertexCount, UINT vertexStartLocation)
 void Graphics::EndFrame()
 {
 	HRESULT hr;
-	ID3D11Resource* res;
-
-
-	
 	if (imguiEnabled)
 	{
 	

@@ -12,7 +12,9 @@
 			DrawReflaction,
 			NoDoubleBlend,
 			NoDepthWrite,
-			LessOrEqual
+			LessOrEqual,
+			Mask,
+			Write
 		};
 		
 		DSS(Graphics& gfx, DSSType dType);

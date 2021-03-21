@@ -67,6 +67,7 @@ Source& Pass::GetSource(std::string name)
 			return *so;
 		}
 	}
+	
 }
 
 const Sink& Pass::GetSinkByName(std::string sinkName)
@@ -78,6 +79,7 @@ const Sink& Pass::GetSinkByName(std::string sinkName)
 			return *si;
 		}
 	}
+	
 }
 
 

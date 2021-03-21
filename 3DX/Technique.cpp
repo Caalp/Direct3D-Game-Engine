@@ -30,13 +30,21 @@ void Technique::Link(RenderGraph& rg)
 
 void Technique::Submit(Drawable& d, size_t channel)
 {
-	for (auto& s : steps)
+	if (isActive && ((techniqueChannel & channel) != 0))
 	{
-		if (isActive && ((techniqueChannel & channel) != 0))
+		for (auto& s : steps)
 		{
+
 			s.Submit(d);
+			
 		}
 	}
+}
+
+
+void Technique::Deactivate()
+{
+	isActive = false;
 }
 
 void Technique::SetTechID(uint32_t id)

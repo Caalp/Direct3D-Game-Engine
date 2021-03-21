@@ -3,7 +3,7 @@
 #include "Bindable.h"
 #include "Drawable.h"
 #include "RenderGraph.h"
-
+#include <assert.h>
 
 Step::Step(std::string ID) : targetPassName(std::move(ID))
 {
@@ -33,7 +33,7 @@ void Step::Submit(Drawable& d)
 	else
 	{
 		printf("TargetPass is not linked for drawable %s", d.GetName().c_str());
-		assert(targetPass != NULL, "TargetPass is not linked for drawable");
+		assert(targetPass != NULL && "TargetPass is not linked for drawable");
 	}
 	
 }

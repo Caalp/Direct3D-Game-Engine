@@ -13,6 +13,7 @@ cbuffer Material : register(b1)
 	float4 m_ambient;
 	float4 m_diffuse;
 	float4 m_specular; // Specular power stored in w component
+	float4 m_reflection;
    
 };
 cbuffer PointLight : register(b2)
@@ -40,7 +41,13 @@ cbuffer SpotLight : register(b3)
 	float s_spot;
 
 }
-
+cbuffer EffectStatus : register(b4)
+{
+	bool fogEnabled;
+	bool reflactionEnabled;
+	bool alphaClipEnabled;
+	bool textureUsed;
+}
 void ComputeDirectionalLight(float3 toEye,
 	float3 normal,
 	out float4 ambient,

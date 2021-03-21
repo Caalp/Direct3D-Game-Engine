@@ -1,7 +1,10 @@
 #pragma once
-#include "Pass.h"
+#include "BindingPass.h"
 #include "RenderGraph.h"
-class ResetRenderTargetPass : public Pass
+
+
+
+class ResetRenderTargetPass : public BindingPass
 {
 public:
 
@@ -10,4 +13,5 @@ public:
 	void Reset() override;
 private:
 	RenderGraph& rg;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceView;
 };

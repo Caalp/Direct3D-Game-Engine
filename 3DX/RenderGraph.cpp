@@ -21,14 +21,14 @@ depthBuffer(std::make_shared<OutputOnlyDepthBuffer>(gfx)) // Create depth buffer
     AddGlobalSink(DirectBufferSink<DepthStencil>::Make("depthbuffer", depthBuffer));
 }
 
-RenderQueuePass* RenderGraph::GetRenderQueuePass(const std::string& techName)
+RenderQueuePass* RenderGraph::GetRenderQueuePass(const std::string& passName)
 {
   
        try
        {
            for (const auto& p : passes)
            {
-               if (p->GetPassName() == techName)
+               if (p->GetPassName() == passName)
                {
                    
                    return dynamic_cast<RenderQueuePass*>(p.get());
@@ -61,6 +61,7 @@ const std::unique_ptr<Pass>& RenderGraph::GetPassByName(std::string passName) co
         if (e->GetPassName() == passName)
             return e;
     }
+    
 }
 
 void RenderGraph::AppendPass(std::unique_ptr<Pass> pass)
@@ -159,9 +160,27 @@ void RenderGraph::ResetRenderTarget(Graphics& gfx)
     }
 }
 
+void RenderGraph::ResetDepthBuffer(Graphics& gfx)
+{
+    //depthBuffer = depth;
+    depthBuffer->BindAsBuffer(gfx);
+}
+
 const std::shared_ptr<RenderTarget>& RenderGraph::GetRenderTarget()
 {
     return backBuffer;
 
+}
+
+const std::unique_ptr<Source>& RenderGraph::GetGlobalSource(const std::string& gSourceName)
+{
+    for (const auto& e : globalSources)
+    {
+        if (e.get()->GetName() == gSourceName)
+        {
+            return e;
+        }
+    }
+   
 }
 

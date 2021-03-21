@@ -8,6 +8,7 @@
 #include "StaticTimer.h"
 #include <fstream>
 #include "Imgui/imgui.h"
+#include "ImguiUtils.h"
 
 App::App() :
 	wnd(1600, 1200, "Hello"),last_x(0),last_y(0),
@@ -16,8 +17,8 @@ App::App() :
 	mPhi(1.5f*3.1415926535f),mTheta(1.5f*3.1415926535f),mRadius(80.0f), imguiHandler(ImguiHandler::GetInstance())
 	
 {
-	
-	cam.SetCameraLens(0.25f*3.1415926535f, 800.0f / 600.0f, 1.0f, 1000.0f);
+	cam.SetCamType(Camera::CameraType::CAM_PERSPECTIVE);
+	//cam.SetCameraLens(0.25f*3.1415926535f, 800.0f / 600.0f, 1.0f, 1000.0f);
 
 	imguiHandler.BindCallback<App, &App::ImguiStatistic>(this);
 
@@ -27,13 +28,14 @@ App::App() :
 	
 	spotLight.LinkTechnique(rgTest);
 	pointLight.LinkTechnique(rgTest);
-	chr.LinkTechnique(rgTest);
+	//chr.LinkTechnique(rgTest);
 	box0.LinkTechnique(rgTest);
 	//testCube.LinkTechnique(rg);
-	floor.LinkTechnique(rgTest);
+	//floor.LinkTechnique(rgTest);
 	//box0.LinkTechnique(rgMirror);
-	mirror.LinkTechnique(rgTest);
+	//mirror.LinkTechnique(rgTest);
 	sky.LinkTechnique(rgTest);
+	centerSphere.LinkTechnique(rgTest);
 
 }
 
@@ -45,7 +47,6 @@ App::~App()
 
 int App::Go()
 {
-	
 	timer.StartTimer();
 	while (true)
 	{
@@ -91,7 +92,9 @@ void App::ImguiStatistic()
 void App::Update(float dt)
 {
 
-	
+	//DirectX::XMMATRIX dd = cam.GetOrtographicProjXM();
+
+	ImguiUtils::DrawMatrix();
 	// Xinput experiment code here
 	static float alpha = dt*10.0f;
 	if (alpha < 1.0f)
@@ -170,7 +173,7 @@ void App::Update(float dt)
 
 	}
 
-	chr.GetFinalTransforms("defaultAnim_0", animTimer);
+	//chr.GetFinalTransforms("defaultAnim_0", animTimer);
 	//chr.GetFinalTransforms("Spider_Armature|Attack", animTimer);
 	//chr.GetFinalTransforms("Walk", 0.5f);
 	//chr.GetFinalTransforms("Salute", animTimer);
@@ -181,18 +184,26 @@ void App::Update(float dt)
 	//chr.GetFinalTransforms("Run", animTimer);
 	//chr.GetFinalTransforms("mixamo.com", 0.05f);
 	//chr.GetFinalTransforms("defaultAnim_0", dt);
-	chr.Update(wnd.gfx());
+	//chr.Update(wnd.gfx());
 	//chr.UpdateXM();
 	
 	
-	spotLight.Submit(channel1::defaultChannel);
-	pointLight.Submit(channel1::defaultChannel);
+	//spotLight.Submit(channel1::defaultChannel);
+	//pointLight.Submit(channel1::defaultChannel);
 	
-	chr.Submit(channel1::defaultChannel);
+	//chr.Submit(channel1::defaultChannel);
 	box0.Submit(channel1::defaultChannel);
-	floor.Submit(channel1::defaultChannel);
-	mirror.Submit(channel1::defaultChannel);
+	//floor.Submit(channel1::defaultChannel);
+	//mirror.Submit(channel1::defaultChannel);
 	sky.Submit(channel1::defaultChannel);
+	centerSphere.Submit(channel1::defaultChannel);
+
+	//spotLight.Submit(channel1::dynamicCubeMap);
+	//pointLight.Submit(channel1::dynamicCubeMap);
+	box0.Submit(channel1::dynamicCubeMap);
+	//floor.Submit(channel1::dynamicCubeMap);
+	//mirror.Submit(channel1::dynamicCubeMap);
+	sky.Submit(channel1::dynamicCubeMap);
 	//emgr->ProcessEvents();
 	//testScene.UpdateTest(alpha);
 	//testCube.Submit(channel1::defaultChannel); // only submitting this w/o linking technique causing vector error!!!
@@ -202,7 +213,10 @@ void App::Update(float dt)
 		
 		if (ImGui::MenuItem("Screenshot"))
 		{
-			rgTest.SaveBufferToFile(wnd.gfx(), "imgui_ss", "");
+			//wnd.gfx().pImmediateContext->OMSetRenderTargets(1, 0, 0);
+			//rgTest.ResetDepthBuffer(wnd.gfx());
+			rgTest.SaveBufferToFile(wnd.gfx(), "imgui_ss_Demo", "offScreenRT");
+			//rgTest.SaveBufferToFile(wnd.gfx(), "imgui_ss_Demo2", "shadowmap");
 			printf("Screenshot Clicked!\n");
 			//ImGui::End();
 			//return;
@@ -212,33 +226,15 @@ void App::Update(float dt)
 	
 	
 	rgTest.Execute(wnd.gfx());
-	//rgTest.ResetRenderTarget(wnd.gfx());
-	static bool demoWnd = true;
+
+
+	static bool demoWnd = false;
 	ImGui::ShowDemoWindow(&demoWnd);
 
-	/* Do Imgui stuff */
+	/* Dirty Imgui stuff */
 	if (wnd.gfx().IsImguiEnabled())
 	{
 
-		//if (ImGui::BeginMainMenuBar())
-		//{
-		//	if (ImGui::BeginMenu("File"))
-		//	{
-		//		//ShowExampleMenuFile();
-		//		ImGui::EndMenu();
-		//	}
-		//	if (ImGui::BeginMenu("Edit"))
-		//	{
-		//		if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
-		//		if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
-		//		ImGui::Separator();
-		//		if (ImGui::MenuItem("Cut", "CTRL+X")) {}
-		//		if (ImGui::MenuItem("Copy", "CTRL+C")) {}
-		//		if (ImGui::MenuItem("Paste", "CTRL+V")) {}
-		//		ImGui::EndMenu();
-		//	}
-		//	ImGui::EndMainMenuBar();
-		//}
 		ImGui::Begin("AnimSpeed");
 
 		ImGui::SliderFloat("dt", &animTimer, 0.0f, 2.0f, "%.5f", 1.0f);

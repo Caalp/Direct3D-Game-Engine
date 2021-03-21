@@ -24,6 +24,10 @@ void BindingPass::BindAll(Graphics& gfx)
 void BindingPass::BindBufferResources(Graphics& gfx)
 {
 	// If renderTarget is not 
+	if (passName == "dynamicCubeMap")
+	{
+		return;
+	}
 	if (renderTarget)
 	{
 		renderTarget->BindAsBuffer(gfx, &(*depthStencil));

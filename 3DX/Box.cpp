@@ -6,8 +6,8 @@
 #include "SceneRenderer.h"
 #include "Components.h"
 #include "DrawCallDispatch.h"
-
-
+#include "ImguiHandler.h"
+#include "Imgui/imgui.h"
 
 
 Box::Box(Graphics & gfx, float x, float y, float z) : Drawable("box")
@@ -145,15 +145,13 @@ Box::Box(Graphics & gfx, float x, float y, float z) : Drawable("box")
 		vertexBuffer = std::make_unique<VertexBuffer>(gfx, vertices);
 		primitiveTopology = std::make_unique<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		indexBuffer = std::make_unique<IndexBuff>(gfx, indices);
-		
-		
-		Technique textured_object("box",channel1::defaultChannel);
+		Technique boxDefault("boxDefault", channel1::defaultChannel,false);
 		{
 			{
-				
+
 				Step s1{ "default" };
-				
-				
+
+
 				s1.AddBind(std::make_shared<PixelShader>(gfx, "PS_TextureMapping.cso"));
 				auto vs = std::make_shared<VertexShader>(gfx, "VS_TextureMapping.cso");
 				auto vsBlob = vs->GetVBlob();
@@ -166,7 +164,7 @@ Box::Box(Graphics & gfx, float x, float y, float z) : Drawable("box")
 
 				s1.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
 
-				
+
 
 
 				s1.AddBind(std::make_shared<SamplerState>(gfx));
@@ -175,14 +173,126 @@ Box::Box(Graphics & gfx, float x, float y, float z) : Drawable("box")
 				entt->AddComponent<Transformation>(DirectX::XMMatrixTranslation(0.0f, -2.0f, -5.0f));
 				uint32_t mID = std::move(entt->GetID());
 				//
-				
+
 				s1.AddBind(std::make_shared<DrawIndexed>(0, indexBuffer.get()->GetIndexCount()));
 				s1.AddBind(std::make_shared<TransformationBuffer>(gfx, mID));
-				textured_object.AddStep(s1);
+				boxDefault.AddStep(s1);
+			}
+
+			
+
+
+		}
+		AppendTechnique(boxDefault);
+		//Technique cubeMapping("cubeMapping", channel1::dynamicCubeMap, true);
+		//{
+		//	{
+
+		//		Step s1{ "dynamicCubeMap" };
+
+
+		//		s1.AddBind(std::make_shared<PixelShader>(gfx, "PS_TextureMapping.cso"));
+		//		auto vs = std::make_shared<VertexShader>(gfx, "VS_TextureMapping.cso");
+		//		auto vsBlob = vs->GetVBlob();
+		//		s1.AddBind(std::move(vs));
+		//		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
+		//		{
+		//			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		//			{ "TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0 }
+		//		};
+
+		//		s1.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
+
+
+
+
+		//		s1.AddBind(std::make_shared<SamplerState>(gfx));
+		//		s1.AddBind(std::make_shared<Texture>(gfx, "../Textures/WoodCrate01.dds"));
+		//		Entity* entt = GetScene().CreateEntity(this);
+		//		entt->AddComponent<Transformation>(DirectX::XMMatrixTranslation(0.0f, -2.0f, -5.0f));
+		//		uint32_t mID = std::move(entt->GetID());
+		//		//
+
+		//		s1.AddBind(std::make_shared<DrawIndexed>(0, indexBuffer.get()->GetIndexCount()));
+		//		s1.AddBind(std::make_shared<TransformationBuffer>(gfx, mID));
+		//		cubeMapping.AddStep(s1);
+		//	}
+
+
+
+
+		//}
+		//AppendTechnique(cubeMapping);
+
+		Technique boxOutline("boxOutline",channel1::defaultChannel );
+		{
+			
+			
+			
+			{
+				Step s3{ "MarkOutline" };
+
+
+				s3.AddBind(std::make_shared<PixelShader>(gfx, "PS_TextureMapping.cso"));
+				auto vs = std::make_shared<VertexShader>(gfx, "VS_TextureMapping.cso");
+				auto vsBlob = vs->GetVBlob();
+				s3.AddBind(std::move(vs));
+				const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
+				{
+					{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+					{ "TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0 }
+				};
+
+				s3.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
+
+
+
+
+				s3.AddBind(std::make_shared<SamplerState>(gfx));
+				s3.AddBind(std::make_shared<Texture>(gfx, "../Textures/WoodCrate01.dds"));
+				Entity* entt = GetScene().CreateEntity(this);
+				entt->AddComponent<Transformation>(DirectX::XMMatrixTranslation(posX, posY, posZ));
+				mID1 = std::move(entt->GetID());
+				//
+
+				s3.AddBind(std::make_shared<DrawIndexed>(0, indexBuffer.get()->GetIndexCount()));
+				s3.AddBind(std::make_shared<TransformationBuffer>(gfx, mID1));
+				boxOutline.AddStep(s3);
 			}
 			{
-				Step s2{ "mirrorReflection" };
+				Step s2{ "DrawOutline" };
+
+				s2.AddBind(std::make_shared<DrawIndexed>(0, indexBuffer.get()->GetIndexCount()));
+				s2.AddBind(std::make_shared<PixelShader>(gfx, "ColorBlenderPS.cso"));
+				auto vs = std::make_shared<VertexShader>(gfx, "ColorBlenderVS.cso");
+				auto vsBlob = vs->GetVBlob();
+				s2.AddBind(std::move(vs));
+				const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
+				{
+					{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+					//{ "TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0 }
+				};
+
+				s2.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
+
 				
+
+				Entity* entt = GetScene().CreateEntity(this);
+				entt->AddComponent<Transformation>(DirectX::XMMatrixScaling(1.1f,1.1f,1.1f)*DirectX::XMMatrixTranslation(posX, posY, posZ));
+				mID2 = std::move(entt->GetID());
+		
+				s2.AddBind(std::make_shared<TransformationBuffer>(gfx, mID2));
+				
+				boxOutline.AddStep(s2);
+			}
+		}
+		AppendTechnique(boxOutline);
+		Technique boxReflection("boxReflection", channel1::defaultChannel,false);
+		{
+
+			{
+				Step s2{ "mirrorReflection" };
+
 				s2.AddBind(std::make_shared<DrawIndexed>(0, indexBuffer.get()->GetIndexCount()));
 				s2.AddBind(std::make_shared<PixelShader>(gfx, "PS_TextureMapping.cso"));
 				auto vs = std::make_shared<VertexShader>(gfx, "VS_TextureMapping.cso");
@@ -205,7 +315,7 @@ Box::Box(Graphics & gfx, float x, float y, float z) : Drawable("box")
 
 
 				Entity* entt = GetScene().CreateEntity(this);
-				entt->AddComponent<Transformation>(DirectX::XMMatrixTranslation(0.0f, -2.0f, -5.0f)*R);
+				entt->AddComponent<Transformation>(DirectX::XMMatrixTranslation(0.0f, -2.0f, -5.0f) * R);
 				uint32_t mID = std::move(entt->GetID());
 				//
 
@@ -215,17 +325,90 @@ Box::Box(Graphics & gfx, float x, float y, float z) : Drawable("box")
 				s2.AddBind(std::make_shared<TransformationBuffer>(gfx, mID));
 				//evl.OnEvent<KeyboardEvent>([=](std::shared_ptr<KeyboardEvent> e) {UpdatePos(e->GetEvent(), mID); });
 				//SetTransformationXM(DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll)* DirectX::XMMatrixTranslation(x, y, z) * R);
-				textured_object.AddStep(s2);
+				boxDefault.AddStep(s2);
 			}
+
+			
 		}
-		AppendTechnique(textured_object);
+		AppendTechnique(boxReflection);
 		
 
+		ImguiHandler& handler = ImguiHandler::GetInstance();
+		handler.BindCallback<Box, &Box::ImguiFunc>(this);
 		
+		//Technique testBox("onlining", channel1::defaultChannel);
+		//{
+		//	{
+
+		//		Step s1{ "default" };
+
+
+		//		s1.AddBind(std::make_shared<PixelShader>(gfx, "PS_TextureMapping.cso"));
+		//		auto vs = std::make_shared<VertexShader>(gfx, "VS_TextureMapping.cso");
+		//		auto vsBlob = vs->GetVBlob();
+		//		s1.AddBind(std::move(vs));
+		//		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
+		//		{
+		//			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		//			{ "TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0 }
+		//		};
+
+		//		s1.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
+
+
+
+
+		//		s1.AddBind(std::make_shared<SamplerState>(gfx));
+		//		s1.AddBind(std::make_shared<Texture>(gfx, "../Textures/WoodCrate01.dds"));
+		//		Entity* entt = GetScene().CreateEntity(this);
+		//		entt->AddComponent<Transformation>(DirectX::XMMatrixTranslation(10.0f, 12.0f, -15.0f));
+		//		uint32_t mID = std::move(entt->GetID());
+		//		//
+
+		//		s1.AddBind(std::make_shared<DrawIndexed>(0, indexBuffer.get()->GetIndexCount()));
+		//		s1.AddBind(std::make_shared<TransformationBuffer>(gfx, mID));
+		//		testBox.AddStep(s1);
+		//	}
+
 		
+		//}
+		////AppendTechnique(testBox);
+		//
 		
 		
 				
+}
+
+void Box::ImguiFunc()
+{
+
+	
+	ImGui::Begin("Box");
+	ImGui::SliderFloat("X", &posX, -30.0f, 30.0f);
+	ImGui::SliderFloat("Y", &posY, 0.0f, 30.0f);
+	ImGui::SliderFloat("Z", &posZ, -30.0f, 30.0f);
+	ImGui::End();
+
+	// Really dirty shortcut take care this later
+	Transformation* transform = nullptr;
+	auto view = (Scene::reg).view<Transformation>();
+	for (const entt::entity& e : view)
+	{
+		if ((uint32_t)e == mID1 || (uint32_t)e == mID2)
+		{
+			transform = &view.get<Transformation>(e);
+			DirectX::XMFLOAT4X4 temp;
+			DirectX::XMStoreFloat4x4(&temp, transform->transform);
+			temp._41 = posX;
+			temp._42 = posY;
+			temp._43 = posZ;
+			transform->transform = DirectX::XMLoadFloat4x4(&temp);
+
+		}
+
+	}
+
+
 }
 
 //void Box::UpdatePos(unsigned char key, uint32_t id)

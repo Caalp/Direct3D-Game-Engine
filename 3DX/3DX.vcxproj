@@ -126,7 +126,7 @@
       </ShaderType>
       <EntryPointName>main</EntryPointName>
       <ShaderModel>4.0_level_9_3</ShaderModel>
-      <ObjectFileOutput>$(ProjectDir)%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput>$(SolutionDir)Compiled\$(ProjectName)_Build\Shaders\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
@@ -216,6 +216,7 @@
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="DomainShader.cpp" />
     <ClCompile Include="Drawable.cpp" />
+    <ClCompile Include="DrawOutlinePass.cpp" />
     <ClCompile Include="DSS.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Events.cpp" />
@@ -224,11 +225,13 @@
     <ClCompile Include="HullShader.cpp" />
     <ClCompile Include="Icosahedron.cpp" />
     <ClCompile Include="ImguiHandler.cpp" />
+    <ClCompile Include="ImguiUtils.cpp" />
     <ClCompile Include="IndexBuff.cpp" />
     <ClCompile Include="InputLayout.cpp" />
     <ClCompile Include="Job.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="MarkMirrorPass.cpp" />
+    <ClCompile Include="MarkOutlinePass.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MirrorReflectionPass.cpp" />
     <ClCompile Include="MirrorRenderGraph.cpp" />
@@ -251,6 +254,8 @@
     <ClCompile Include="SamplerState.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneRenderer.cpp" />
+    <ClCompile Include="ShadowMap.cpp" />
+    <ClCompile Include="ShadowMapPass.cpp" />
     <ClCompile Include="Sink.cpp" />
     <ClCompile Include="Sky.cpp" />
     <ClCompile Include="SkyBoxPass.cpp" />
@@ -299,7 +304,9 @@
     <ClInclude Include="ConstBuffs.h" />
     <ClInclude Include="CustomException.h" />
     <ClInclude Include="DrawCallDispatch.h" />
+    <ClInclude Include="DrawOutlinePass.h" />
     <ClInclude Include="DSS.h" />
+    <ClInclude Include="DynamicCubeMapPass.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Events.h" />
     <ClInclude Include="GeometryShader.h" />
@@ -307,10 +314,12 @@
     <ClInclude Include="HullShader.h" />
     <ClInclude Include="Icosahedron.h" />
     <ClInclude Include="ImguiHandler.h" />
+    <ClInclude Include="ImguiUtils.h" />
     <ClInclude Include="IndexBuff.h" />
     <ClInclude Include="InputLayout.h" />
     <ClInclude Include="Job.h" />
     <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="MarkOutlinePass.h" />
     <ClInclude Include="MatHelper.h" />
     <ClInclude Include="MarkMirrorPass.h" />
     <ClInclude Include="Mesh.h" />
@@ -331,9 +340,12 @@
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="ResetRenderTargetPass.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="RgDynamicCubeMapping.h" />
     <ClInclude Include="SamplerState.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneRenderer.h" />
+    <ClInclude Include="ShadowMap.h" />
+    <ClInclude Include="ShadowMapPass.h" />
     <ClInclude Include="Sink.h" />
     <ClInclude Include="Sky.h" />
     <ClInclude Include="SkyBoxPass.h" />
