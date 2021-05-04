@@ -20,10 +20,10 @@
 ## Goals by end of 2021
  I have listed features that I would like to add to my framework by end of 2021.       
  
-        1. Enable ImGui's docking feature.
+        1. Enable ImGui's docking feature. (Completed)
         2. Add shadow mapping and partical systems.
         3. Advance render graph system.
         4. Support for gamepads along with better input handling strategy.
-        5. Serialization for creation of objects.
+        5. Serialization for creation of objects. (Under development in branch Shadows)
         6. Animation blending.
         7. Basic implementation of PhysX physics engine.
