@@ -19,7 +19,7 @@ RenderTarget::RenderTarget(Graphics& gfx, UINT w, UINT h) : width(w),height(h)
 	texDesc.MiscFlags = 0;
 
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> rtvTex;
-	GetDevice(gfx)->CreateTexture2D(&texDesc, 0, rtvTex.GetAddressOf());
+	GraphicsResources::GetSingleton().pDevice->CreateTexture2D(&texDesc, 0, rtvTex.GetAddressOf());
 
 	D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -28,7 +28,7 @@ RenderTarget::RenderTarget(Graphics& gfx, UINT w, UINT h) : width(w),height(h)
 
 	
 		
-	GetDevice(gfx)->CreateRenderTargetView(rtvTex.Get(), &rtvDesc, renderTargetView[0].GetAddressOf());
+	GraphicsResources::GetSingleton().pDevice->CreateRenderTargetView(rtvTex.Get(), &rtvDesc, renderTargetView[0].GetAddressOf());
 	
 }
 
@@ -46,37 +46,38 @@ RenderTarget::RenderTarget(Graphics& gfx, ID3D11Texture2D* texture)
 	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 	rtvDesc.Texture2D.MipSlice = 0u;
 
-	GetDevice(gfx)->CreateRenderTargetView(texture, &rtvDesc, renderTargetView[0].GetAddressOf());
+	GraphicsResources::GetSingleton().pDevice->CreateRenderTargetView(texture, &rtvDesc, renderTargetView[0].GetAddressOf());
 }
 
 void RenderTarget::BindAsBuffer(Graphics& gfx)
 {
 	assert(renderTargetView[0].Get() == nullptr);
-	GetContext(gfx)->OMSetRenderTargets(1u, renderTargetView[0].GetAddressOf(), nullptr);
+	GraphicsResources::GetSingleton().pImmediateContext->OMSetRenderTargets(1u, renderTargetView[0].GetAddressOf(), nullptr);
 }
 
 void RenderTarget::BindAsBuffer(Graphics& gfx, BufferResource* depth)
 {
 
 	// TO DO : Make sure depth variable is not null or other type than DepthStencil !!!
-	GetContext(gfx)->OMSetRenderTargets(1u, renderTargetView[0].GetAddressOf(), dynamic_cast<DepthStencil*>(depth)->depthStencilView.Get());
+	GraphicsResources::GetSingleton().pImmediateContext->OMSetRenderTargets(1u, renderTargetView[0].GetAddressOf(), dynamic_cast<DepthStencil*>(depth)->depthStencilView.Get());
 }
 
-void RenderTarget::BindAsBuffer(Graphics& gfx, DepthStencil* depth)
+void RenderTarget::BindAsBuffer(Graphics& gfx, DepthStencil* depth, UINT rtIndex)
 {
 	assert(depth != nullptr);
-	GetContext(gfx)->OMSetRenderTargets(1u, renderTargetView[0].GetAddressOf(), depth->depthStencilView.Get());
+	GraphicsResources::GetSingleton().pImmediateContext->OMSetRenderTargets(1u, renderTargetView[rtIndex].GetAddressOf(), depth->depthStencilView.Get());
 }
 
 void RenderTarget::Clear(Graphics& gfx)
 {
 	float color[] = { 0.0f,0.0f,0.0f,1.0f };
-	Clear(gfx, color);
+	GraphicsResources::GetSingleton().pImmediateContext->ClearRenderTargetView(renderTargetView[0].Get(), color);
+
 }
 
-void RenderTarget::Clear(Graphics& gfx, const float color[4])
+void RenderTarget::Clear(Graphics& gfx,const float color[4], UINT in)
 {
-	GetContext(gfx)->ClearRenderTargetView(renderTargetView[0].Get(), color);
+	GraphicsResources::GetSingleton().pImmediateContext->ClearRenderTargetView(renderTargetView[in].Get(), color);
 }
 
 UINT RenderTarget::GetWidth() const
@@ -111,17 +112,17 @@ ShaderViewRenderTarget::ShaderViewRenderTarget(Graphics& gfx, UINT width, UINT h
 	srvDesc.TextureCube.MipLevels = 1u;
 	srvDesc.TextureCube.MostDetailedMip = 0;
 
-	GetDevice(gfx)->CreateShaderResourceView(resource.Get(), &srvDesc, shaderResourceView.GetAddressOf());
+	GraphicsResources::GetSingleton().pDevice->CreateShaderResourceView(resource.Get(), &srvDesc, shaderResourceView.GetAddressOf());
 }
 
 void ShaderViewRenderTarget::BindAsBuffer(Graphics& gfx)
 {
-	GetContext(gfx)->PSSetShaderResources(1u, 1u, shaderResourceView.GetAddressOf());
+	GraphicsResources::GetSingleton().pImmediateContext->PSSetShaderResources(1u, 1u, shaderResourceView.GetAddressOf());
 }
 
 void ShaderViewRenderTarget::BindAsBuffer(Graphics& gfx, UINT startSlot, UINT numViews)
 {
-	GetContext(gfx)->PSSetShaderResources(startSlot, numViews, shaderResourceView.GetAddressOf());
+	GraphicsResources::GetSingleton().pImmediateContext->PSSetShaderResources(startSlot, numViews, shaderResourceView.GetAddressOf());
 }
 
 void ShaderViewRenderTarget::GetResource(ID3D11Resource** resource)

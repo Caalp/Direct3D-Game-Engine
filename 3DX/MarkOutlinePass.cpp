@@ -12,5 +12,5 @@ void MarkOutlinePass::Execute(Graphics& gfx)
 
 void MarkOutlinePass::Reset()
 {
-
+	RenderQueuePass::Reset();
 }

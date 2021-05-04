@@ -2,17 +2,15 @@
 
 #include <DirectXMath.h>
 #include <memory>
+#include "Entity.h"
 
-class Camera 
+class Camera : public Entity
 {
 public:
-	enum CameraType
-	{
-		CAM_PERSPECTIVE,
-		CAM_ORTO
-	};
+
 public:
-	Camera(const CameraType& camType = CameraType::CAM_PERSPECTIVE);
+
+	Camera(const std::string& targetScene,const std::string& camName);
 	Camera(const Camera&) = delete;
 	// Getter and setters for camera position
 	DirectX::XMVECTOR GetPositionXM() const;
@@ -20,7 +18,7 @@ public:
 	void SetPosition(float, float, float);
 	void SetPosition(DirectX::XMFLOAT3& v);
 	
-	void SetCamType(CameraType type);
+	//void SetCamType(CameraType type, float aspectR = 1600.0f /900.0f);
 	// Camera base vectors
 	DirectX::XMVECTOR GetRightXM() const;
 	DirectX::XMFLOAT3 GetRight() const;
@@ -41,7 +39,7 @@ public:
 	float GetFarPlaneHeight() const;
 
 	void InitOrtoProjXM();
-	CameraType GetCamType() const;
+	//CameraType GetCamType() const;
 	void SetCameraLens(float fY, float aspectRatio, float zn, float zf);
 
 	void LookAt(DirectX::FXMVECTOR pos, DirectX::FXMVECTOR target, DirectX::FXMVECTOR worldUp);
@@ -49,7 +47,7 @@ public:
 
 	DirectX::XMMATRIX GetViewXM() const;
 	DirectX::XMMATRIX GetProjXM() const;
-	DirectX::XMMATRIX ViewProjXM() const;
+	const DirectX::XMMATRIX& ViewProjXM() const;
 
 	//walk or strafe
 
@@ -68,7 +66,8 @@ public:
 	
 
 private:
-	CameraType m_camType;
+	std::string m_CameraName;
+	////CameraType m_camType;
 	DirectX::XMFLOAT3 cam_pos;
 	DirectX::XMFLOAT3 cam_right;
 	DirectX::XMFLOAT3 cam_up;

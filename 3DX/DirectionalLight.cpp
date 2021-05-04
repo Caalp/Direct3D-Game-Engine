@@ -1,6 +1,6 @@
 #include "DirectionalLight.h"
 
-DirectionalLight::DirectionalLight(Graphics & gfx) : __buff(gfx)
+DirectionalLight::DirectionalLight(Graphics & gfx) : __buff()
 {
 	__BufferData = {
 		{ 0.2f,0.2f,0.2f,0.0f},
@@ -12,6 +12,6 @@ DirectionalLight::DirectionalLight(Graphics & gfx) : __buff(gfx)
 
 void DirectionalLight::Bind(Graphics & gfx)
 {
-	__buff.Update(gfx, __BufferData);
+	__buff.Update(__BufferData);
 	__buff.Bind(gfx);
 }

@@ -9,24 +9,20 @@
 //	typedef T* Key;
 //public:
 //	
-//	CommandBucket(Graphics& gfx)
-//	{
-//		
+//	CommandBucket() = default;
 //
-//	}
-//	
 //	template<typename T>
 //	T* AddCommand(UINT key, size_t auxMemorySize)
 //	{
 //		// Create command packet with command type added to bucket
-//		CommandPacket commandPacket = commandPacket::Create<T>(auxMemorySize);
-//		//keys[currentIndex] = key;
-//		cmdPackets[currentIndex] = commandPacket;
-//		
-//		commandPacket::StoreNextCommandPacket(commandPacket, nullptr);
-//		commandPacket::StoreBackendDispatchFunction(commandPacket, T::DispatchFucntion);
+//		//CommandPacket commandPacket = commandPacket::Create<T>(auxMemorySize);
+//		////keys[currentIndex] = key;
+//		//cmdPackets[currentIndex] = commandPacket;
+//		//
+//		//commandPacket::StoreNextCommandPacket(commandPacket, nullptr);
+//		//commandPacket::StoreBackendDispatchFunction(commandPacket, T::DispatchFucntion);
 //
-//		return commandPacket::GetCommand<T>(commandPacket);
+//		//return commandPacket::GetCommand<T>(commandPacket);
 //
 //	}
 //	template<typename U, typename V>
@@ -56,25 +52,12 @@
 //	}
 //	void SubmitPacket(const CommandPacket packet)
 //	{
-//		const BackendDispatchFunction function = commandPacket::LoadBackendDispatchFunction(packet);
+//	/*	const BackendDispatchFunction function = commandPacket::LoadBackendDispatchFunction(packet);
 //		const void* command = commandPacket::LoadCommand(packet);
-//		function(command);
+//		function(command);*/
 //	}
-//	/*std::vector<Pass> GetPasses() const
-//	{
-//		return passes;
-//	}*/
+//
 //	
-//	Pass* GetTargetPass(std::string targetPassName)
-//	{
-//		for ( const auto& p : passes)
-//		{
-//			if (p->GetPassName() == targetPassName)
-//			{
-//				return p;
-//			}
-//		}
-//	}
 //
 //private:
 //	Key keys;

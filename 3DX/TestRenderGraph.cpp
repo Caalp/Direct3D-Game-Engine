@@ -18,7 +18,7 @@
 
 #pragma comment(lib,"DirectXTK/x86/DirectXTK.lib")
 #pragma comment(lib,"DirectXTK/x86/d3dx11d.lib")
-TestRenderGraph::TestRenderGraph(Graphics& gfx, Camera& cam) : RenderGraph(gfx)
+TestRenderGraph::TestRenderGraph(Graphics& gfx, Camera& cam, std::string graphName) : RenderGraph(gfx,graphName)
 {
 	
 	//cam.SetCamType(Camera::CameraType::CAM_ORTO);
@@ -47,56 +47,56 @@ TestRenderGraph::TestRenderGraph(Graphics& gfx, Camera& cam) : RenderGraph(gfx)
 		//pass->SetSinkLinkage("buffer", "$.shadowmap");
 		AppendPass(std::move(pass));
 	}
+	//{
+	//	auto pass = std::make_unique<DynamicCubeMapPass>(gfx,"dynamicCubeMap");
+	//	//pass->SetSinkLinkage("buffer", "$.offScreenRT");
+	//	AppendPass(std::move(pass));
+	//}
 	{
-		auto pass = std::make_unique<DynamicCubeMapPass>(gfx,cam,"dynamicCubeMap");
-		//pass->SetSinkLinkage("buffer", "$.offScreenRT");
-		AppendPass(std::move(pass));
-	}
-	/*{
 		auto pass = std::make_unique<SkyBoxPass>(gfx, "skybox");
 		pass->SetSinkLinkage("depthstencil", "clearDS.buffer");
 		pass->SetSinkLinkage("rendertarget", "clearRT.buffer");
 		AppendPass(std::move(pass));
+	}
+	/*{
+		auto pass = std::make_unique<RasterClockwise>(gfx, "rasterclockwise");
+		pass->SetSinkLinkage("depthstencil", "clearDS.buffer");
+		pass->SetSinkLinkage("rendertarget", "clearRT.buffer");
+		AppendPass(std::move(pass));
 	}*/
-	//{
-	//	auto pass = std::make_unique<RasterClockwise>(gfx, "rasterclockwise");
-	//	//pass->SetSinkLinkage("depthstencil", "clearDS.buffer");
-	//	//pass->SetSinkLinkage("rendertarget", "clearRT.buffer");
-	//	AppendPass(std::move(pass));
-	//}
 	{
 		auto pass = std::make_unique<DefaultPass>(gfx, "default");
 		pass->SetSinkLinkage("depthstencil", "clearDS.buffer");
 		pass->SetSinkLinkage("rendertarget", "clearRT.buffer");
-		pass->SetSinkLinkage("srv", "dynamicCubeMap.dcMap");
+		//pass->SetSinkLinkage("srv", "dynamicCubeMap.dcMap");
 		/*!!! Linking only depth buffer will result with discarding RT and only binding depth !!!*/
 		// Link those render and deptstencil to existing buffers from clearRT and ClearDS
 		//pass->SetSinkLinkage("rendertarget", "clearRT.buffer");
 		//pass->SetSinkLinkage("depthstencil", "clearDS.buffer");
 		AppendPass(std::move(pass));
-		std::cout << "Linked\n" << std::endl;
+		//std::cout << "Linked\n" << std::endl;
 	}
-	//{
-	//	auto pass = std::make_unique<MarkMirrorPass>(gfx, "markMirror");
-	//	//pass->SetSinkLinkage("depthstencil", "clearDS.buffer");
-	//	//pass->SetSinkLinkage("rendertarget", "$.backbuffer");
-	//	AppendPass(std::move(pass));
+	{
+		auto pass = std::make_unique<MarkMirrorPass>(gfx, "markMirror");
+		//pass->SetSinkLinkage("depthstencil", "clearDS.buffer");
+		//pass->SetSinkLinkage("rendertarget", "$.backbuffer");
+		AppendPass(std::move(pass));
 
-	//}
-	//{
-	//	auto pass = std::make_unique<MirrorReflectionPass>(gfx, "mirrorReflection");
-	//	//pass->SetSinkLinkage("depthstencil", "clearDS.buffer");
-	//	//pass->SetSinkLinkage("rendertarget", "$.backbuffer");
-	//	AppendPass(std::move(pass));
+	}
+	{
+		auto pass = std::make_unique<MirrorReflectionPass>(gfx, "mirrorReflection");
+		//pass->SetSinkLinkage("depthstencil", "clearDS.buffer");
+		//pass->SetSinkLinkage("rendertarget", "$.backbuffer");
+		AppendPass(std::move(pass));
 
-	//}
-	//{
-	//	auto pass = std::make_unique<BlendTransparentPass>(gfx, "blendTransparent");
-	//	//pass->SetSinkLinkage("depthstencil", "clearDS.buffer");
-	//	//pass->SetSinkLinkage("rendertarget", "clearRT.buffer");
-	//	AppendPass(std::move(pass));
+	}
+	{
+		auto pass = std::make_unique<BlendTransparentPass>(gfx, "blendTransparent");
+		//pass->SetSinkLinkage("depthstencil", "clearDS.buffer");
+		//pass->SetSinkLinkage("rendertarget", "clearRT.buffer");
+		AppendPass(std::move(pass));
 
-	//}
+	}
 
 	{
 		auto pass = std::make_unique<MarkOutlinePass>(gfx, "MarkOutline");
@@ -140,7 +140,7 @@ void TestRenderGraph::SaveBufferToFile(Graphics& gfx, std::string filename,std::
 	//offScreenRT.get()->GetResource(&res);
 	
 	//DirectX::SaveWICTextureToFile(gfx.pImmediateContext.Get(), res, GUID_ContainerFormatJpeg, std::wstring(fName.begin(), fName.end()).c_str());
-	HRESULT hr = D3DX11SaveTextureToFile(gfx.pImmediateContext.Get(), res, D3DX11_IFF_JPG, fName.c_str());
+	HRESULT hr = D3DX11SaveTextureToFile(GraphicsResources::GetSingleton().pImmediateContext.Get(), res, D3DX11_IFF_JPG, fName.c_str());
 	//_com_error err(hr);
 	//LPCTSTR errMsg = err.ErrorMessage();
 	//std::cout << "ERROR: " << errMsg << std::endl;
@@ -158,7 +158,7 @@ void TestRenderGraph::Imgui_func()
 	//ImGui::BeginChild("GameRender");
 	//ImVec2 wsize = ImGui::GetWindowSize();
 
-	ImGui::Image((void*)dynamic_cast<ShaderViewRenderTarget*>(offScreenRT.get())->GetShaderResourceView(), ImVec2(800, 600));
+	ImGui::Image((void*)dynamic_cast<ShaderViewRenderTarget*>(offScreenRT.get())->GetShaderResourceView(), ImVec2(800, 450));
 	//ImGui::Image((void*)tx.srv.Get(), ImVec2(800, 600));
 
 	//ImGui::EndChild();

@@ -5,7 +5,7 @@
 class VertexShader : public Bindable
 {
 public:
-	VertexShader(Graphics& gfx, const std::string& filename);
+	VertexShader(const std::string& filename);
 	void Bind(Graphics& gfx) override;
 	ID3DBlob* GetVBlob() const;
 	std::string  GetFilename() const;

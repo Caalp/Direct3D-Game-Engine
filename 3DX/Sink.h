@@ -64,8 +64,12 @@ public:
 	{}
 	void Bind(Source& source) override
 	{
+		/*auto p = std::dynamic_pointer_cast<T>(source.GetSource());
 
+		isLinked = true;
+		directSink = std::move(p);*/
 	};
+
 private:
 	std::shared_ptr<T>& bindableSink;
 };

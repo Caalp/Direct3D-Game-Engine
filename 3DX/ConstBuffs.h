@@ -1,37 +1,39 @@
 #pragma once
 #include "Bindable.h"
 #include <vector>
+#include "GraphicsResources.h"
+
 template<typename C>
 class ConstBuffs : public Bindable
 {
 	
 public:
-	void Update(Graphics& gfx, const C& cb)
+	void Update(const C& cb)
 	{
 		D3D11_MAPPED_SUBRESOURCE MappedSource;
-		GetContext(gfx)->Map(
+		GraphicsResources::GetSingleton().pImmediateContext->Map(
 			pConstBuffer.Get(), 0u,
 			D3D11_MAP_WRITE_DISCARD, 0u,
 			&MappedSource
 		);
 		memcpy(MappedSource.pData, &cb, sizeof(cb));
-		GetContext(gfx)->Unmap(pConstBuffer.Get(), 0u);
+		GraphicsResources::GetSingleton().pImmediateContext->Unmap(pConstBuffer.Get(), 0u);
 		
 	}
-	void Update(Graphics& gfx, const C& cb,UINT size)
+	void Update(const C& cb,UINT size)
 	{
 		D3D11_MAPPED_SUBRESOURCE MappedSource;
-		GetContext(gfx)->Map(
+		GraphicsResources::GetSingleton().pImmediateContext->Map(
 			pConstBuffer.Get(), 0u,
 			D3D11_MAP_WRITE_DISCARD, 0u,
 			&MappedSource
 		);
 		memcpy(MappedSource.pData, cb.data(), sizeof(cb[0])*size);
-		GetContext(gfx)->Unmap(pConstBuffer.Get(), 0u);
+		GraphicsResources::GetSingleton().pImmediateContext->Unmap(pConstBuffer.Get(), 0u);
 
 	}
 	
-	ConstBuffs(Graphics& gfx, const C& consts, UINT slot = 0u)
+	ConstBuffs(const C& consts, UINT slot = 0u)
 		:
 		slot(slot)
 	{
@@ -45,9 +47,9 @@ public:
 
 		D3D11_SUBRESOURCE_DATA csd = {};
 		csd.pSysMem = &consts;
-		GetDevice(gfx)->CreateBuffer(&cbd, &csd, &pConstBuffer);
+		GraphicsResources::GetSingleton().pDevice->CreateBuffer(&cbd, &csd, &pConstBuffer);
 	}
-	ConstBuffs(Graphics& gfx, C& consts, UINT size,UINT slot)
+	ConstBuffs(C& consts, UINT size,UINT slot)
 		:
 		slot(slot)
 	{
@@ -61,9 +63,9 @@ public:
 
 		D3D11_SUBRESOURCE_DATA csd = {};
 		csd.pSysMem = &consts[0];
-		GetDevice(gfx)->CreateBuffer(&cbd, &csd, &pConstBuffer);
+		GraphicsResources::GetSingleton().pDevice->CreateBuffer(&cbd, &csd, &pConstBuffer);
 	}
-	ConstBuffs(Graphics& gfx, UINT slot = 0u)
+	ConstBuffs(UINT slot = 0u)
 		:slot(slot)
 	{
 		D3D11_BUFFER_DESC bdsc{};
@@ -74,7 +76,7 @@ public:
 		bdsc.MiscFlags = 0u;
 		bdsc.StructureByteStride = 0u;
 
-		GetDevice(gfx)->CreateBuffer(&bdsc, nullptr, &pConstBuffer);
+		GraphicsResources::GetSingleton().pDevice->CreateBuffer(&bdsc, nullptr, &pConstBuffer);
 	}
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pConstBuffer;
@@ -90,11 +92,11 @@ public:
 	
 	void Bind(Graphics& gfx) override
 	{
-		Bindable::GetContext(gfx)->VSSetConstantBuffers(0u, 1u,pConstBuffer.GetAddressOf());
+		GraphicsResources::GetSingleton().pImmediateContext->VSSetConstantBuffers(0u, 1u,pConstBuffer.GetAddressOf());
 	}
 	void Bind(Graphics& gfx, UINT startSlot,UINT numofBuff) override
 	{
-		Bindable::GetContext(gfx)->VSSetConstantBuffers(startSlot,numofBuff, ConstBuffs<C>::pConstBuffer.GetAddressOf());
+		GraphicsResources::GetSingleton().pImmediateContext->VSSetConstantBuffers(startSlot,numofBuff, ConstBuffs<C>::pConstBuffer.GetAddressOf());
 	}
 };
 
@@ -108,7 +110,7 @@ public:
 
 	void Bind(Graphics& gfx) override
 	{
-		Bindable::GetContext(gfx)->PSSetConstantBuffers(slot, 1u,pConstBuffer.GetAddressOf());
+		GraphicsResources::GetSingleton().pImmediateContext->PSSetConstantBuffers(slot, 1u,pConstBuffer.GetAddressOf());
 	}
 	/*void Bind(Graphics& gfx, UINT startSlot, UINT numofBuff) override
 	{

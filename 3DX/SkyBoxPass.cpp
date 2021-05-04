@@ -11,14 +11,7 @@ SkyBoxPass::SkyBoxPass(Graphics& gfx, std::string passName) : RenderQueuePass(pa
 
 void SkyBoxPass::Execute(Graphics& gfx)
 {
-	mCubeMapViewport.TopLeftX = 0.0f;
-	mCubeMapViewport.TopLeftY = 0.0f;
-	mCubeMapViewport.Width = (float)256.0f;
-	mCubeMapViewport.Height = (float)256.0f;
-	mCubeMapViewport.MinDepth = 0.0f;
-	mCubeMapViewport.MaxDepth = 1.0f;
 
-	gfx.pImmediateContext->RSSetViewports(1, &mCubeMapViewport);
 	RenderQueuePass::Execute(gfx);
 }
 

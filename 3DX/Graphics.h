@@ -4,7 +4,7 @@
 #include<wrl.h>
 #include <directxmath.h>
 #include <d3dcompiler.h>
-#include "Command.h"
+
 
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib, "D3DCompiler.lib")
@@ -61,9 +61,9 @@ private:
 	DirectX::XMFLOAT3 cameraPos;
 public:
 	int i = 0;
-	static Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
-	static Microsoft::WRL::ComPtr<IDXGISwapChain> pSwapChain;
-	static Microsoft::WRL::ComPtr<ID3D11DeviceContext> pImmediateContext;
+	//static Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
+	//static Microsoft::WRL::ComPtr<IDXGISwapChain> pSwapChain;
+	//static Microsoft::WRL::ComPtr<ID3D11DeviceContext> pImmediateContext;
 	Microsoft::WRL::ComPtr <ID3D11Debug> debug;
 	std::shared_ptr<RenderTarget> pTarget;
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;

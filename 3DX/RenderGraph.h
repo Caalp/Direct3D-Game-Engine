@@ -16,7 +16,7 @@ class RenderGraph
 	
 public:
 
-	RenderGraph(Graphics& gfx);
+	RenderGraph(Graphics& gfx,const std::string& name);
 	RenderQueuePass* GetRenderQueuePass(const std::string& techName);
 	void AddGlobalSource(std::unique_ptr<Source> source);
 	void AddGlobalSink(std::unique_ptr<Sink> sink);
@@ -28,6 +28,7 @@ public:
 	void SetRenderTarget(std::shared_ptr<RenderTarget> rt);
 	void ResetRenderTarget(Graphics& gfx);
 	void ResetDepthBuffer(Graphics& gfx);
+	const std::string& Name() const;
 	const std::shared_ptr<RenderTarget>& GetRenderTarget();
 public:
 	const std::unique_ptr<Source>& GetGlobalSource(const std::string& gSourceName);
@@ -36,7 +37,7 @@ private:
 	std::shared_ptr<RenderTarget> backBuffer;
 	std::shared_ptr<DepthStencil> depthBuffer;
 private:
-
+	std::string m_GraphName;
 	std::vector<std::unique_ptr<Pass>> passes;
 	std::vector<std::unique_ptr<Sink>> globalSinks;
 	std::vector<std::unique_ptr<Source>> globalSources;

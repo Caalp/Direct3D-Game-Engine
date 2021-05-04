@@ -1,44 +1,37 @@
 #include "TransformationBuffer.h"
 #include "Drawable.h"
 #include "Scene.h"
+#include "ECSFactory.h"
 
-TransformationBuffer::TransformationBuffer(Graphics & gfx, const uint32_t& enttID):
-	mEnttID(std::move(enttID))
-	
-		
+//TransformationBuffer::TransformationBuffer(Graphics& gfx)
+//{
+//
+//	//if (!m_TBuffer)
+//	//{
+//	//	m_TBuffer = std::make_shared<VSConstBuff<TransformBuffer>>(gfx);
+//	//}
+//
+//}
+
+TransformationBuffer::TransformationBuffer(std::shared_ptr<VSConstBuff<TransformBuffer>> tbuff)
 {
-	if (!m_TransformBuffer)
-	{
-		m_TransformBuffer = std::make_unique<VSConstBuff<TransformBuffer>>(gfx);
-	}
-	
-	
+	m_TBuffer = tbuff;
 }
 
 
 void TransformationBuffer::UpdateBufferData(Graphics& gfx)
 {
-	
-	Transformation* transform = nullptr;
-	auto view = (Scene::reg).view<Transformation>();
-	for (const entt::entity& e : view)
-	{
-		if ((uint32_t)e == mEnttID)
-		{
-			transform = &view.get<Transformation>(e);
-			break;
-		}
-		 
-	}
-	_TransformBuffer =
-	{
+	//const auto& m_TransformComponent = ECSFactory::GetECSFactory().GetRegistry().view<TransformationComponent>().get((entt::entity)m_ID);
 
-		{DirectX::XMMatrixTranspose(transform->transform)},
-		{transform->GetInverseTransform()},
-		{DirectX::XMMatrixTranspose(transform->transform*gfx.GetCamera())},
-		{gfx.GetCameraPos()},
+	//m_BufferStruct =
+	//{
 
-	};
+	//	{DirectX::XMMatrixTranspose(m_TransformComponent.GetMatrix())},
+	//	{m_TransformComponent.GetInverseTransform()},
+	//	{DirectX::XMMatrixTranspose(m_TransformComponent.GetMatrix() * gfx.GetCamera())},
+	//	{gfx.GetCameraPos()},
+
+	//};
 }
 
 
@@ -46,10 +39,15 @@ void TransformationBuffer::Bind(Graphics & gfx)
 {
 	
 	
-	UpdateBufferData(gfx);
-	m_TransformBuffer->Update(gfx,_TransformBuffer);
-	
-	m_TransformBuffer->Bind(gfx,0u,1u);
+	////UpdateBufferData(gfx);
+
+	//	m_TBuffer->Update(gfx, *m_BufferStruct);
+	if (auto pref = m_TBuffer.lock())
+	{
+		pref->Bind(gfx, 0u, 1u);
+	}
+		
+
 	
 }
 

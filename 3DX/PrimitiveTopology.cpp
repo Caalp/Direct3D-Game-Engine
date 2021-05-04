@@ -6,5 +6,5 @@ PrimitiveTopology::PrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY P_topology) : Pt(P_t
 
 void PrimitiveTopology::Bind(Graphics & gfx)
 {
-	GetContext(gfx)->IASetPrimitiveTopology(Pt);
+	GraphicsResources::GetSingleton().pImmediateContext->IASetPrimitiveTopology(Pt);
 }

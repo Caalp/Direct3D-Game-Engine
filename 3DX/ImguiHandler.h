@@ -13,7 +13,7 @@ class ImguiHandler
 	
 
 	// Static function to return the member function
-	template<class C, void (C::* Function)()>
+	template<class C, void (C::*Function)()>
 	static inline void CreateFuncPair(INSTANCE_PTR instance)
 	{
 		return (static_cast<C*>(instance)->*Function)();

@@ -5,7 +5,13 @@ class Graphics;
 
 class BufferResource
 {
-
+public :
+	enum ResType
+	{
+		Texture,
+		PSConstBuff,
+		VSConstBuff
+	};
 public:
 	virtual ~BufferResource() = default;
 	virtual void BindAsBuffer(Graphics& gfx) = 0;

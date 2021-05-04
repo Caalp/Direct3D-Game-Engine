@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-Camera::Camera(const CameraType& camType) : m_camType(camType),
+Camera::Camera(const std::string& targetScene, const std::string& camName): Entity(std::move(targetScene)),m_CameraName(std::move(camName)),
 	cam_pos(0.0f,0.0f,-30.0f),
 	cam_right(1.0f,0.0f,0.0f),
 	cam_up(0.0f,1.0f,0.0f),
@@ -8,6 +8,10 @@ Camera::Camera(const CameraType& camType) : m_camType(camType),
 {
 
 }
+
+
+
+
 
 DirectX::XMVECTOR Camera::GetPositionXM() const
 {
@@ -27,23 +31,6 @@ void Camera::SetPosition(float x, float y, float z)
 void Camera::SetPosition(DirectX::XMFLOAT3 & v)
 {
 	cam_pos = v;
-}
-
-void Camera::SetCamType(CameraType type)
-{
-	m_camType = type;
-	switch (type)
-	{
-	case CameraType::CAM_PERSPECTIVE:
-		// Set as is for now ...
-		SetCameraLens(0.25f * 3.1415926535f, 800.0f / 600.0f, 1.0f, 1000.0f);
-		break;
-	case CameraType::CAM_ORTO:
-		InitOrtoProjXM();
-		break;
-	default:
-		break;
-	}
 }
 
 
@@ -149,10 +136,6 @@ void Camera::InitOrtoProjXM()
 	DirectX::XMLoadFloat4x4(&ProjXM);
 }
 
-Camera::CameraType Camera::GetCamType() const
-{
-	return m_camType;
-}
 
 void Camera::SetCameraLens(float fY, float aspectRatio, float zn, float zf)
 {
@@ -201,7 +184,7 @@ DirectX::XMMATRIX Camera::GetProjXM() const
 	return DirectX::XMLoadFloat4x4(&ProjXM);
 }
 
-DirectX::XMMATRIX Camera::ViewProjXM() const
+const DirectX::XMMATRIX& Camera::ViewProjXM() const
 {
 
 	return DirectX::XMMatrixMultiply(GetViewXM(),GetProjXM() );
@@ -296,3 +279,4 @@ void Camera::UpdateViewXM()
 	ViewXM(3, 3) = 1.0f;
 
 }
+

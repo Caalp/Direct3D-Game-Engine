@@ -26,10 +26,10 @@
 //	template <typename T>
 //	T* GetCommand(CommandPacket packet)
 //	{
-//		return union_cast<T*>(reinterpret_cast<char*>(packet) + OFFSET_COMMAND);
+//		return (reinterpret_cast<T*>(packet) + OFFSET_COMMAND);
 //	}
 //
-//	CommandPacket* GetNextCommandPacket(CommandPacket packet)
+//	/*CommandPacket* GetNextCommandPacket(CommandPacket packet)
 //	{
 //		return union_cast<CommandPacket*>(reinterpret_cast<char*>(packet) + OFFSET_NEXT_COMMAND_PACKET);
 //	}
@@ -66,6 +66,6 @@
 //	const BackendDispatchFunction LoadBackendDispatchFunction(const  CommandPacket packet)
 //	{
 //		return *GetBackendDispatchFunction(packet);
-//	}
+//	}*/
 //
 //};

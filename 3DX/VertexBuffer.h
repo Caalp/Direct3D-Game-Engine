@@ -1,6 +1,7 @@
 #pragma once
 #include "Bindable.h"
 #include <vector>
+#include "DynamicVertex.h"
 class VertexBuffer : public Bindable
 {
 
@@ -20,9 +21,26 @@ public:
 		D3D11_SUBRESOURCE_DATA sd = {};
 		
 		sd.pSysMem = v.data(); // pointer to initialization data
-		GetDevice(gfx)->CreateBuffer(&vbdesc, &sd, &pVertexBuffer);
+		GraphicsResources::GetSingleton().pDevice->CreateBuffer(&vbdesc, &sd, &pVertexBuffer);
 		
 		
+	}
+	VertexBuffer(Graphics& gfx, dvbuff::VertexBuffer& v) : stride(v.GetVertexSizeInBytes()), offset(UINT(0u))
+	{
+		D3D11_BUFFER_DESC vbdesc = {};
+		vbdesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		vbdesc.Usage = D3D11_USAGE_DEFAULT;
+		vbdesc.CPUAccessFlags = 0u;
+		vbdesc.MiscFlags = 0u;
+		vbdesc.ByteWidth = v.SizeInBytes();// size of the vertices array
+		vbdesc.StructureByteStride = v.GetVertexSizeInBytes();
+		// data for initializing a subresource 
+		D3D11_SUBRESOURCE_DATA sd = {};
+
+		sd.pSysMem = v.Data(); // pointer to initialization data
+		GraphicsResources::GetSingleton().pDevice->CreateBuffer(&vbdesc, &sd, &pVertexBuffer);
+
+
 	}
 	void Bind(Graphics& gfx);
 

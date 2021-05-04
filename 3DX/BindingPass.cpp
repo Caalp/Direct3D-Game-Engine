@@ -24,6 +24,7 @@ void BindingPass::BindAll(Graphics& gfx)
 void BindingPass::BindBufferResources(Graphics& gfx)
 {
 	// If renderTarget is not 
+	// Dirty way of handling a pass change this
 	if (passName == "dynamicCubeMap")
 	{
 		return;

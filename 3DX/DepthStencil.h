@@ -4,7 +4,7 @@
 #include "Drawable.h"
 
 // New child classes can be created like RenderTarget example
-class DepthStencil : public Bindable, public BufferResource,public Drawable
+class DepthStencil : public Bindable, public BufferResource
 {
 	friend class RenderTarget;
 public:

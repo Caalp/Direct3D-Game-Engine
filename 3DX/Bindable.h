@@ -1,7 +1,7 @@
 #pragma once
 #include "Graphics.h"
 #include "Camera.h"
-
+#include "GraphicsResources.h"
 
 class Bindable
 {
@@ -13,7 +13,6 @@ public:
 	virtual ~Bindable() = default;
 
 protected:
-	static ID3D11Device* GetDevice(Graphics& gfx);
-	static ID3D11DeviceContext* GetContext(Graphics& gfx);
+
 	static const std::shared_ptr<RenderTarget>& GetTarget(Graphics& gfx);
 };

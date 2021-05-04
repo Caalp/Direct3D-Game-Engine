@@ -10,9 +10,10 @@
 
 
 
-RenderGraph::RenderGraph(Graphics& gfx) : 
+RenderGraph::RenderGraph(Graphics& gfx, const std::string& name) :
 backBuffer(gfx.GetTarget()), // Get reference of render target which created in Graphics
-depthBuffer(std::make_shared<OutputOnlyDepthBuffer>(gfx)) // Create depth buffer here
+depthBuffer(std::make_shared<OutputOnlyDepthBuffer>(gfx)),
+m_GraphName(name)// Create depth buffer here
 {
     AddGlobalSink(DirectBufferSink<RenderTarget>::Make("backbuffer",backBuffer));
     AddGlobalSource(DirectBufferSource<RenderTarget>::Make("backbuffer",backBuffer));
@@ -20,6 +21,7 @@ depthBuffer(std::make_shared<OutputOnlyDepthBuffer>(gfx)) // Create depth buffer
     AddGlobalSource(DirectBufferSource<DepthStencil>::Make("depthbuffer",depthBuffer));
     AddGlobalSink(DirectBufferSink<DepthStencil>::Make("depthbuffer", depthBuffer));
 }
+
 
 RenderQueuePass* RenderGraph::GetRenderQueuePass(const std::string& passName)
 {
@@ -164,6 +166,11 @@ void RenderGraph::ResetDepthBuffer(Graphics& gfx)
 {
     //depthBuffer = depth;
     depthBuffer->BindAsBuffer(gfx);
+}
+
+const std::string& RenderGraph::Name() const
+{
+    return m_GraphName;
 }
 
 const std::shared_ptr<RenderTarget>& RenderGraph::GetRenderTarget()

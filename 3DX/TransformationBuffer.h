@@ -1,32 +1,47 @@
 #pragma once
 
 #include "ConstBuffs.h"
-#include "Camera.h"
 
-class Drawable;
+
+struct TransformBuffer
+{
+	DirectX::XMMATRIX world;
+	DirectX::XMMATRIX worldInverseTranspose;
+	DirectX::XMMATRIX worldviewProj;
+	DirectX::XMFLOAT3 eyePos;
+	float padding;
+};
 class TransformationBuffer : public Bindable
 {
 
 public:
 
-	TransformationBuffer(Graphics& gfx, const uint32_t& enttID);
-	void UpdateBufferData(Graphics& gfx);
+
+	//TransformationBuffer(Graphics& gfx);
+	TransformationBuffer(std::shared_ptr<VSConstBuff<TransformBuffer>> tbuff);
+	
+	/// <summary>
+	/// Update buffer data with UpdateBufferData and Bind Buffer
+	/// </summary>
+	/// <param name="gfx"></param>
 	void Bind(Graphics& gfx) override;
 
 private:
-	struct TransformBuffer
-	{
-		DirectX::XMMATRIX world;
-		DirectX::XMMATRIX worldInverseTranspose;
-		DirectX::XMMATRIX worldviewProj;
-		DirectX::XMFLOAT3 eyePos;
-		float padding;
-	};
+
+	/// <summary>
+	/// Update buffer data with data from Transformation Component
+	/// </summary>
+	/// <param name="gfx"></param>
+	void UpdateBufferData(Graphics& gfx);
+
+	/// <summary>
+	/// Transformation Buffer structure (Created as D3D11_USAGE_DYNAMIC)
+	/// </summary>
 	
-protected:
-	TransformBuffer _TransformBuffer; 
-	mutable std::unique_ptr<VSConstBuff<TransformBuffer>> m_TransformBuffer;
-	//const Drawable& parent;
-	const uint32_t mEnttID;
+	
+private:
+	//std::shared_ptr<TransformBuffer> m_BufferStruct; 
+	std::weak_ptr<VSConstBuff<TransformBuffer>> m_TBuffer;
+
 	
 };

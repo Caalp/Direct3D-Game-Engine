@@ -2,5 +2,5 @@
 
 void VertexBuffer::Bind(Graphics & gfx)
 {
-	GetContext(gfx)->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
+	GraphicsResources::GetSingleton().pImmediateContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
 }

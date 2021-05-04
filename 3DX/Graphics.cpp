@@ -10,6 +10,7 @@
 #include "DepthStencil.h"
 #include "DirectXTK/pch.h"
 #include "Texture.h"
+#include "GraphicsResources.h"
 namespace wrl = Microsoft::WRL;
 
 
@@ -76,9 +77,9 @@ Graphics::Graphics(HWND hWnd, uint32_t w, uint32_t h) : width(w),height(h)
 	scd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	scd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	UINT creatingFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
-//#if defined(_DEBUG)
-//	creatingFlags |= D3D11_CREATE_DEVICE_DEBUG;
-//#endif
+#if defined(_DEBUG)
+	creatingFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
 	D3D11CreateDeviceAndSwapChain(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
@@ -88,15 +89,15 @@ Graphics::Graphics(HWND hWnd, uint32_t w, uint32_t h) : width(w),height(h)
 		0,
 		D3D11_SDK_VERSION,
 		&scd,
-		&pSwapChain,
-		&pDevice,
+		&(GraphicsResources::GetSingleton().pSwapChain),
+		&GraphicsResources::GetSingleton().pDevice,
 		nullptr,
-		&pImmediateContext);
+		&GraphicsResources::GetSingleton().pImmediateContext);
 
 	wrl::ComPtr<ID3D11Texture2D> pBackBuffer ;
 	wrl::ComPtr<ID3D11Texture2D> pTexBuffer ;
 	
-	pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &pBackBuffer);
+	GraphicsResources::GetSingleton().pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &pBackBuffer);
 
 	pTarget = std::shared_ptr<RenderTarget>{ new BackBuffer(*this,pBackBuffer.Get()) };
 	//D3D11_TEXTURE2D_DESC texDesc;
@@ -118,16 +119,16 @@ Graphics::Graphics(HWND hWnd, uint32_t w, uint32_t h) : width(w),height(h)
 	//pTarget2 = std::shared_ptr<RenderTarget>{ new BackBuffer(*this,texture.Get()) };
 	//
 	//shaderResourceViewRT = new ShaderViewRenderTarget(*this, 800u, 600u, 0u);
-//#if defined(_DEBUG)
-//	pDevice->QueryInterface<ID3D11Debug>(&debug);
-//	debug->SetFeatureMask(D3D11_DEBUG_FEATURE_PRESENT_PER_RENDER_OP);
-//
-//#endif
+#if defined(_DEBUG)
+	GraphicsResources::GetSingleton().pDevice->QueryInterface<ID3D11Debug>(&debug);
+	debug->SetFeatureMask(D3D11_DEBUG_FEATURE_PRESENT_PER_RENDER_OP);
+
+#endif
 	
 
 	if (imguiEnabled)
 	{
-		ImGui_ImplDX11_Init(this->pDevice.Get(), this->pImmediateContext.Get());
+		ImGui_ImplDX11_Init(GraphicsResources::GetSingleton().pDevice.Get(), GraphicsResources::GetSingleton().pImmediateContext.Get());
 	}
 		
 	CreateViewport((float)w, (float)h);
@@ -148,12 +149,12 @@ Graphics::~Graphics()
 
 void Graphics::DrawIndexed(UINT count,uint32_t startIndexLocation, int startVertexLocation)
 {
-	pImmediateContext->DrawIndexed(count, startIndexLocation, startVertexLocation);
+	GraphicsResources::GetSingleton().pImmediateContext->DrawIndexed(count, startIndexLocation, startVertexLocation);
 }
 
 void Graphics::Draw(UINT vertexCount, UINT vertexStartLocation)
 {
-	pImmediateContext->Draw(vertexCount, vertexStartLocation);
+	GraphicsResources::GetSingleton().pImmediateContext->Draw(vertexCount, vertexStartLocation);
 }
 
 void Graphics::EndFrame()
@@ -168,7 +169,7 @@ void Graphics::EndFrame()
 		ImGui::RenderPlatformWindowsDefault();
 	}
 
-	hr = pSwapChain->Present(1u, 0u);
+	hr = GraphicsResources::GetSingleton().pSwapChain->Present(1u, 0u);
 	
 }
 
@@ -239,7 +240,7 @@ void Graphics::CreateViewport(float w, float h, float maxDepth, float minDepth, 
 	vp.TopLeftX = leftX;
 	vp.TopLeftY = leftY;
 
-	pImmediateContext->RSSetViewports(1u, &vp);
+	GraphicsResources::GetSingleton().pImmediateContext->RSSetViewports(1u, &vp);
 }
 
 const UINT& Graphics::GetWidth() const
@@ -256,8 +257,8 @@ const UINT& Graphics::GetHeight() const
 
 
 
-
-
-Microsoft::WRL::ComPtr<ID3D11Device> Graphics::pDevice;
-Microsoft::WRL::ComPtr<IDXGISwapChain> Graphics::pSwapChain;
-Microsoft::WRL::ComPtr<ID3D11DeviceContext> Graphics::pImmediateContext;
+//
+//
+//Microsoft::WRL::ComPtr<ID3D11Device> Graphics::pDevice;
+//Microsoft::WRL::ComPtr<IDXGISwapChain> Graphics::pSwapChain;
+//Microsoft::WRL::ComPtr<ID3D11DeviceContext> Graphics::pImmediateContext;

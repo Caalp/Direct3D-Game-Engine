@@ -16,5 +16,6 @@ public:
 private:
 	uint32_t mID1;
 	uint32_t mID2;
+	uint32_t mID3;
 };
 

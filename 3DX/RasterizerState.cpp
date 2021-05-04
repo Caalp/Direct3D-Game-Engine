@@ -24,17 +24,17 @@ RasterizerState::RasterizerState(Graphics & gfx, RasterizerType Rs):rsType(Rs)
 		rsDesc.FrontCounterClockwise = true;
 		rsDesc.DepthClipEnable = true;
 	}
-	GetDevice(gfx)->CreateRasterizerState(&rsDesc, rasState.GetAddressOf());
+	GraphicsResources::GetSingleton().pDevice->CreateRasterizerState(&rsDesc, rasState.GetAddressOf());
 }
 
 void RasterizerState::Bind(Graphics & gfx)
 {
 	if (rsType == RasterizerType::Default)
 	{
-		GetContext(gfx)->RSSetState(0);
+		GraphicsResources::GetSingleton().pImmediateContext->RSSetState(0);
 	}
 	else
 	{
-		GetContext(gfx)->RSSetState(rasState.Get());
+		GraphicsResources::GetSingleton().pImmediateContext->RSSetState(rasState.Get());
 	}
 }

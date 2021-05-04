@@ -24,10 +24,10 @@ void ShadowMapPass::BindShadowMap(Graphics& gfx)
 		
 
 			//AddBind(std::make_shared<DrawIndexed>(0, indexBuffer.get()->GetIndexCount()));
-			std::make_shared<SamplerState>(gfx).get()->Bind(gfx);
-			std::make_shared<Texture>(gfx, m_shadowMap.get()->shaderResourceView).get()->Bind(gfx);
-			std::make_shared<PixelShader>(gfx, "PS_Textured.cso").get()->Bind(gfx);
-			auto vs = std::make_shared<VertexShader>(gfx, "ColorBlenderVS.cso");
+			std::make_shared<SamplerState>().get()->Bind(gfx);
+			//std::make_shared<Texture>(gfx, m_shadowMap.get()->shaderResourceView).get()->Bind(gfx);
+			std::make_shared<PixelShader>("PS_Textured.cso").get()->Bind(gfx);
+			auto vs = std::make_shared<VertexShader>("ColorBlenderVS.cso");
 			auto vsBlob = vs->GetVBlob();
 			std::move(vs).get()->Bind(gfx);
 			//const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =

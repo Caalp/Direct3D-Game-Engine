@@ -114,13 +114,13 @@ DSS::DSS(Graphics & gfx, DSSType dType):dss(dType)
 	}
 	
 	
-	GetDevice(gfx)->CreateDepthStencilState(&DSSDesc, pDSS.GetAddressOf());
+	GraphicsResources::GetSingleton().pDevice->CreateDepthStencilState(&DSSDesc, pDSS.GetAddressOf());
 }
 
 void DSS::Bind(Graphics & gfx)
 {
 	
-		GetContext(gfx)->OMSetDepthStencilState(pDSS.Get(), 1u);
+	GraphicsResources::GetSingleton().pImmediateContext->OMSetDepthStencilState(pDSS.Get(), 1u);
 
 	
 }

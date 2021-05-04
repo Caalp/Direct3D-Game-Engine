@@ -1,13 +1,18 @@
 #include "Entity.h"
-#include "Drawable.h"
+#include "Scene.h"
+#include "ECSFactory.h"
 
 
-Entity::Entity(entt::registry& reg, Scene* scene) : scene(scene)
+Entity::Entity(const std::string& sceneName)
 {
-	entity = (reg).create();
+
+	m_TargetScene = Scene::CreateScene(sceneName);
+	mEntity = ECSFactory::CreateEntity();
+	m_TargetScene->AddEntity(this);
 }
 
-uint32_t Entity::GetID() const
+size_t Entity::GetID() const
 {
-	return (uint32_t)entity;
+	return (size_t)mEntity;
 }
+

@@ -13,7 +13,7 @@ class RenderQueuePass;
 class Bindable;
 class Drawable;
 class Graphics;
-
+struct Renderable;
 
 
 class Step
@@ -25,7 +25,7 @@ public:
 	//void AddPacket(CommandPacket* cmdPkt);
 	void AddBind(std::shared_ptr<Bindable> bindable);
 	void AddBind(const std::shared_ptr<IBackendDispatch>& drawFunc);
-	void Submit(Drawable& d);
+	void Submit(Renderable& d);
 	void Link(RenderGraph& fg);
 	void Bind(Graphics& gfx) const ;
 	

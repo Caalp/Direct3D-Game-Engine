@@ -3,7 +3,6 @@
 #include "Channels.h"
 #include "Technique.h"
 #include "Entity.h"
-#include "SceneRenderer.h"
 #include "Components.h"
 #include "DrawCallDispatch.h"
 
@@ -33,7 +32,7 @@ DepthStencil::DepthStencil(Graphics& gfx, UINT width, UINT height) : width(width
 	depthTexDesc.Usage = D3D11_USAGE_DEFAULT;
 	depthTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 
-	GetDevice(gfx)->CreateTexture2D(&depthTexDesc, nullptr, depthTex.GetAddressOf());
+	GraphicsResources::GetSingleton().pDevice->CreateTexture2D(&depthTexDesc, nullptr, depthTex.GetAddressOf());
 
 	// Create depth Stencil View To bind texture to the device
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsv = {};
@@ -41,7 +40,7 @@ DepthStencil::DepthStencil(Graphics& gfx, UINT width, UINT height) : width(width
 	dsv.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsv.Texture2D.MipSlice = 0u;
 	dsv.Flags = 0;
-	GetDevice(gfx)->CreateDepthStencilView(depthTex.Get(), &dsv, depthStencilView.GetAddressOf());
+	GraphicsResources::GetSingleton().pDevice->CreateDepthStencilView(depthTex.Get(), &dsv, depthStencilView.GetAddressOf());
 
 	//Technique textured_object("box", channel1::defaultChannel);
 	//{
@@ -98,14 +97,14 @@ DepthStencil::DepthStencil(Graphics& gfx, UINT width, UINT height, UINT state) :
 	textureDesc.Usage = D3D11_USAGE_DEFAULT;
 	textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_DEPTH_STENCIL;
 
-	GetDevice(gfx)->CreateTexture2D(&textureDesc, nullptr, depthTexture.GetAddressOf());
+	GraphicsResources::GetSingleton().pDevice->CreateTexture2D(&textureDesc, nullptr, depthTexture.GetAddressOf());
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsv = {};
 	dsv.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	dsv.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsv.Texture2D.MipSlice = 0u;
 	dsv.Flags = 0;
-	GetDevice(gfx)->CreateDepthStencilView(depthTexture.Get(), &dsv, depthStencilView.GetAddressOf());
+	GraphicsResources::GetSingleton().pDevice->CreateDepthStencilView(depthTexture.Get(), &dsv, depthStencilView.GetAddressOf());
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC shadowSrv = {};
 	shadowSrv.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
@@ -113,7 +112,7 @@ DepthStencil::DepthStencil(Graphics& gfx, UINT width, UINT height, UINT state) :
 	shadowSrv.Texture2D.MipLevels = 1u;
 	shadowSrv.Texture2D.MostDetailedMip = 0;
 
-	GetDevice(gfx)->CreateShaderResourceView(depthTexture.Get(), &shadowSrv, shaderResourceView.GetAddressOf());
+	GraphicsResources::GetSingleton().pDevice->CreateShaderResourceView(depthTexture.Get(), &shadowSrv, shaderResourceView.GetAddressOf());
 
 	// TO DO: if released sometimes complains about returning nullptr !
 	//depthTexture->Release();
@@ -141,7 +140,7 @@ DepthStencil::DepthStencil(Graphics& gfx, ID3D11Texture2D* texture, UINT state)
 
 void DepthStencil::BindAsBuffer(Graphics& gfx)
 {
-	GetContext(gfx)->OMSetRenderTargets(0, nullptr, depthStencilView.Get());
+	GraphicsResources::GetSingleton().pImmediateContext->OMSetRenderTargets(0, nullptr, depthStencilView.Get());
 }
 
 void DepthStencil::BindAsBuffer(Graphics& gfx, BufferResource* depth)
@@ -150,7 +149,7 @@ void DepthStencil::BindAsBuffer(Graphics& gfx, BufferResource* depth)
 
 void DepthStencil::Clear(Graphics& gfx)
 {
-	GetContext(gfx)->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f,0.0f);
+	GraphicsResources::GetSingleton().pImmediateContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f,0.0f);
 }
 
 OutputOnlyDepthBuffer::OutputOnlyDepthBuffer(Graphics& gfx) : OutputOnlyDepthBuffer(gfx,gfx.GetWidth(),gfx.GetHeight())

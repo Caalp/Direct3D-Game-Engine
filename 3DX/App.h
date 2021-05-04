@@ -10,14 +10,15 @@
 #include "CommandBucket.h"
 #include "TestRenderGraph.h"
 #include "Plane.h"
-#include "SceneRenderer.h"
 #include "TestCube.h"
 #include "Sky.h"
 #include "AnimatedCharacter.h"
 #include "RenderGraph.h"
-
-//#include "DirectXTK/PlatformHelpers.h"
-//#include "DirectXTK/DDS.h"
+#include "TestBox.h"
+#include "Timer.h"
+#include "TransformationSystem.h"
+#include "RenderSystem.h"
+#include "CameraSystem.h"
 
 
 class App
@@ -40,32 +41,62 @@ private:
 	float topXPos = 400.0f;
 	float topYPos = 0.0f;
 
+
+
+
+
+
+
+
+
+
 	Window wnd;
-	Camera cam;
+	Camera cam1;
+	Camera cam2;
+
+	/*--------------------- Systems-------------------------------*/
+
+	RenderSystem& m_RenderSystem;
+	CameraSystem& m_CameraSystem;
+
+
+
+
+
+
+
+
+
+	/*---------------------------------------------------------*/
+	//Model sponza{ wnd.gfx(),"../Models/sponza/sponza.obj" };
 	
-	SceneRenderer sceneRenderer;
-	DirectionalLight dirLight;
+	//DirectionalLight dirLight;
 	float animTime = 0.0f;
-	SpotLight spotLight{wnd.gfx()};
-	PointLight pointLight;
+	//SpotLight spotLight{wnd.gfx()};
+	//PointLight pointLight;
 	float dt;
 	float last_x;
 	float last_y;
 	float mPhi, mTheta,mRadius;
-	TestRenderGraph rgTest{ wnd.gfx(),cam};
-	TestCube testCube{ wnd.gfx(),0.0f,0.0f,10.0f };
+	//TestRenderGraph rgTest{ wnd.gfx(),cam,"TestGraph"};
+	Timer testTimer;
+	std::vector<TestBox*> testBox;
+	TransformationSystem ts;
+
+	
+	/*TestCube testCube{ wnd.gfx(),0.0f,0.0f,10.0f };
 	Plane mirror { wnd.gfx(),"mirror",10u, 10u, 1.0f, 0.03f, 0.0f, 1.0f };
 	Plane floor{ wnd.gfx(),"floor", 30u, 30u, 1.0f, 0.03f, 0, 4.0f };
 	Box box0{ wnd.gfx(),0.0f,0.0f,-12.0f };
 	Sky sky{ wnd.gfx(),"skySphere",5000.0f,30,30 };
-	Sphere centerSphere{wnd.gfx(),"centerSphere",3.0f,20,20};
+	Sphere centerSphere{wnd.gfx(),"centerSphere",3.0f,20,20};*/
 	//AnimatedCharacter chr{ wnd.gfx(),"../Models/mouse.fbx","boblamp" };
 	//AnimatedCharacter chr{ wnd.gfx(),"../Models/nanosuit.obj","boblamp" };
 	//AnimatedCharacter chr{ wnd.gfx(),"../Models/box/box.obj","boblamp" };
 	//AnimatedCharacter chr{ wnd.gfx(),"../Models/silly_dancing/silly_dancing.fbx","boblamp" };
+	//Model futureBox = { wnd.gfx(),"../Models/futurebox/box.obj"};
 	
-	
-	AnimatedCharacter chr{ wnd.gfx(),"../Models/boblamp/boblampclean.md5mesh","boblamp" };
+	//AnimatedCharacter chr{ wnd.gfx(),"../Models/boblamp/boblampclean.md5mesh","boblamp" };
 	//AnimatedCharacter chr{ wnd.gfx(),"../Models/drone/drone.X","boblamp" };
 	//AnimatedCharacter chr{ wnd.gfx(),"../Models/soldier/soldier.X","boblamp" };
 	//AnimatedCharacter chr{ wnd.gfx(),"../Models/TestModel.fbx","boblamp" };

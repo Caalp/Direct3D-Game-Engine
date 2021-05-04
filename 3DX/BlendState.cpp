@@ -59,7 +59,7 @@ BlendState::BlendState(Graphics & gfx, bool bState, BlendType bType) :isBlendOn(
 		}
 		
 	
-	GetDevice(gfx)->CreateBlendState(&blendDesc, blendState.GetAddressOf());
+		GraphicsResources::GetSingleton().pDevice->CreateBlendState(&blendDesc, blendState.GetAddressOf());
 }
 
 //void BlendState::ResetBlendState(Graphics & gfx)
@@ -73,11 +73,11 @@ void BlendState::Bind(Graphics & gfx)
 	if (isBlendOn)
 	{
 		float blendFactor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
-		GetContext(gfx)->OMSetBlendState(blendState.Get(), blendFactor, 0xffffffff);
+		GraphicsResources::GetSingleton().pImmediateContext->OMSetBlendState(blendState.Get(), blendFactor, 0xffffffff);
 	}
 		
 	else
 	{
-		GetContext(gfx)->OMSetBlendState(0, 0, 0xffffffff);
+		GraphicsResources::GetSingleton().pImmediateContext->OMSetBlendState(0, 0, 0xffffffff);
 	}
 }

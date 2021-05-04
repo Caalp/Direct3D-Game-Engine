@@ -4,6 +4,7 @@
 #include "Drawable.h"
 #include "RenderGraph.h"
 #include <assert.h>
+#include "Components.h"
 
 Step::Step(std::string ID) : targetPassName(std::move(ID))
 {
@@ -24,7 +25,9 @@ void Step::AddBind(const std::shared_ptr<IBackendDispatch>& drawFunc)
 	mDrawFunc.push_back(drawFunc);
 }
 
-void Step::Submit(Drawable& d)
+
+
+void Step::Submit(Renderable& d)
 {
 	if (targetPass)
 	{
@@ -32,10 +35,9 @@ void Step::Submit(Drawable& d)
 	}
 	else
 	{
-		printf("TargetPass is not linked for drawable %s", d.GetName().c_str());
-		assert(targetPass != NULL && "TargetPass is not linked for drawable");
+		//printf("TargetPass is not linked for drawable %s", d.GetName().c_str());
+		assert(targetPass != NULL && "TargetPass is not linked for renderable");
 	}
-	
 }
 
 void Step::Link(RenderGraph& rg)

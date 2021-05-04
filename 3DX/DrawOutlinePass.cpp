@@ -12,4 +12,5 @@ void DrawOutlinePass::Execute(Graphics& gfx)
 
 void DrawOutlinePass::Reset()
 {
+	RenderQueuePass::Reset();
 }

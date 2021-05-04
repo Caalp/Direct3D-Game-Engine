@@ -1,6 +1,6 @@
 #include "SamplerState.h"
 
-SamplerState::SamplerState(Graphics & gfx)
+SamplerState::SamplerState()
 {
 	D3D11_SAMPLER_DESC sampler_desc = CD3D11_SAMPLER_DESC{ CD3D11_DEFAULT{} };
 	sampler_desc.Filter = D3D11_FILTER_ANISOTROPIC;
@@ -9,10 +9,10 @@ SamplerState::SamplerState(Graphics & gfx)
 	sampler_desc.MaxAnisotropy = D3D11_REQ_MAXANISOTROPY;
 	
 
-	GetDevice(gfx)->CreateSamplerState(&sampler_desc, &pSampler);
+	GraphicsResources::GetSingleton().pDevice->CreateSamplerState(&sampler_desc, &pSampler);
 }
 
 void SamplerState::Bind(Graphics& gfx)
 {
-	GetContext(gfx)->PSSetSamplers(0, 1u, pSampler.GetAddressOf());
+	GraphicsResources::GetSingleton().pImmediateContext->PSSetSamplers(0, 1u, pSampler.GetAddressOf());
 }

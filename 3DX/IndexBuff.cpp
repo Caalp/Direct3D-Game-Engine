@@ -12,7 +12,7 @@ IndexBuff::IndexBuff(Graphics & gfx, const std::vector<WORD>& v): count((UINT)v.
 	D3D11_SUBRESOURCE_DATA sd = {};
 	sd.pSysMem = v.data();
 
-	GetDevice(gfx)->CreateBuffer(&indexDesc, &sd, &indexBuffer_);
+	GraphicsResources::GetSingleton().pDevice->CreateBuffer(&indexDesc, &sd, &indexBuffer_);
 }
 
 IndexBuff::IndexBuff(Graphics& gfx, const std::vector<UINT>& v, int x) : count((UINT)v.size())
@@ -28,7 +28,7 @@ IndexBuff::IndexBuff(Graphics& gfx, const std::vector<UINT>& v, int x) : count((
 	D3D11_SUBRESOURCE_DATA sd = {};
 	sd.pSysMem = v.data();
 
-	GetDevice(gfx)->CreateBuffer(&indexDesc, &sd, &indexBuffer_);
+	GraphicsResources::GetSingleton().pDevice->CreateBuffer(&indexDesc, &sd, &indexBuffer_);
 }
 
 
@@ -37,11 +37,11 @@ void IndexBuff::Bind(Graphics& gfx)
 {
 	if (new1)
 	{
-		GetContext(gfx)->IASetIndexBuffer(indexBuffer_.Get(), DXGI_FORMAT_R32_UINT, 0);
+		GraphicsResources::GetSingleton().pImmediateContext->IASetIndexBuffer(indexBuffer_.Get(), DXGI_FORMAT_R32_UINT, 0);
 		return;
 	}
 	
-	GetContext(gfx)->IASetIndexBuffer(indexBuffer_.Get(), DXGI_FORMAT_R16_UINT, 0);
+	GraphicsResources::GetSingleton().pImmediateContext->IASetIndexBuffer(indexBuffer_.Get(), DXGI_FORMAT_R16_UINT, 0);
 }
 
 UINT IndexBuff::GetIndexCount() const

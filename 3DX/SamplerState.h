@@ -4,7 +4,7 @@
 class SamplerState : public Bindable
 {
 public:
-	SamplerState(Graphics& gfx);
+	SamplerState();
 	void Bind(Graphics& gfx) override;
 protected:
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> pSampler;

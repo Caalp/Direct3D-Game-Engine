@@ -5,7 +5,7 @@
 class PixelShader : public Bindable
 {
 public:
-	PixelShader(Graphics& gfx, const std::string& filename);
+	PixelShader(const std::string& filename);
 	void Bind(Graphics& gfx);
 
 private:

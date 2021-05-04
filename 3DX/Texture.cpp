@@ -7,7 +7,7 @@
 #pragma comment(lib,"DirectXTK/x86/DirectXTK.lib")
 #pragma comment(lib,"DirectXTK/x86/d3dx11d.lib")
 
-Texture::Texture(Graphics& gfx, const std::vector<std::string>& filepath,unsigned int index)
+Texture::Texture(const std::vector<std::string>& filepath,unsigned int index)
 {
 	this->bufferSlot = index;
 	HRESULT hr;
@@ -32,7 +32,7 @@ Texture::Texture(Graphics& gfx, const std::vector<std::string>& filepath,unsigne
 		loadInfo.MipFilter = D3DX11_FILTER_NONE;
 		loadInfo.pSrcInfo = 0;
 
-		D3DX11CreateTextureFromFile(GetDevice(gfx), filepath[i].c_str(),
+		D3DX11CreateTextureFromFile(GraphicsResources::GetSingleton().pDevice.Get(), filepath[i].c_str(),
 			&loadInfo, 0, (ID3D11Resource**)&srcTex[i], 0);
 	}
 
@@ -64,18 +64,18 @@ Texture::Texture(Graphics& gfx, const std::vector<std::string>& filepath,unsigne
 		srd[i].SysMemPitch = texDesc.Width * 4;
 		srd[i].SysMemSlicePitch = 0u;
 	}
-	GetDevice(gfx)->CreateTexture2D(&texArrayDesc, srd, &texArrayElement);
+	GraphicsResources::GetSingleton().pDevice->CreateTexture2D(&texArrayDesc, srd, &texArrayElement);
 	for (unsigned int texElem = 0; texElem < arraySize-4; texElem++)
 	{
 		
 		for (unsigned int mipLevel = 0; mipLevel < texDesc.MipLevels; mipLevel++)
 		{
 			D3D11_MAPPED_SUBRESOURCE tex2D;
-			GetContext(gfx)->Map(srcTex[texElem], mipLevel, D3D11_MAP_READ, 0, &tex2D);
+			GraphicsResources::GetSingleton().pImmediateContext->Map(srcTex[texElem], mipLevel, D3D11_MAP_READ, 0, &tex2D);
 
-			GetContext(gfx)->UpdateSubresource(texArrayElement,
+			GraphicsResources::GetSingleton().pImmediateContext->UpdateSubresource(texArrayElement,
 				D3D11CalcSubresource(mipLevel, texElem, texDesc.MipLevels), 0, tex2D.pData, tex2D.RowPitch, tex2D.DepthPitch);
-			GetContext(gfx)->Unmap(srcTex[texElem], mipLevel);
+			GraphicsResources::GetSingleton().pImmediateContext->Unmap(srcTex[texElem], mipLevel);
 		}
 	}
 
@@ -103,17 +103,17 @@ Texture::Texture(Graphics& gfx, const std::vector<std::string>& filepath,unsigne
 
 
 	//GetDevice(gfx)->CreateTexture2D(&tex2desc, &sd0, &ptex);
-	GetDevice(gfx)->CreateShaderResourceView(texArrayElement, &srvDesc, &srv);
-	GetContext(gfx)->GenerateMips(srv.Get());
+	GraphicsResources::GetSingleton().pDevice->CreateShaderResourceView(texArrayElement, &srvDesc, &srv);
+	GraphicsResources::GetSingleton().pImmediateContext->GenerateMips(srv);
 }
 
-Texture::Texture(Graphics & gfx, const char * filePath, unsigned int bufferSlot)
+Texture::Texture(const char * filePath, unsigned int bufferSlot)
 {
 	this->bufferSlot = bufferSlot;
 	HRESULT hr;
 	
 	
-	hr = D3DX11CreateShaderResourceViewFromFile(GetDevice(gfx), filePath, 0, 0, &srv, 0);
+	hr = D3DX11CreateShaderResourceViewFromFile(GraphicsResources::GetSingleton().pDevice.Get(), filePath, 0, 0, &srv, 0);
 	
 	if (FAILED(hr))
 	{
@@ -123,10 +123,15 @@ Texture::Texture(Graphics & gfx, const char * filePath, unsigned int bufferSlot)
 
 }
 
-Texture::Texture(Graphics & gfx, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> paramSrv, unsigned int bufferSlot)
+Texture::Texture(ID3D11ShaderResourceView* paramSrv, unsigned int bufferSlot)
 {
 	this->bufferSlot = bufferSlot;
 	srv = paramSrv;
+}
+
+Texture::~Texture()
+{
+	srv->Release();
 }
 
 
@@ -134,7 +139,7 @@ Texture::Texture(Graphics & gfx, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView
 void Texture::Bind(Graphics & gfx)
 {
 
-	GetContext(gfx)->PSSetShaderResources(bufferSlot, 1u, srv.GetAddressOf());
+	GraphicsResources::GetSingleton().pImmediateContext->PSSetShaderResources(bufferSlot, 1u, &srv);
 
 }
 
