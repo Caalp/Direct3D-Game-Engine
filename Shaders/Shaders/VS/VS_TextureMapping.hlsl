@@ -1,4 +1,5 @@
 #include "..\Common\TransformBufferVar.hlsl"
+
 struct VSOut
 {
 	float4 pos : SV_POSITION;
@@ -8,7 +9,9 @@ VSOut main(float3 pos : Position, float2 tex : TexCoord)
 {
 	VSOut vso;
 
-	vso.pos =  mul(float4(pos,1.0f),worldViewProj);
+	
+	matrix worldViewProj = transpose(mul(mul(projXM, viewXM), model));
+	vso.pos = mul(float4(pos, 1.0f), worldViewProj);
 	vso.tex = tex;
 	return vso;
 }

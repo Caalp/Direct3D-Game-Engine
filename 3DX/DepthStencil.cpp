@@ -3,7 +3,6 @@
 #include "Channels.h"
 #include "Technique.h"
 #include "Entity.h"
-#include "Components.h"
 #include "DrawCallDispatch.h"
 
 DepthStencil::DepthStencil(Graphics& gfx) : DepthStencil(gfx,gfx.GetWidth(),gfx.GetHeight())

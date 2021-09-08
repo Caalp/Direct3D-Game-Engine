@@ -5,8 +5,10 @@
 class PixelShader : public Bindable
 {
 public:
+	PixelShader() = default;
 	PixelShader(const std::string& filename);
 	void Bind(Graphics& gfx);
+	void Bind() override;
 
 private:
 	

@@ -21,3 +21,9 @@ void InputLayout::Bind(Graphics & gfx)
 {
 	GraphicsResources::GetSingleton().pImmediateContext->IASetInputLayout(pInputLayout.Get());
 }
+
+
+void InputLayout::Bind()
+{
+	GraphicsResources::GetSingleton().pImmediateContext->IASetInputLayout(pInputLayout.Get());
+}

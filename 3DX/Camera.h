@@ -6,11 +6,12 @@
 
 class Camera : public Entity
 {
-public:
+	
 
 public:
+	
 
-	Camera(const std::string& targetScene,const std::string& camName);
+	Camera();
 	Camera(const Camera&) = delete;
 	// Getter and setters for camera position
 	DirectX::XMVECTOR GetPositionXM() const;

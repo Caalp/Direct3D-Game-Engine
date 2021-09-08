@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>E:\Users\calpy\Source\Repos\Compiled\3DX_Build\Bin\3DX.exe</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>E:\Users\calpy\Source\Repos\Compiled\3DX_Build\Shaders\VS_Basic.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>E:\Users\calpy\Source\Repos\Compiled\3DX_Build\Shaders\ColorBlenderPS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>E:\Users\calpy\Source\Repos\Compiled\3DX_Build\Shaders\ConstantColorPS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>E:\Users\calpy\Source\Repos\Compiled\3DX_Build\Shaders\PhongLightingPS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>E:\Users\calpy\Source\Repos\Compiled\3DX_Build\Shaders\PS_CubeMapping.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>E:\Users\calpy\Source\Repos\Compiled\3DX_Build\Shaders\PS_NormalMap.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>E:\Users\calpy\Source\Repos\Compiled\3DX_Build\Shaders\PS_TextureArrayMapping.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>E:\Users\calpy\Source\Repos\Compiled\3DX_Build\Shaders\PS_Textured.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>E:\Users\calpy\Source\Repos\Compiled\3DX_Build\Shaders\PS_TextureMapping.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>E:\Users\calpy\Source\Repos\Compiled\3DX_Build\Shaders\ColorBlenderVS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>E:\Users\calpy\Source\Repos\Compiled\3DX_Build\Shaders\PhongLightingVS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>E:\Users\calpy\Source\Repos\Compiled\3DX_Build\Shaders\VS_AnimatedCharacter.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>E:\Users\calpy\Source\Repos\Compiled\3DX_Build\Shaders\VS_CubeMapping.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>E:\Users\calpy\Source\Repos\Compiled\3DX_Build\Shaders\VS_NormalMap.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>E:\Users\calpy\Source\Repos\Compiled\3DX_Build\Shaders\VS_Textured.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>E:\Users\calpy\Source\Repos\Compiled\3DX_Build\Shaders\VS_TextureMapping.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>

@@ -9,7 +9,7 @@
 class TestRenderGraph : public RenderGraph
 {
 public:
-	TestRenderGraph(Graphics& gfx,Camera& cam,std::string graphName);
+	TestRenderGraph(Graphics& gfx, std::string graphName);
 	void SaveBufferToFile(Graphics& gfx,std::string filename, std::string resourceName);
 	void Imgui_func();
 private:

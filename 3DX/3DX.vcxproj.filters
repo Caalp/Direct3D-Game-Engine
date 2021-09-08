@@ -52,12 +52,6 @@
     <Filter Include="Header Files\Events">
       <UniqueIdentifier>{aeb7510d-45e6-4bc1-8649-23b346477051}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\LoadingGeometry">
-      <UniqueIdentifier>{435261c3-7b80-4d49-b916-b5f7661b2678}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\LoadingGeometry">
-      <UniqueIdentifier>{d1363c19-ea82-4988-aecb-fda60f06b7f8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\ECS">
       <UniqueIdentifier>{0057093d-f40d-4e7e-8a41-fe8aca71f849}</UniqueIdentifier>
     </Filter>
@@ -72,6 +66,39 @@
     </Filter>
     <Filter Include="Source Files\ECS\Systems">
       <UniqueIdentifier>{0f90db32-ee1f-4360-a347-3c4c7d3258b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ECS\Components">
+      <UniqueIdentifier>{22c10ff1-2860-4e2b-9436-7ea5a4659b66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RenderGraphs">
+      <UniqueIdentifier>{e60101d1-f358-4b23-85cd-305756417e67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TestObjects">
+      <UniqueIdentifier>{559b735c-596a-492a-96c7-8761527c2219}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utilities">
+      <UniqueIdentifier>{a598d327-5def-418e-9f36-26de2278abc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utilities">
+      <UniqueIdentifier>{faa0feb6-47cb-4b0f-8a5f-4b979c78f231}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ResourceManagement">
+      <UniqueIdentifier>{8995672f-7428-4641-babf-d34ec3f2115b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ModelLoading">
+      <UniqueIdentifier>{435261c3-7b80-4d49-b916-b5f7661b2678}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ModelLoading">
+      <UniqueIdentifier>{d1363c19-ea82-4988-aecb-fda60f06b7f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ResourceManagement">
+      <UniqueIdentifier>{cea23c30-69c7-400e-a34e-e7719189aacd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Editor">
+      <UniqueIdentifier>{eed29f8e-c8fc-4dbf-8ebe-f9022cdd01a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\CommandQueue">
+      <UniqueIdentifier>{83b61fcc-8462-49bb-b39c-79ac464476a2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -137,9 +164,6 @@
     </ClCompile>
     <ClCompile Include="SpotLight.cpp">
       <Filter>Source Files\Lights</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TerrainClass.cpp">
       <Filter>Source Files\Drawables</Filter>
@@ -231,38 +255,20 @@
     <ClCompile Include="Icosahedron.cpp">
       <Filter>Source Files\Drawables</Filter>
     </ClCompile>
-    <ClCompile Include="Entity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TestCube.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Events.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sky.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SkyBoxPass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AnimatedCharacter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RasterClockwise.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files\LoadingGeometry</Filter>
+      <Filter>Source Files\ModelLoading</Filter>
     </ClCompile>
     <ClCompile Include="Node.cpp">
-      <Filter>Source Files\LoadingGeometry</Filter>
+      <Filter>Source Files\ModelLoading</Filter>
     </ClCompile>
     <ClCompile Include="Model.cpp">
-      <Filter>Source Files\LoadingGeometry</Filter>
+      <Filter>Source Files\ModelLoading</Filter>
     </ClCompile>
     <ClCompile Include="ImguiHandler.cpp">
       <Filter>Source Files</Filter>
@@ -273,44 +279,98 @@
     <ClCompile Include="RenderGraph.cpp">
       <Filter>Source Files\RenderQueueItems</Filter>
     </ClCompile>
-    <ClCompile Include="TestRenderGraph.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MirrorRenderGraph.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ResetRenderTargetPass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ImguiUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ShadowMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MarkOutlinePass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DrawOutlinePass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ShadowMapPass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TransformationSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CameraComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="RenderSystem.cpp">
       <Filter>Source Files\ECS\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="CameraSystem.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="RenderableComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
     </ClCompile>
     <ClCompile Include="ECSFactory.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Source Files\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneLoader.cpp">
+      <Filter>Source Files\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraSystem.cpp">
+      <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformationSystem.cpp">
+      <Filter>Source Files\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawOutlinePass.cpp">
+      <Filter>Source Files\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="MarkOutlinePass.cpp">
+      <Filter>Source Files\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowMapPass.cpp">
+      <Filter>Source Files\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyBoxPass.cpp">
+      <Filter>Source Files\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="ResetRenderTargetPass.cpp">
+      <Filter>Source Files\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="RasterClockwise.cpp">
+      <Filter>Source Files\Passes</Filter>
+    </ClCompile>
+    <ClCompile Include="MirrorRenderGraph.cpp">
+      <Filter>Source Files\RenderGraphs</Filter>
+    </ClCompile>
+    <ClCompile Include="TestRenderGraph.cpp">
+      <Filter>Source Files\RenderGraphs</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimatedCharacter.cpp">
+      <Filter>Source Files\Drawables</Filter>
+    </ClCompile>
+    <ClCompile Include="Sky.cpp">
+      <Filter>Source Files\Drawables</Filter>
+    </ClCompile>
+    <ClCompile Include="FileUtils.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="MathUtils.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelResource.cpp">
+      <Filter>Source Files\ResourceManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelComponent.cpp">
+      <Filter>Source Files\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>Source Files\ResourceManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureResource.cpp">
+      <Filter>Source Files\ResourceManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderable.cpp">
+      <Filter>Source Files\Drawables</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Source Files\ECS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -389,12 +449,6 @@
     <ClInclude Include="SpotLight.h">
       <Filter>Header Files\Lights</Filter>
     </ClInclude>
-    <ClInclude Include="CommandBucket.h">
-      <Filter>Header Files\RenderQueueItems</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandPacket.h">
-      <Filter>Header Files\RenderQueueItems</Filter>
-    </ClInclude>
     <ClInclude Include="Step.h">
       <Filter>Header Files\RenderQueueItems</Filter>
     </ClInclude>
@@ -424,9 +478,6 @@
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Command.h">
-      <Filter>Header Files\RenderQueueItems</Filter>
     </ClInclude>
     <ClInclude Include="union_cast.h">
       <Filter>Header Files</Filter>
@@ -494,9 +545,6 @@
     <ClInclude Include="Sphere.h">
       <Filter>Header Files\Drawables</Filter>
     </ClInclude>
-    <ClInclude Include="CyclopsUtils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Plane.h">
       <Filter>Header Files\Drawables</Filter>
     </ClInclude>
@@ -531,13 +579,13 @@
       <Filter>Header Files\Passes</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
-      <Filter>Header Files\LoadingGeometry</Filter>
+      <Filter>Header Files\ModelLoading</Filter>
     </ClInclude>
     <ClInclude Include="Node.h">
-      <Filter>Header Files\LoadingGeometry</Filter>
+      <Filter>Header Files\ModelLoading</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
-      <Filter>Header Files\LoadingGeometry</Filter>
+      <Filter>Header Files\ModelLoading</Filter>
     </ClInclude>
     <ClInclude Include="ImguiHandler.h">
       <Filter>Header Files</Filter>
@@ -572,9 +620,6 @@
     <ClInclude Include="DynamicVertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TestBox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Header Files\ECS</Filter>
     </ClInclude>
@@ -582,9 +627,6 @@
       <Filter>Header Files\ECS</Filter>
     </ClInclude>
     <ClInclude Include="ECSFactory.h">
-      <Filter>Header Files\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="Components.h">
       <Filter>Header Files\ECS</Filter>
     </ClInclude>
     <ClInclude Include="System.h">
@@ -608,14 +650,86 @@
     <ClInclude Include="ModelComponent.h">
       <Filter>Header Files\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="BoxColliderComponent.h">
-      <Filter>Header Files\ECS\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files\ECS</Filter>
     </ClInclude>
     <ClInclude Include="CameraSystem.h">
       <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneLoader.h">
+      <Filter>Header Files\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Header Files\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderableComponent.h">
+      <Filter>Header Files\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestBox.h">
+      <Filter>Header Files\TestObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="TestModel.h">
+      <Filter>Header Files\TestObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="MathUtils.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="FileUtils.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>Header Files\ResourceManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelResource.h">
+      <Filter>Header Files\ResourceManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureResource.h">
+      <Filter>Header Files\ResourceManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="IResource.h">
+      <Filter>Header Files\ResourceManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelRenderer.h">
+      <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicRenderer.h">
+      <Filter>Header Files\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderable.h">
+      <Filter>Header Files\Drawables</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectorDock.h">
+      <Filter>Header Files\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneDock.h">
+      <Filter>Header Files\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.h">
+      <Filter>Header Files\CommandQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11Renderer.h">
+      <Filter>Header Files\CommandQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="IRenderer.h">
+      <Filter>Header Files\CommandQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="Backend.h">
+      <Filter>Header Files\CommandQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandBucket.h">
+      <Filter>Header Files\CommandQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="TestShape.h">
+      <Filter>Header Files\CommandQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="config.h">
+      <Filter>Header Files\CommandQueue</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

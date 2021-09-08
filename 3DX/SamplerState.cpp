@@ -16,3 +16,7 @@ void SamplerState::Bind(Graphics& gfx)
 {
 	GraphicsResources::GetSingleton().pImmediateContext->PSSetSamplers(0, 1u, pSampler.GetAddressOf());
 }
+void SamplerState::Bind()
+{
+	GraphicsResources::GetSingleton().pImmediateContext->PSSetSamplers(0, 1u, pSampler.GetAddressOf());
+}

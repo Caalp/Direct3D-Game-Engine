@@ -4,6 +4,9 @@
 #include <memory>
 #include <string>
 #include "DrawCallDispatch.h"
+#include "Types.h"
+#include "IndexBuff.h"
+#include "VertexBuffer.h"
 
 
 class PixelShader;
@@ -13,8 +16,8 @@ class RenderQueuePass;
 class Bindable;
 class Drawable;
 class Graphics;
-struct Renderable;
-
+class RenderableComponent;
+class Renderable;
 
 class Step
 {
@@ -26,11 +29,14 @@ public:
 	void AddBind(std::shared_ptr<Bindable> bindable);
 	void AddBind(const std::shared_ptr<IBackendDispatch>& drawFunc);
 	void Submit(Renderable& d);
+
 	void Link(RenderGraph& fg);
-	void Bind(Graphics& gfx) const ;
+	void Bind(Graphics& gfx) const;
+	void Bind() const;
 	
 	
 	void Draw(Graphics& gfx) const;
+	void Draw() const;
 
 	const std::string& GetTargetPassName() const;
 	bool isLinked() const;

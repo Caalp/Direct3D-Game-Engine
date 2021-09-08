@@ -17,6 +17,7 @@ public:
 	~Texture();
 	
 	void Bind(Graphics& gfx) override;
+	void Bind()override;
 
 public:
 	UINT bufferSlot;

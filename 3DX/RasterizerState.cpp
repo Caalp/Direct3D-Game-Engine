@@ -38,3 +38,15 @@ void RasterizerState::Bind(Graphics & gfx)
 		GraphicsResources::GetSingleton().pImmediateContext->RSSetState(rasState.Get());
 	}
 }
+
+void RasterizerState::Bind()
+{
+	if (rsType == RasterizerType::Default)
+	{
+		GraphicsResources::GetSingleton().pImmediateContext->RSSetState(0);
+	}
+	else
+	{
+		GraphicsResources::GetSingleton().pImmediateContext->RSSetState(rasState.Get());
+	}
+}

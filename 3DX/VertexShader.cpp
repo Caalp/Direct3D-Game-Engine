@@ -15,6 +15,10 @@ void VertexShader::Bind(Graphics & gfx)
 {
 	GraphicsResources::GetSingleton().pImmediateContext->VSSetShader(pVertexShader.Get(), nullptr, 0u);
 }
+void VertexShader::Bind()
+{
+	GraphicsResources::GetSingleton().pImmediateContext->VSSetShader(pVertexShader.Get(), nullptr, 0u);
+}
 
 ID3DBlob * VertexShader::GetVBlob() const
 {

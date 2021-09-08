@@ -24,9 +24,9 @@ VertexOut main(VertexIn vin)
 	vout.PosW = mul(float4(vin.PosL, 1.0f), model);
 	vout.NormalW = mul(vin.NormalL, (float3x3) worldInverseTransform);
 	vout.tangentW = mul(vin.TangentL, (float3x3)model);
-	vout.PosH = mul(float4(vin.PosL, 1.0f), worldViewProj);
+	vout.PosH = mul(float4(vin.PosL, 1.0f), transpose(model * viewXM * projXM));
 	vout.txCoord = vin.texCoordinate;
-	vout.eyePos = eyePos;
+	vout.eyePos = cameraPos;
   
 	return vout;
 }

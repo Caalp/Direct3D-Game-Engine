@@ -1,12 +1,25 @@
 #include "Camera.h"
+#include "CameraComponent.h"
 
-Camera::Camera(const std::string& targetScene, const std::string& camName): Entity(std::move(targetScene)),m_CameraName(std::move(camName)),
+Camera::Camera(): 
 	cam_pos(0.0f,0.0f,-30.0f),
 	cam_right(1.0f,0.0f,0.0f),
 	cam_up(0.0f,1.0f,0.0f),
 	cam_look(0.0f,0.0f,1.0f)
 {
+	// Create camera as prespective camera default 
+	CameraComponent data;
+	data.m_Name = "EditorCamera";
+	data.m_CamType = CAM_PERSPECTIVE;
+	data.m_CamPos = { 0.0f,0.0f,-30.0f };
+	data.m_CamRight = { 1.0f,0.0f,0.0f };
+	data.m_CamUp = { 0.0f,1.0f,0.0f };
+	data.m_CamLook = { 0.0f,0.0f,1.0f };
+	data.SetCameraLens(0.25f * 3.1415926535f, 800.0f / 600.0f, 1.0f, 1000.0f);
 
+
+	this->AddComponent<CameraComponent>(std::move(data));
+	this->AddComponent<MainCamera>();
 }
 
 

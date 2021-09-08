@@ -119,11 +119,11 @@ Graphics::Graphics(HWND hWnd, uint32_t w, uint32_t h) : width(w),height(h)
 	//pTarget2 = std::shared_ptr<RenderTarget>{ new BackBuffer(*this,texture.Get()) };
 	//
 	//shaderResourceViewRT = new ShaderViewRenderTarget(*this, 800u, 600u, 0u);
-#if defined(_DEBUG)
-	GraphicsResources::GetSingleton().pDevice->QueryInterface<ID3D11Debug>(&debug);
-	debug->SetFeatureMask(D3D11_DEBUG_FEATURE_PRESENT_PER_RENDER_OP);
-
-#endif
+//#if defined(_DEBUG)
+//	GraphicsResources::GetSingleton().pDevice->QueryInterface<ID3D11Debug>(&debug);
+//	debug->SetFeatureMask(D3D11_DEBUG_FEATURE_PRESENT_PER_RENDER_OP);
+//
+//#endif
 	
 
 	if (imguiEnabled)

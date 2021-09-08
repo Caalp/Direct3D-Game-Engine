@@ -4,8 +4,11 @@
 #include "RenderGraph.h"
 #include "Channels.h"
 
+
+
 class RenderSystem : public System
 {
+	friend class Renderer;
 public:
 	static RenderSystem& GetSingleton();
 
@@ -14,13 +17,12 @@ public:
 	void AddGraph(std::shared_ptr<RenderGraph> rg);
 
 	void LinkTechniques();
-
 	void SubmitObjects();
-
-
 	void Execute(Graphics& gfx);
 
 	void Reset();
+
+	void UpdateAndBindCameraBuffer();
 
 
 private:

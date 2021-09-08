@@ -124,3 +124,11 @@ void DSS::Bind(Graphics & gfx)
 
 	
 }
+void DSS::Bind()
+{
+
+	GraphicsResources::GetSingleton().pImmediateContext->OMSetDepthStencilState(pDSS.Get(), 1u);
+
+
+}
+

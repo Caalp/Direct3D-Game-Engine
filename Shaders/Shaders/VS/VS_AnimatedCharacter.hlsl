@@ -38,7 +38,7 @@ VS_out main(VS_in vin)
 	
 	if (weights[0] == 0.0f && weights[1] == 0.0f && weights[2] == 0.0f && weights[3] == 0.0f)
 	{
-		vso.PosH = mul(float4(vin.position, 1.0f), worldViewProj);
+		vso.PosH = mul(float4(vin.position, 1.0f), transpose(model * viewXM * projXM));
 	}
 	else
 	{
@@ -53,7 +53,7 @@ VS_out main(VS_in vin)
 				
 
 		}
-		vso.PosH = mul(float4(posL, 1.0f), worldViewProj);
+		vso.PosH = mul(float4(posL, 1.0f), transpose(model * viewXM * projXM));
 		
 	}
 	

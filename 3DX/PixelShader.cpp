@@ -14,3 +14,8 @@ void PixelShader::Bind(Graphics & gfx)
 {
 	GraphicsResources::GetSingleton().pImmediateContext->PSSetShader(pPixelShader.Get(), nullptr, 0u);
 }
+
+void PixelShader::Bind()
+{
+	GraphicsResources::GetSingleton().pImmediateContext->PSSetShader(pPixelShader.Get(), nullptr, 0u);
+}

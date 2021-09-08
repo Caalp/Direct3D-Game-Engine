@@ -1,16 +1,21 @@
 #pragma once
+#include "Types.h"
+#include "VertexBuffer.h"
+#include "IndexBuff.h"
 
 class Step;
 class Graphics;
-struct Renderable;
+class RenderableComponent;
+class Renderable;
+
 
 class Job
 {
 public:
-
 	Job(const Step& s, const Renderable& d);
 	void Execute(Graphics& gfx);
 private:
-	const Renderable* const m_Renderable;
-	const Step* step;
+	const Renderable& m_renderable;
+	const Step& m_step;
 };
+

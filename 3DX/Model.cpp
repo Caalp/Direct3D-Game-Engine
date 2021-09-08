@@ -1,3 +1,10 @@
+#include "Model.h"
+#include "ResourceManager.h"
+
+
+
+
+
 //#include "Model.h"
 //#include "MatHelper.h"
 //#include <fstream>
@@ -122,6 +129,8 @@
 //						anims[animName].frames[nodeName][i].scalingKey = DirectX::XMFLOAT3(vScaling.x, vScaling.y, vScaling.z);
 //						anims[animName].frames[nodeName][i].hasScal = true;
 //					}
+
+
 //					else
 //					{
 //						anims[animName].frames[nodeName][i].hasScal = false;

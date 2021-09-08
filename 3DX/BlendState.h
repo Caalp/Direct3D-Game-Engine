@@ -15,6 +15,7 @@ public:
 	BlendState(Graphics& gfx, bool bState = false,BlendType bType = Default);
 	//void ResetBlendState(Graphics& gfx);
 	void Bind(Graphics& gfx);
+	void Bind() override;
 private:
 	//Microsoft::WRL::ComPtr<ID3D11RasterizerState> rastState;
 	Microsoft::WRL::ComPtr<ID3D11BlendState> blendState;

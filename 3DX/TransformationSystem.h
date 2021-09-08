@@ -1,6 +1,9 @@
 #pragma once
 #include "System.h"
 
+
+class TransformComponent;
+
 class TransformationSystem : public System
 {
 public:
@@ -13,8 +16,9 @@ public:
 	void SetScaling(size_t id, DirectX::XMFLOAT3 s);
 
 
-	void Update(Graphics& gfx,float dt);
+	void Update(float dt);
 
-
+private:
+	void PassDown(Scene* scene, TransformComponent& parentTransform);
 
 };

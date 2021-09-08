@@ -8,3 +8,7 @@ void PrimitiveTopology::Bind(Graphics & gfx)
 {
 	GraphicsResources::GetSingleton().pImmediateContext->IASetPrimitiveTopology(Pt);
 }
+void PrimitiveTopology::Bind()
+{
+	GraphicsResources::GetSingleton().pImmediateContext->IASetPrimitiveTopology(Pt);
+}

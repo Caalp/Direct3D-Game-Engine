@@ -1,60 +1,78 @@
 #pragma once
 #include "entt\entt.hpp"
 #include <map>
+#include "Entity.h"
+#include <string>
+#include "Types.h"
 
-
-// Scene shouldn't be coupled with entity. It just holds ref/ptr to entity type
-// Can't manipulate entity directly, if any state change in entity, entity removes itself
-// Scene can get entity return to ref/ptr
-// We can say Scene->submit and drawable entity's submit themselves to render graph?
-// Update routine can be only with entities need to be updated 
 
 class Entity;
-
+#define SET_NAME(name) this->m_Name = name;
 class Scene 
 {
 	friend class Entity;
 public:
 
 
-	Scene(std::string sceneName);
+	Scene();
 	~Scene();
 	
-	/// <summary>
-	/// Create scene with given name if it is already exist return to scene
-	/// </summary>
-	/// <param name="sceneName">:Target scene name</param>
-	/// <returns> Scene* </returns>
-	static Scene* CreateScene(const std::string& sceneName);
 
+	static Scene* Create();
 
-	/// <summary>
-	/// Return to entity with passed id
-	/// </summary>
-	/// <param name="id">entity id</param>
-	/// <returns> pointer to the entity with given id</returns>
-	Entity* GetEntity(uint32_t id);
+	/* Create root scene with empty entity */
+	static Scene* CreateRootScene();
+	
 
+	Entity* GetEntity();
 
-	/// <summary>
-	/// Add Enttity to the scene
-	/// </summary>
-	/// <param name="entt"></param>
-	void AddEntity(Entity* const entt);
+	static const std::vector<Scene*>& GetScenes();
 
+	Scene(Entity* entt, std::string name) : 
+		p_Entity(std::move(entt)),
+		m_SceneID((uint32_t)p_Entity->mEntity),
+		m_Name(std::move(name)),
+		m_FullName(this->m_Name + " #" + std::to_string(this->m_SceneID))
+	{
+		s_Scenes.emplace_back(std::move(this));
+		p_Entity->m_TargetScene = this;
+	}
 
-	void PrintEnttities();
+	void SetEntity(Entity* entt)
+	{
+		m_Name = entt->GetName();
+		return;
+	}
+	
+	static void SetEntity(Scene* scene, Entity* const entity);
+	void AddChild(Scene* child);
+	std::vector<Ptr<Scene>>& GetChildren();
+	static Scene* GetRootScene();
+	void SetName(const std::string& name);
 
+	
 	void DrawImgui();
+	inline uint32_t GetID() const;
 private:
-	void TraverseSceneTree(const Entity* scene);
+	void TraverseSceneTree(Scene* scene);
+	void SetFullName(const std::string& fullname);
 private:
-	
-	std::string m_SceneName;
-	static std::vector<Scene*> s_Scenes;
-	std::vector<Entity*> m_Entities;
-	
 
+	static std::vector<Scene*> s_Scenes; // All scenes stored statically here root scene stored in index 0
+	std::vector<Ptr<Scene>> m_ChildScenes; // Childrens of the parent scene
+
+
+	Scene* p_ParentScene = nullptr; // pointer to the parent scene and nullptr for the root scene
+	Ptr<Entity> p_Entity;	// Corresponding entity for the current scene
+	
+	uint32_t m_SceneID; // Scene that matches with stored entities id (maybe zero for root scene)
+	std::string m_Name; // Name of the entity
+	std::string m_FullName; // Full scene name combination of m_Name and m_SceneID
+	
+	
+	
+	
+	
 
 
 };

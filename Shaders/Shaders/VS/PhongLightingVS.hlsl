@@ -22,9 +22,9 @@ VertexOut main(VertexIn vin)
 	VertexOut vout;
 	vout.PosW = mul(float4(vin.PosL, 1.0f), model);
 	vout.NormalW = mul(vin.NormalL, (float3x3) worldInverseTransform);
-	vout.PosH = mul(float4(vin.PosL, 1.0f), worldViewProj);
+	vout.PosH = mul(float4(vin.PosL, 1.0f), transpose(model * viewXM * projXM));
 	vout.txCoord = vin.texCoordinate;
-	vout.eyePos = eyePos;
+	vout.eyePos = cameraPos;
   
 	return vout;
 }

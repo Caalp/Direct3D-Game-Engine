@@ -2,12 +2,13 @@
 #include <DirectXMath.h>
 #include <cstdlib>
 
+
 namespace dx = DirectX;
 const float Pi = 3.1415926535f;
 #define XM_PI               3.141592654f
 #define XM_2PI              6.283185307f
 
-namespace Util
+namespace MathUtils
 {
 	inline DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& r, const DirectX::XMFLOAT3& l)
 	{
@@ -149,5 +150,9 @@ namespace Util
 		}
 		//static const float Infinity;
 		//static const float Pi;
+
+		// This function can be stored somewhere else
 		
+	
 }
+

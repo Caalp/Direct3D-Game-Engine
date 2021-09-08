@@ -81,3 +81,16 @@ void BlendState::Bind(Graphics & gfx)
 		GraphicsResources::GetSingleton().pImmediateContext->OMSetBlendState(0, 0, 0xffffffff);
 	}
 }
+void BlendState::Bind()
+{
+	if (isBlendOn)
+	{
+		float blendFactor[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		GraphicsResources::GetSingleton().pImmediateContext->OMSetBlendState(blendState.Get(), blendFactor, 0xffffffff);
+	}
+
+	else
+	{
+		GraphicsResources::GetSingleton().pImmediateContext->OMSetBlendState(0, 0, 0xffffffff);
+	}
+}

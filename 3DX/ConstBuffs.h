@@ -8,6 +8,7 @@ class ConstBuffs : public Bindable
 {
 	
 public:
+	/* To Do:  Break dependency to passing vector as template argument that is dumb */
 	void Update(const C& cb)
 	{
 		D3D11_MAPPED_SUBRESOURCE MappedSource;
@@ -16,6 +17,7 @@ public:
 			D3D11_MAP_WRITE_DISCARD, 0u,
 			&MappedSource
 		);
+
 		memcpy(MappedSource.pData, &cb, sizeof(cb));
 		GraphicsResources::GetSingleton().pImmediateContext->Unmap(pConstBuffer.Get(), 0u);
 		
@@ -28,6 +30,7 @@ public:
 			D3D11_MAP_WRITE_DISCARD, 0u,
 			&MappedSource
 		);
+
 		memcpy(MappedSource.pData, cb.data(), sizeof(cb[0])*size);
 		GraphicsResources::GetSingleton().pImmediateContext->Unmap(pConstBuffer.Get(), 0u);
 
@@ -65,11 +68,14 @@ public:
 		csd.pSysMem = &consts[0];
 		GraphicsResources::GetSingleton().pDevice->CreateBuffer(&cbd, &csd, &pConstBuffer);
 	}
-	ConstBuffs(UINT slot = 0u)
+
+	
+	ConstBuffs(UINT size,UINT slot = 0u)
 		:slot(slot)
 	{
+
 		D3D11_BUFFER_DESC bdsc{};
-		bdsc.ByteWidth = sizeof(C);
+		bdsc.ByteWidth = size;
 		bdsc.Usage = D3D11_USAGE_DYNAMIC;
 		bdsc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		bdsc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -78,12 +84,14 @@ public:
 
 		GraphicsResources::GetSingleton().pDevice->CreateBuffer(&bdsc, nullptr, &pConstBuffer);
 	}
+
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pConstBuffer;
 	UINT slot;
 };
 
-template <typename C>
+
+template <typename C = std::vector<char>>
 class VSConstBuff : public ConstBuffs<C>
 {
 	using ConstBuffs<C>::pConstBuffer;
@@ -94,7 +102,11 @@ public:
 	{
 		GraphicsResources::GetSingleton().pImmediateContext->VSSetConstantBuffers(0u, 1u,pConstBuffer.GetAddressOf());
 	}
-	void Bind(Graphics& gfx, UINT startSlot,UINT numofBuff) override
+	void Bind() override
+	{
+		GraphicsResources::GetSingleton().pImmediateContext->VSSetConstantBuffers(0u, 1u, pConstBuffer.GetAddressOf());
+	}
+	void Bind(UINT startSlot,UINT numofBuff) override
 	{
 		GraphicsResources::GetSingleton().pImmediateContext->VSSetConstantBuffers(startSlot,numofBuff, ConstBuffs<C>::pConstBuffer.GetAddressOf());
 	}

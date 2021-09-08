@@ -143,3 +143,9 @@ void Texture::Bind(Graphics & gfx)
 
 }
 
+void Texture::Bind()
+{
+
+	GraphicsResources::GetSingleton().pImmediateContext->PSSetShaderResources(bufferSlot, 1u, &srv);
+
+}

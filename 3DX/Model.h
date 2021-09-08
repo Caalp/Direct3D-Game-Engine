@@ -1,4 +1,27 @@
-//#pragma once
+#pragma once
+#include "Entity.h"
+
+//class ModelResource;
+//class Model : public Entity
+//{
+//public:
+//	bool LoadModel(const char* resName, const char* filepath)
+//	{
+//		m_modelResource = ResourceManager::GetSingleton().CreateResource(resName, ResourceManager::TypeModelResource)->get<ModelResource*>();
+//
+//	}
+//
+//
+//private:
+//	ModelResource* m_modelResource;
+//
+//};
+
+
+
+
+
+
 //#include <string>
 //#include <vector>
 //#include <memory>

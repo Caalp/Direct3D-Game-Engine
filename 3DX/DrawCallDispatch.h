@@ -1,6 +1,6 @@
 #pragma once
 #include "Graphics.h"
-
+#include "GraphicsResources.h"
 class IBackendDispatch
 {
 
@@ -8,6 +8,7 @@ public:
 	
 	IBackendDispatch() = default;
 	virtual void Draw(Graphics& gfx) const = 0;
+	virtual void Draw() const  {};
 	virtual ~IBackendDispatch() = default;
 };
 
@@ -29,6 +30,12 @@ public:
 	{
 		gfx.DrawIndexed(mIndexCount,mStartIndex,m_vertexBaseIndex);
 	}
+
+	virtual void Draw()const  override
+	{
+		GraphicsResources::GetSingleton().pImmediateContext->DrawIndexed(mIndexCount, mStartIndex, m_vertexBaseIndex);
+	}
+	
 
 private:
 	unsigned int mStartIndex;

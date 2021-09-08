@@ -1,20 +1,18 @@
 #include "Job.h"
-#include "Drawable.h"
 #include "DrawCallDispatch.h"
 #include "Step.h"
-#include "Components.h"
+#include "Renderable.h"
 
 
-Job::Job(const Step & s, const Renderable & d) : step(&s), m_Renderable(&d)
+Job::Job(const Step& s, const Renderable& d) : m_step(s), m_renderable(d)
 {
 }
+
 
 void Job::Execute(Graphics& gfx)
 {
 	
-	m_Renderable->Bind(gfx);
-	step->Bind(gfx);
-	step->Draw(gfx);
-	//gfx.DrawIndexed(drawable.GetIndexCount());
+	m_renderable.Bind();
+	m_step.Bind();
+	m_step.Draw();
 }
-

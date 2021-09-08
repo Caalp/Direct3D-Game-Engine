@@ -5,7 +5,7 @@
 #include "Graphics.h"
 #include "DepthStencil.h"
 #include "Pass.h"
-
+#include <map>
 
 class RenderQueuePass;
 
@@ -14,9 +14,10 @@ class RenderQueuePass;
 class RenderGraph
 {
 	
+
 public:
 
-	RenderGraph(Graphics& gfx,const std::string& name);
+	RenderGraph(Graphics& gfx, const std::string& name);
 	RenderQueuePass* GetRenderQueuePass(const std::string& techName);
 	void AddGlobalSource(std::unique_ptr<Source> source);
 	void AddGlobalSink(std::unique_ptr<Sink> sink);
@@ -32,6 +33,7 @@ public:
 	const std::shared_ptr<RenderTarget>& GetRenderTarget();
 public:
 	const std::unique_ptr<Source>& GetGlobalSource(const std::string& gSourceName);
+	
 
 private:
 	std::shared_ptr<RenderTarget> backBuffer;
@@ -41,4 +43,5 @@ private:
 	std::vector<std::unique_ptr<Pass>> passes;
 	std::vector<std::unique_ptr<Sink>> globalSinks;
 	std::vector<std::unique_ptr<Source>> globalSources;
+
 };

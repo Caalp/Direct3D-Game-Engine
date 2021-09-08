@@ -1,6 +1,6 @@
 #include "DirectionalLight.h"
 
-DirectionalLight::DirectionalLight(Graphics & gfx) : __buff()
+DirectionalLight::DirectionalLight(Graphics & gfx) : __buff(sizeof(DirectionalLightCBuff))
 {
 	__BufferData = {
 		{ 0.2f,0.2f,0.2f,0.0f},

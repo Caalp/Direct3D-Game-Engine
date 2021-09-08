@@ -2,13 +2,13 @@
 #include "Drawable.h"
 
 #include "RenderGraph.h"
-#include "Components.h"
+#include "RenderableComponent.h"
 
-Technique::Technique(std::string graphName,std::string techName, bool status) : m_TargetGraphName(graphName),techniqueName(techName), isActive(status)
+Technique::Technique(std::string graphName,std::string techName, bool status) : m_targetGraphName(graphName),techniqueName(techName), isActive(status)
 {
 }
 
-Technique::Technique(std::string graphName, std::string techName, size_t techChannel, bool status): m_TargetGraphName(graphName), techniqueName(techName), techniqueChannel(techChannel), isActive(status)
+Technique::Technique(std::string graphName, std::string techName, size_t techChannel, bool status): m_targetGraphName(graphName), techniqueName(techName), techniqueChannel(techChannel), isActive(status)
 {
 
 }
@@ -31,14 +31,14 @@ void Technique::Link(RenderGraph& rg)
 
 
 
-void Technique::Submit(Renderable& d, size_t channel)
+void Technique::Submit(Renderable& rd, size_t channel)
 {
 	if (isActive && ((techniqueChannel & channel) != 0))
 	{
 		for (auto& s : steps)
 		{
 
-			s.Submit(d);
+			s.Submit(rd);
 
 		}
 	}
@@ -69,5 +69,10 @@ void Technique::AddStep(Step& step)
 std::string Technique::GetName() const
 {
 	return techniqueName;
+}
+
+std::string Technique::GetTargetGraphName() const
+{
+	return m_targetGraphName;
 }
 

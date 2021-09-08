@@ -1,8 +1,11 @@
 #pragma once
 #include "entt\entt.hpp"
 #include "ECSFactory.h"
-#include "Scene.h"
 
+
+
+class Scene;
+	
 class Entity 
 {
 	friend class Scene;
@@ -13,18 +16,22 @@ public:
 	/// </summary>
 	/// <param name="sceneName"></param>
 	/// <returns></returns>
-	Entity(const std::string& sceneName);
 
+	Entity();
+	Entity(Scene* scene);
+	~Entity();
 
+	
 
 	size_t GetID() const;
-
-
-
+	
 	///* Virtual Functions */
 	//virtual void Update(float dt) = 0;
 	
+	const char* GetName() const;
 
+
+	const char* GetFullName() const;
 
 	/* Template function declarations */
 	template<typename T, typename... Args>
@@ -36,8 +43,8 @@ public:
 	T& GetComponent();
 
 
-
 private:
+
 	Scene* m_TargetScene;
 	entt::entity mEntity;
 

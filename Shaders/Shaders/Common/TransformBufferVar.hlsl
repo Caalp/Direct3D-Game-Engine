@@ -1,8 +1,13 @@
-cbuffer CBuf
+cbuffer CBuf : register(b0)
 {
 	matrix model;
 	matrix worldInverseTransform;
-	matrix worldViewProj;
-	float3 eyePos;
    
 };
+
+cbuffer CameraBuffer : register(b1)
+{
+	matrix viewXM;
+	matrix projXM;
+	float3 cameraPos;
+}

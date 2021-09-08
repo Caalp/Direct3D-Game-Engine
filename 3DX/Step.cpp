@@ -4,7 +4,8 @@
 #include "Drawable.h"
 #include "RenderGraph.h"
 #include <assert.h>
-#include "Components.h"
+#include "RenderableComponent.h"
+#include "Renderable.h"
 
 Step::Step(std::string ID) : targetPassName(std::move(ID))
 {
@@ -26,12 +27,11 @@ void Step::AddBind(const std::shared_ptr<IBackendDispatch>& drawFunc)
 }
 
 
-
 void Step::Submit(Renderable& d)
 {
 	if (targetPass)
 	{
-		targetPass->Accept(Job{ *this,d });
+		//targetPass->Accept(Job{ *this,d });
 	}
 	else
 	{
@@ -39,6 +39,7 @@ void Step::Submit(Renderable& d)
 		assert(targetPass != NULL && "TargetPass is not linked for renderable");
 	}
 }
+
 
 void Step::Link(RenderGraph& rg)
 {
@@ -71,6 +72,17 @@ void Step::Bind(Graphics & gfx) const
 }
 
 
+void Step::Bind() const
+{
+	//OutputDebugString(typeid(mDrawFunc.get()).name());
+	//DrawExample* dw = dynamic_cast<DrawExample*>(mDrawFunc.get());
+	for (auto& elem : bindables)
+	{
+		elem->Bind();
+	}
+}
+
+
 void Step::Draw(Graphics& gfx) const 
 {
 	for (auto elem : mDrawFunc)
@@ -80,6 +92,14 @@ void Step::Draw(Graphics& gfx) const
 	
 }
 
+void Step::Draw() const
+{
+	for (auto elem : mDrawFunc)
+	{
+		elem->Draw();
+	}
+
+}
 
 const std::string& Step::GetTargetPassName() const
 {

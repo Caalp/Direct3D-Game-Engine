@@ -4,10 +4,13 @@
 
 
 class RenderGraph;
+class RenderableComponent;
+class Renderable;
 
 class Technique
 {
 	friend class RenderSystem;
+	friend class RenderableComponent;
 public:
 	Technique(std::string graphName,std::string techName, bool status = true);
 	
@@ -19,13 +22,15 @@ public:
 	uint32_t GetTechID() const;
 	void AddStep(Step& step);
 	std::string GetName() const;
+	std::string GetTargetGraphName() const;
+
 
 
 private:
 	bool isActive = true;
 	uint32_t techID;
 	std::string techniqueName;
-	std::string m_TargetGraphName;
+	std::string m_targetGraphName;
 	unsigned int techniqueChannel;
 	std::vector<Step> steps;
 	
