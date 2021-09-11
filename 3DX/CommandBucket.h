@@ -1,9 +1,6 @@
 #pragma once
 #include "Command.h"
-
-
-
-
+#include "Types.h"
 
 template<typename T>
 class CommandBucket
@@ -107,4 +104,16 @@ public:
 	}
 
 };
+
+
+
+namespace bucket
+{
+
+	//CommandBucket<U64> testBucket(1024,)
+}
+
+
+
+
 

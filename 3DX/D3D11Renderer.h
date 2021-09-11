@@ -52,13 +52,14 @@ public:
 			nullptr,
 			&GraphicsResources::GetSingleton().pImmediateContext);
 
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> backBuffer;
-		Microsoft::WRL::ComPtr<ID3D11Texture2D> TexBuffer;
+		//Microsoft::WRL::ComPtr<ID3D11Texture2D> TexBuffer;
 
-		GraphicsResources::GetSingleton().pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer);
+		GraphicsResources::GetSingleton().pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &m_backBuffer);
+
+		
 
 		D3D11_TEXTURE2D_DESC textureDesc;
-		backBuffer->GetDesc(&textureDesc);
+		m_backBuffer->GetDesc(&textureDesc);
 		width = textureDesc.Width;
 		height = textureDesc.Height;
 
@@ -68,7 +69,7 @@ public:
 		rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 		rtvDesc.Texture2D.MipSlice = 0u;
 
-		GraphicsResources::GetSingleton().pDevice->CreateRenderTargetView(backBuffer.Get(), &rtvDesc, m_renderTarget.GetAddressOf());
+		GraphicsResources::GetSingleton().pDevice->CreateRenderTargetView(m_backBuffer.Get(), &rtvDesc, m_mainRT.GetAddressOf());
 
 	}
 	virtual void CreateVertexBuffer(VertexBufferHandle handle, void* data, U32 size, U32 stride) override
@@ -98,45 +99,69 @@ public:
 	}
 	virtual void CreateShader(ShaderHandle handle, std::string name, backend::ShaderType type) override
 	{
-		switch (type)
-		{
-		case backend::PS:
-			m_psh[handle.idx].Create(name);
-			break;
-		case backend::VS:
-			m_vsh[handle.idx].Create(name);
-			break;
-		case backend::CS:
-			break;
-		case backend::HS:
-			break;
-		default:
-			break;
-		}
+		m_shaderMgr.Create(handle, name, type);
 	}
 	virtual void BindShader(ShaderHandle handle, backend::ShaderType type) override
 	{
-		switch (type)
-		{
-		case backend::PS:
-			m_psh[handle.idx].Bind();
-			break;
-		case backend::VS:
-			m_vsh[handle.idx].Bind();
-			break;
-		case backend::CS:
-			break;
-		case backend::HS:
-			break;
-		default:
-			break;
-		}
+		m_shaderMgr.BindShader(handle, type);
+	}
+	virtual void CreateRenderTarget(RenderTargetHandle handle, D3D11_TEXTURE2D_DESC desc) override
+	{
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> rtvTex;
+		GraphicsResources::GetSingleton().pDevice->CreateTexture2D(&desc, 0, rtvTex.GetAddressOf());
+
+		D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+		rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+		rtvDesc.Texture2D.MipSlice = 0u;
+
+
+
+		GraphicsResources::GetSingleton().pDevice->CreateRenderTargetView(rtvTex.Get(), &rtvDesc, m_mainRT.GetAddressOf());
+
+	}
+	virtual void BindRenderTarget(RenderTargetHandle handle) override
+	{
+		GraphicsResources::GetSingleton().pImmediateContext->OMSetRenderTargets(1u, m_mainRT.GetAddressOf(),m_depthStencilView.Get());
+	}
+
+	void CreateDepthBuffer(DepthBufferHandle handle, U32 width, U32 height,D3D11_TEXTURE2D_DESC desc) override
+	{
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> depthTex;
+		D3D11_TEXTURE2D_DESC  depthTexDesc{};
+		ZeroMemory(&depthTexDesc, sizeof(depthTexDesc));
+		depthTexDesc.Width = width;
+		depthTexDesc.Height = height;
+		depthTexDesc.MipLevels = 1;
+		depthTexDesc.ArraySize = 1;
+		depthTexDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		// This part is refers to MSAA settings
+		depthTexDesc.SampleDesc.Count = 1;
+		depthTexDesc.SampleDesc.Quality = 0;
+		depthTexDesc.Usage = D3D11_USAGE_DEFAULT;
+		depthTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+		GraphicsResources::GetSingleton().pDevice->CreateTexture2D(&depthTexDesc, nullptr, depthTex.GetAddressOf());
+
+		// Create depth Stencil View To bind texture to the device
+		D3D11_DEPTH_STENCIL_VIEW_DESC dsv = {};
+		dsv.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		dsv.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		dsv.Texture2D.MipSlice = 0u;
+		dsv.Flags = 0;
+		GraphicsResources::GetSingleton().pDevice->CreateDepthStencilView(depthTex.Get(), &dsv, m_depthStencilView.GetAddressOf());
+	}
+	virtual void ClearDepthBuffer(DepthBufferHandle handle, U32 flags, float depthVal, U8 stencilVal) override
+	{
+		GraphicsResources::GetSingleton().pImmediateContext->ClearDepthStencilView(m_depthStencilView.Get(), flags, depthVal, stencilVal);
 	}
 private:
 	
 	VertexBuffer m_vbh[TORC_MAX_VERTEX_BUFFER_COUNT];
 	IndexBuff m_ibh[TORC_MAX_INDEX_BUFFER_COUNT];;
-	backend::Shader<backend::PS> m_psh[MAX_PS_COUNT];
-	backend::Shader<backend::VS> m_vsh[MAX_VS_COUNT];
-	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_renderTarget;
+	backend::ShaderManager m_shaderMgr;
+
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> m_backBuffer;
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_mainRT;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depthStencilView;
 };

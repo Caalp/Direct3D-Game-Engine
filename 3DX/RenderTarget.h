@@ -17,6 +17,7 @@ public:
 	}
 	RenderTarget(Graphics& gfx, UINT width, UINT height);
 	RenderTarget(Graphics& gfx, ID3D11Texture2D* texture);
+	RenderTarget(ID3D11Texture2D* texture);
 	void BindAsBuffer(Graphics& gfx) override;
 	void BindAsBuffer(Graphics& gfx, BufferResource* depth) override;
 	void GetResource(ID3D11Resource** resource) override  { }

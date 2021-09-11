@@ -15,14 +15,17 @@
 App::App() :
 	wnd(1600, 900, "Hello"),
 	m_SceneLoader(SceneLoader::GetSingleton()),
-	 imguiHandler(ImguiHandler::GetInstance())
-	
+	imguiHandler(ImguiHandler::GetInstance())
+
 {
 	backend::Shader<backend::VS> _shader;
 	_shader.Create("VS_Textured.cso");
 
 	backend::Init(new D3D11Renderer());
 	TestShape box;
+
+	uint32_t test_state = 0 | (BS_OPAQUE | DSS_DEFAULT | RS_CULL_COUNTER_CLOCKWISE | SS_ANISOTROPIC_WRAP);
+
 	//ResourceManager& rm = ResourceManager::GetSingleton();
 	//MeshResource* r1 = rm.CreateResource("boblamb",ResourceManager::TypeMeshResource)->get<MeshResource*>();
 	//r1->Load("../Models/boblamp/boblampclean.md5mesh");

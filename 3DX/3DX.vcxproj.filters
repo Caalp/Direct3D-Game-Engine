@@ -369,9 +369,6 @@
     <ClCompile Include="Renderable.cpp">
       <Filter>Source Files\Drawables</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>Source Files\ECS</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinHeader.h">

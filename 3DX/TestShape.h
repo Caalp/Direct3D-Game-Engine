@@ -118,11 +118,14 @@ public:
 
 		m_vbh = backend::CreateVertexBuffer(vertices.data(),vertices.size()*sizeof(Vertex),sizeof(Vertex));
 		m_ibh = backend::CreateIndexBuffer(indices.data(),indices.size()*sizeof(U16), sizeof(U16));
-
+		m_vsh = backend::CreateShader("ColorBlenderVS.cso", backend::ShaderType::VS);
+		m_psh = backend::CreateShader("ColorBlenderPS.cso", backend::ShaderType::PS);
 
 	}
 
 private:
 	IndexBufferHandle m_ibh;
 	VertexBufferHandle m_vbh;
+	ShaderHandle m_psh;
+	ShaderHandle m_vsh;
 };

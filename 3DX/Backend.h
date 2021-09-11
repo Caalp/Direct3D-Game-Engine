@@ -8,7 +8,8 @@ DEFINE_HANDLER(IndexBufferHandle)
 DEFINE_HANDLER(VertexLayoutHandle)
 DEFINE_HANDLER(ConstantBufferHandle)
 DEFINE_HANDLER(ShaderHandle) 
-
+DEFINE_HANDLER(RenderTargetHandle)
+DEFINE_HANDLER(DepthBufferHandle)
 
 
 
@@ -98,7 +99,50 @@ namespace backend
 		Microsoft::WRL::ComPtr<ID3DBlob> m_blob;
 	};
 
+	struct ShaderManager
+	{
+		void Create(ShaderHandle _handle, std::string filename,ShaderType _type )
+		{
+			switch(_type)
+			{
+			case backend::PS:
+				m_psh[_handle.idx].Create(filename);
+				break;
+			case backend::VS:
+				m_vsh[_handle.idx].Create(filename);
+				break;
+			case backend::CS:
+				
+				break;
+			case backend::HS:
+				
+				break;
+			default:
+				break;
+			}
 
+		}
+		void BindShader(ShaderHandle handle, backend::ShaderType type)
+		{
+			switch (type)
+			{
+			case backend::PS:
+				m_psh[handle.idx].Bind();
+				break;
+			case backend::VS:
+				m_vsh[handle.idx].Bind();
+				break;
+			case backend::CS:
+				break;
+			case backend::HS:
+				break;
+			default:
+				break;
+			}
+		}
+		backend::Shader<backend::PS> m_psh[MAX_PS_COUNT];
+		backend::Shader<backend::VS> m_vsh[MAX_VS_COUNT];
+	};
 	// static idx until alloc op
 	static uint16_t vbh_idx = 0;
 	static uint16_t ibh_idx = 0;
@@ -146,6 +190,21 @@ namespace backend
 	IndexBufferHandle m_ibh[TORC_MAX_INDEX_BUFFER_COUNT];
 	ShaderHandle m_sh[10];
 
+
+
+	struct RendererData
+	{
+		void* renderTarget;
+		void* depthBuffer;
+	};
+
+
+	struct RenderDraw
+	{
+		DepthBufferHandle dph;
+		VertexBufferHandle vbh;
+		IndexBufferHandle ibh;
+	};
 
 
 

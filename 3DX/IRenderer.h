@@ -4,6 +4,8 @@
 struct VertexBufferHandle;
 struct IndexBufferHandle;
 struct ShaderHandle;
+struct DepthBufferHandle;
+struct RenderTargetHandle;
 
 namespace backend
 {
@@ -30,6 +32,14 @@ public:
 	virtual void BindIndexBuffer(IndexBufferHandle handle) = 0;
 	virtual void CreateShader(ShaderHandle handle, std::string name,backend::ShaderType type) = 0;
 	virtual void BindShader(ShaderHandle handle, backend::ShaderType type) = 0;
+
+	// texture desc for the render target
+	virtual void CreateRenderTarget(RenderTargetHandle handle, D3D11_TEXTURE2D_DESC desc) = 0;
+	virtual void BindRenderTarget(RenderTargetHandle handle) = 0;
+	virtual void CreateDepthBuffer(DepthBufferHandle handle, U32 width, U32 height, D3D11_TEXTURE2D_DESC desc) = 0;
+	
+	virtual void ClearDepthBuffer(DepthBufferHandle handle, U32 flags = 3u,float depthVal = 1.0f, U8 stencilVal = 0u) = 0;
+
 
 	
 	

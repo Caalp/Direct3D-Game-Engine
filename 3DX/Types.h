@@ -1,6 +1,8 @@
 #pragma once
 
+#include <stdint.h>
 
+typedef uint64_t U64;
 typedef unsigned int U32;
 typedef char Byte;
 typedef unsigned char U8;

@@ -49,6 +49,23 @@ RenderTarget::RenderTarget(Graphics& gfx, ID3D11Texture2D* texture)
 	GraphicsResources::GetSingleton().pDevice->CreateRenderTargetView(texture, &rtvDesc, renderTargetView[0].GetAddressOf());
 }
 
+RenderTarget::RenderTarget(ID3D11Texture2D* texture)
+{
+	renderTargetView.resize(1);
+	D3D11_TEXTURE2D_DESC textureDesc;
+	texture->GetDesc(&textureDesc);
+	width = textureDesc.Width;
+	height = textureDesc.Height;
+
+
+	D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+	rtvDesc.Format = textureDesc.Format;
+	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	rtvDesc.Texture2D.MipSlice = 0u;
+
+	GraphicsResources::GetSingleton().pDevice->CreateRenderTargetView(texture, &rtvDesc, renderTargetView[0].GetAddressOf());
+}
+
 void RenderTarget::BindAsBuffer(Graphics& gfx)
 {
 	assert(renderTargetView[0].Get() == nullptr);

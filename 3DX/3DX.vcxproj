@@ -255,7 +255,6 @@
     <ClCompile Include="RasterizerState.cpp" />
     <ClCompile Include="Renderable.cpp" />
     <ClCompile Include="RenderableComponent.cpp" />
-    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderGraph.cpp" />
     <ClCompile Include="RenderOffScreenPass.cpp" />
     <ClCompile Include="RenderQueuePass.cpp" />
