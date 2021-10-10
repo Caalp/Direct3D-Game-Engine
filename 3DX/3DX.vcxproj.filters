@@ -345,7 +345,7 @@
     <ClCompile Include="AnimatedCharacter.cpp">
       <Filter>Source Files\Drawables</Filter>
     </ClCompile>
-    <ClCompile Include="Sky.cpp">
+    <ClCompile Include="SkyBox.cpp">
       <Filter>Source Files\Drawables</Filter>
     </ClCompile>
     <ClCompile Include="FileUtils.cpp">
@@ -368,6 +368,15 @@
     </ClCompile>
     <ClCompile Include="Renderable.cpp">
       <Filter>Source Files\Drawables</Filter>
+    </ClCompile>
+    <ClCompile Include="Backend.cpp">
+      <Filter>Header Files\CommandQueue</Filter>
+    </ClCompile>
+    <ClCompile Include="Command.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="buckets.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -560,7 +569,7 @@
     <ClInclude Include="StaticTimer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sky.h">
+    <ClInclude Include="SkyBox.h">
       <Filter>Header Files\Drawables</Filter>
     </ClInclude>
     <ClInclude Include="SkyBoxPass.h">
@@ -726,6 +735,18 @@
       <Filter>Header Files\CommandQueue</Filter>
     </ClInclude>
     <ClInclude Include="config.h">
+      <Filter>Header Files\CommandQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="HandleAlloc.h">
+      <Filter>Header Files\CommandQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="defines.h">
+      <Filter>Header Files\CommandQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="buckets.h">
+      <Filter>Header Files\CommandQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="rrTorcDefines.h">
       <Filter>Header Files\CommandQueue</Filter>
     </ClInclude>
   </ItemGroup>

@@ -58,7 +58,7 @@ public:
 	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
 	void SetWindowTitle(std::string& name);
-	HWND getMainWindow()
+	HWND getMainWindow() const
 	{
 		return hWnd;
 	}

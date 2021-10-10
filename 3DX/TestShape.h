@@ -1,26 +1,38 @@
 #pragma once
+#include "defines.h"
 #include "Backend.h"
+#include "Command.h"
 #include <vector>
 
 
 class TestShape
 {
 
-	
+	struct Vertex
+	{
+		DirectX::XMFLOAT3 Pos;
+		DirectX::XMFLOAT2 TexCoord;
 
+	};
+
+
+	std::vector<Vertex> vertices;
+	std::vector<uint16_t> indices =
+	{
+
+			0,2,1,    2,3,1,
+			4,5,7,    4,7,6,
+			8,10, 9,  10,11,9,
+			12,13,15, 12,15,14,
+			16,17,18, 18,17,19,
+			20,23,21, 20,22,23
+
+	};
 public:
 	TestShape()
 	{
 #pragma region CreateBox
-		struct Vertex
-		{
-			DirectX::XMFLOAT3 Pos;
-			DirectX::XMFLOAT2 TexCoord;
-
-		};
-
-
-		std::vector<Vertex> vertices;
+		
 		vertices.resize(24);
 
 
@@ -102,30 +114,69 @@ public:
 		vertices[23].Normal = { 1.0f,0.0f,0.0f };*/
 
 
-		std::vector<unsigned short> indices =
-		{
-
-				0,2,1,    2,3,1,
-				4,5,7,    4,7,6,
-				8,10, 9,  10,11,9,
-				12,13,15, 12,15,14,
-				16,17,18, 18,17,19,
-				20,23,21, 20,22,23
-
-		};
+		
 
 #pragma endregion
-
-		m_vbh = backend::CreateVertexBuffer(vertices.data(),vertices.size()*sizeof(Vertex),sizeof(Vertex));
-		m_ibh = backend::CreateIndexBuffer(indices.data(),indices.size()*sizeof(U16), sizeof(U16));
-		m_vsh = backend::CreateShader("ColorBlenderVS.cso", backend::ShaderType::VS);
-		m_psh = backend::CreateShader("ColorBlenderPS.cso", backend::ShaderType::PS);
+	
 
 	}
+	struct modelTransformBuffer
+	{
+		DirectX::XMMATRIX model;
+		DirectX::XMMATRIX inverseTransform;
+	} modelTransform;
+	void Init()
+	{
 
+
+
+		modelTransform.model = DirectX::XMMatrixIdentity();
+		modelTransform.inverseTransform = DirectX::XMMatrixIdentity();
+		auto xm = DirectX::XMMatrixIdentity();
+		auto t1 = sizeof(xm);
+		auto t2 = sizeof(xm.r[1]);
+		m_vbh = backend::CreateVertexBuffer(vertices.data(), vertices.size() * sizeof(Vertex), sizeof(Vertex));
+		m_ibh = backend::CreateIndexBuffer(indices.data(), (indices.size() * sizeof(U16)), sizeof(U16));
+		m_vsh = backend::CreateShader("ColorBlenderVS.cso", ShaderType::VertexShader);
+		m_psh = backend::CreateShader("ColorBlenderPS.cso", ShaderType::PixelShader);
+		m_vsCB = backend::CreateConstantBuffer(BufferType::VSConstantBuffer, &modelTransform, sizeof(modelTransform), sizeof(DirectX::XMMATRIX), 0u);
+
+		std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
+		{
+			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 }
+			//{ "TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0 }
+		};
+		m_vlh = backend::CreateVertexLayout(m_vsh, ied.data(), ied.size());
+
+		//uint64_t stateKey = TORC_STATE_DEPTH_ENABLE | TORC_STATE_STENCIL_DISABLE;
+		backend::SortKey key;
+		key.m_sortKey = 1000;
+		uint32_t test_state = 0 | (BS_OPAQUE | DSS_DEFAULT | RS_CULL_COUNTER_CLOCKWISE | SS_ANISOTROPIC_WRAP);
+		command::DrawIndexed* draw = bucket::testBucket.AddCommand<command::DrawIndexed>(key, 0);
+		draw->indexBuffer = m_ibh;
+		draw->vertexBuffer = m_vbh;
+		draw->vertexLayout = m_vlh;
+		draw->indexCount = indices.size();
+		draw->baseVertexLocation = 0;
+		draw->startIndexLocation = 0u;
+		draw->drawInfo.cb = m_vsCB;
+		//draw->drawInfo.
+		draw->drawInfo.ps = m_psh;
+		draw->drawInfo.vs = m_vsh;
+	}
+	void Update(float dt)
+	{
+		static float step = dt;
+		step += dt;
+		modelTransform.model = DirectX::XMMatrixIdentity() * DirectX::XMMatrixRotationRollPitchYaw(0.0f, 1.5708 * step, 0.0f);
+		modelTransform.inverseTransform = DirectX::XMMatrixIdentity();
+		backend::UpdateConstantBuffer(m_vsCB, &modelTransform);
+	}
 private:
 	IndexBufferHandle m_ibh;
 	VertexBufferHandle m_vbh;
 	ShaderHandle m_psh;
 	ShaderHandle m_vsh;
+	ConstantBufferHandle m_vsCB;
+	VertexLayoutHandle m_vlh;
 };

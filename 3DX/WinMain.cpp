@@ -23,7 +23,7 @@ int CALLBACK WinMain(
 		
 
 	App{}.Go();
-
+	
 	fclose(stream);
 
 	// error chatching required

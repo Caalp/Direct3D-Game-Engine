@@ -1,6 +1,10 @@
 #pragma once
+#include "defines.h"
 #include "Backend.h"
 
+
+
+using namespace backend;
 struct BufferData
 {
 	uint32_t mBufferType;
@@ -10,11 +14,11 @@ struct BufferData
 
 struct BackendDispatchFunction
 {
-	static void UpdateConstantBuffer(void* data);
-	static void CreateConstantBuffer(void* data);
-	static void DrawIndexed(void* data);
-	static void Draw(void* data);
-	static void DrawInstanced(void* data);
+	static void UpdateConstantBuffer(const void* data);
+	static void CreateConstantBuffer(const void* data);
+	static void DrawIndexed(const void* data);
+	static void Draw(const void* data);
+	static void DrawInstanced(const void* data);
 
 };
 
@@ -22,24 +26,26 @@ struct BackendDispatchFunction
 
 namespace command
 {
-	typedef void(*BackendDispatchFunc)(void* data);
+	typedef void(*BackendDispatchFunc)(const void* data);
 
 
 
 	struct DrawIndexed
 	{
 		static const BackendDispatchFunc BACKEND_DISPATCH_FUNC;
-		//VertexLayoutHandle m_vlh;
-		IndexBufferHandle m_ibh;
-		VertexBufferHandle m_vbh;
+		RenderDrawInfo drawInfo;
+		VertexLayoutHandle vertexLayout;
+		IndexBufferHandle indexBuffer;
+		VertexBufferHandle vertexBuffer;
+		TextureHandle texHandle;
 
-		uint32_t m_vertexCount;
-		uint32_t m_startIndexLocation;
-		int m_baseVertexLocation;
+		int baseVertexLocation;
+		uint32_t indexCount;
+		uint32_t startIndexLocation;
 
+	
 
 	};
-	const BackendDispatchFunc DrawIndexed::BACKEND_DISPATCH_FUNC = &BackendDispatchFunction::DrawIndexed;
 
 
 	struct Draw
@@ -53,7 +59,6 @@ namespace command
 		uint32_t m_startVertexLocation;
 	};
 
-	const BackendDispatchFunc Draw::BACKEND_DISPATCH_FUNC = &BackendDispatchFunction::Draw;
 
 	struct CreateConstantBuffer
 	{
@@ -62,7 +67,12 @@ namespace command
 		ConstantBufferHandle mBufferHandle;
 	};
 
-	const BackendDispatchFunc CreateConstantBuffer::BACKEND_DISPATCH_FUNC = &BackendDispatchFunction::CreateConstantBuffer;
+	struct BindSampler
+	{
+		static const BackendDispatchFunc BACKEND_DISPATCH_FUNC;
+		SamplerHandle Sampler;
+
+	};
 
 	struct UpdateConstantBuffer
 	{
@@ -71,7 +81,6 @@ namespace command
 		ConstantBufferHandle mBufferHandle;
 	};
 
-	const BackendDispatchFunc UpdateConstantBuffer::BACKEND_DISPATCH_FUNC = &BackendDispatchFunction::UpdateConstantBuffer;
 }
 
 // try static var initialization ??
@@ -101,29 +110,13 @@ namespace commandpacket
 		return reinterpret_cast<T*>(reinterpret_cast<char*>(commandPacket) + kCommandDataOffset);
 	}
 
-	CommandPacket* LoadNextCommandPacket(CommandPacket commandPacket)
-	{
-		return reinterpret_cast<CommandPacket*>(commandPacket) + kNextCommandPacketOffset;
-	}
+	CommandPacket* LoadNextCommandPacket(CommandPacket commandPacket);
 
-	CommandPacket GetNextCommandPacket(CommandPacket commandPacket)
-	{
-		return reinterpret_cast<CommandPacket>(*LoadNextCommandPacket(commandPacket));
-	}
-	void* LoadCommand(CommandPacket commandPacket)
-	{
-		return reinterpret_cast<char*>(commandPacket) + kCommandDataOffset;
-	}
-	command::BackendDispatchFunc* GetBackendDispatchFunction(CommandPacket commandPacket)
-	{
-		return reinterpret_cast<command::BackendDispatchFunc*>((reinterpret_cast<char*>(commandPacket) + kBackendDispatchFunctionOffset));
-	}
+	CommandPacket GetNextCommandPacket(CommandPacket commandPacket);
+	void* LoadCommand(CommandPacket commandPacket);
+	command::BackendDispatchFunc* GetBackendDispatchFunction(CommandPacket commandPacket);
 
-	command::BackendDispatchFunc LoadBackendDispatchFunction(CommandPacket commandPacket)
-	{
-		return *GetBackendDispatchFunction(commandPacket);
-
-	}
+	command::BackendDispatchFunc LoadBackendDispatchFunction(CommandPacket commandPacket);
 	template<typename T>
 	void* GetAuxMemoryPtr(CommandPacket commandPacket)
 	{
@@ -134,15 +127,9 @@ namespace commandpacket
 	{
 		return reinterpret_cast<char*>(command) + sizeof(T);
 	}
-	void SetBackendDispatchFunction(CommandPacket commandpacket, command::BackendDispatchFunc func)
-	{
-		*GetBackendDispatchFunction(commandpacket) = func;
-	}
+	void SetBackendDispatchFunction(CommandPacket commandpacket, command::BackendDispatchFunc func);
 
-	void SetNextCommandPacket(CommandPacket current, CommandPacket next)
-	{
-		*LoadNextCommandPacket(current) = next;
-	}
+	void SetNextCommandPacket(CommandPacket current, CommandPacket next);
 
 	template<typename C, typename D>
 	void SetAuxMemData(CommandPacket commandPacket, D data)
@@ -152,40 +139,3 @@ namespace commandpacket
 	}
 }
 
-#pragma region BackendDispatchFunctioDefinations
-void BackendDispatchFunction::DrawIndexed(void* data)
-{
-	//command::DrawIndexed* drawIndexData = reinterpret_cast<command::DrawIndexed*>(data);
-	std::cout << "DrawIndexed Func called" << std::endl;
-	// draw call to the API
-	//backend::DrawIndexed(...)
-}
-
-void BackendDispatchFunction::Draw(void* data)
-{
-	std::cout << "Draw Func called" << std::endl;
-}
-
-void BackendDispatchFunction::CreateConstantBuffer(void* data)
-{
-	std::cout << "CreateConstantBuffer Func called" << std::endl;
-}
-
-void BackendDispatchFunction::UpdateConstantBuffer(void* data)
-{
-	command::UpdateConstantBuffer* cmd = reinterpret_cast<command::UpdateConstantBuffer*>(data);
-	BufferData* bd = reinterpret_cast<BufferData*>(commandpacket::GetAuxMemoryPtrFromCommandDataPtr<command::UpdateConstantBuffer>(data));
-	cmd->mBufferHandle = bd->mBufferHandle;
-	cmd->mBufferType = bd->mBufferType;
-	std::cout << "UpdateConstantBuffer Func mBufferType: " << cmd->mBufferType << std::endl;
-	std::cout << "UpdateConstantBuffer Func mBufferHandle:" << cmd->mBufferHandle.idx << std::endl;
-	std::cout << "UpdateConstantBuffer Func called" << std::endl;
-}
-
-void BackendDispatchFunction::DrawInstanced(void* data)
-{
-
-}
-
-
-#pragma endregion

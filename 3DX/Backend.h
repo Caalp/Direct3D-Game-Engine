@@ -1,154 +1,54 @@
 #pragma once
-#include "config.h"
 #include "IRenderer.h"
+#include "Window.h"
+
+#include "rrTorcDefines.h"
 
 
-DEFINE_HANDLER(VertexBufferHandle)
-DEFINE_HANDLER(IndexBufferHandle)
-DEFINE_HANDLER(VertexLayoutHandle)
-DEFINE_HANDLER(ConstantBufferHandle)
-DEFINE_HANDLER(ShaderHandle) 
-DEFINE_HANDLER(RenderTargetHandle)
-DEFINE_HANDLER(DepthBufferHandle)
+enum class ShaderType
+{
+	VertexShader,
+	PixelShader
+
+};
+
+enum class BufferType
+{
+	VSConstantBuffer,
+	PSConstantBuffer
+
+};
 
 
 
 namespace backend
 {
-	enum ShaderType : U8
+
+
+	
+	enum RendererType
 	{
-		PS = 0u,
-		VS = 1u,
-		CS = 2u,
-		HS = 3u,
+		D3D11,
 	};
 
-	template<ShaderType> struct ShaderDesc {};
-	template<> struct ShaderDesc<VS>
+	
+
+	struct InitInfo
 	{
-		std::string shaderName;
-		Microsoft::WRL::ComPtr<ID3D11VertexShader> shader;
-		void Create(ID3DBlob* blob)
-		{
-			GraphicsResources::GetSingleton().pDevice->CreateVertexShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &shader);
-		}
-		void Bind()
-		{
-			GraphicsResources::GetSingleton().pImmediateContext->VSSetShader(shader.Get(), nullptr, 0u);
-		}
-	};
-	template<> struct ShaderDesc<PS>
-	{
-		std::string shaderName;
-		Microsoft::WRL::ComPtr<ID3D11PixelShader> shader;
-		void Create(ID3DBlob* blob)
-		{
-			GraphicsResources::GetSingleton().pDevice->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &shader);
-		}
-		void Bind()
-		{
-			GraphicsResources::GetSingleton().pImmediateContext->PSSetShader(shader.Get(), nullptr, 0u);
-		}
-	};
-	template<ShaderType type>
-	class Shader
-	{
-	public:
-		Microsoft::WRL::ComPtr<ID3DBlob> GetBlob()
-		{
-			return m_blob;
-		}
-		void Create(std::string filename)
-		{
-			m_shader.shaderName = filename;
-			// read shader to blob
-			std::string fullPath = SHADER_DIRECTORY + m_shader.shaderName;
-			D3DReadFileToBlob(std::wstring(fullPath.begin(), fullPath.end()).c_str(), &m_blob);
-			m_shader.Create(m_blob.Get());
-		}
-		std::string GetType() const
-		{
-			switch (type)
-			{
-			case backend::PS:
-				return "PS";
-				break;
-			case backend::VS:
-				return "VS";
-				break;
-			case backend::CS:
-				return "CS";
-				break;
-			case backend::HS:
-				return "HS";
-				break;
-			default:
-				break;
-			}
-		}
-		U8 GetTypeId() const
-		{
-			return (U8)type;
-		}
-		void Bind()
-		{
-			m_shader.Bind();
-		}
-	private:
-		ShaderDesc<type> m_shader;
-		Microsoft::WRL::ComPtr<ID3DBlob> m_blob;
+		uint32_t width;
+		uint32_t height;
+		std::string windowName;
+		bool vsync;
+		RendererType renderer;
 	};
 
-	struct ShaderManager
-	{
-		void Create(ShaderHandle _handle, std::string filename,ShaderType _type )
-		{
-			switch(_type)
-			{
-			case backend::PS:
-				m_psh[_handle.idx].Create(filename);
-				break;
-			case backend::VS:
-				m_vsh[_handle.idx].Create(filename);
-				break;
-			case backend::CS:
-				
-				break;
-			case backend::HS:
-				
-				break;
-			default:
-				break;
-			}
+	extern InitInfo m_initData;
 
-		}
-		void BindShader(ShaderHandle handle, backend::ShaderType type)
-		{
-			switch (type)
-			{
-			case backend::PS:
-				m_psh[handle.idx].Bind();
-				break;
-			case backend::VS:
-				m_vsh[handle.idx].Bind();
-				break;
-			case backend::CS:
-				break;
-			case backend::HS:
-				break;
-			default:
-				break;
-			}
-		}
-		backend::Shader<backend::PS> m_psh[MAX_PS_COUNT];
-		backend::Shader<backend::VS> m_vsh[MAX_VS_COUNT];
-	};
+	
 	// static idx until alloc op
-	static uint16_t vbh_idx = 0;
-	static uint16_t ibh_idx = 0;
-	static uint16_t vsh_idx = 0;
-	static uint16_t psh_idx = 0;
-	static uint16_t sh_idx = 0;
+	static uint16_t vlh_idx = 0;
+	static uint16_t cbh_idx = 0;
+	static uint16_t rtv_idx = 0;
 
 	//DEFINE_HANDLER(VertexBufferHandler)
 	constexpr uint8_t k_sortKeyFullscreenLayerNumBits = 2u;
@@ -181,83 +81,50 @@ namespace backend
 	constexpr uint8_t k_sortKeyMaterialBitShift = k_sortKeyDepthBitShift - k_sortKeyMaterialNumBits;
 	constexpr uint64_t k_sortKeyMaterialMask = uint64_t(0x1fffffff) << k_sortKeyMaterialBitShift;
 
-
-
-
-
-	IRenderer* m_renderer;
-	VertexBufferHandle m_vbh[TORC_MAX_VERTEX_BUFFER_COUNT];
-	IndexBufferHandle m_ibh[TORC_MAX_INDEX_BUFFER_COUNT];
-	ShaderHandle m_sh[10];
-
-
-
-	struct RendererData
-	{
-		void* renderTarget;
-		void* depthBuffer;
-	};
-
-
-	struct RenderDraw
-	{
-		DepthBufferHandle dph;
-		VertexBufferHandle vbh;
-		IndexBufferHandle ibh;
-	};
-
+	
 
 
 	struct SortKey
 	{
 		uint64_t m_sortKey;
-
+		uint64_t m_state;
+		uint32_t m_stencil;
 
 
 	};
 
-	VertexBufferHandle CreateVertexBuffer(void* data, U32 size, U32 stride)
-	{
-		VertexBufferHandle vbh;
-		vbh.idx = vbh_idx;
-		m_vbh[vbh_idx] = vbh;
-		vbh_idx++;
 
-		// call to the backend
-		m_renderer->CreateVertexBuffer(vbh,data,size,stride);
+	void Init(InitInfo init);
+	void BeginFrame();
+	void EndFrame();
+	void ShutDown(); // release all the stuff we have and shut down the backend
+	VertexLayoutHandle CreateVertexLayout(ShaderHandle vsHandle, void* data, U32 elemCount);
+	void BindVertexLayout(VertexLayoutHandle handle);
+	ConstantBufferHandle CreateConstantBuffer(BufferType bufferType, void* data, U32 size, U32 stride, U32 flags);
+	ConstantBufferHandle CreateConstantBuffer(BufferType bufferType, U32 size, U32 stride, U32 flags);
 
-		return vbh;
-	}
+	VertexBufferHandle CreateVertexBuffer(void* data, U32 size, U32 stride);
 
-	IndexBufferHandle CreateIndexBuffer(void* data, U32 size, U32 stride)
-	{
-		IndexBufferHandle ibh;
-		ibh.idx = ibh_idx;
-		m_ibh[ibh.idx] = ibh;
-		ibh_idx++;
-		// call to the backend
-		m_renderer->CreateIndexBuffer(ibh,data,size,stride);
+	IndexBufferHandle CreateIndexBuffer(void* data, U32 size, U32 stride);
+	ShaderHandle CreateShader(std::string filename, ShaderType type);
+	DepthBufferHandle CreateDepthBuffer();
 
-		return ibh;
-	}
-
-	ShaderHandle CreateShader(std::string _name,ShaderType type)
-	{
-		ShaderHandle sh;
-		sh.idx = sh_idx;
-		m_sh[sh.idx] = sh;
-		sh_idx++;
-		
-		m_renderer->CreateShader(sh,_name,type);
-		return sh;
-	}
-
-	void Init(IRenderer* renderer)
-	{
-		if (renderer)
-			m_renderer = renderer;
-	}
-
-
-
+	RenderTargetHandle CreateRenderTarget();
+	void BindShader(ShaderHandle handle);
+	void BindVertexBuffer(VertexBufferHandle handle);
+	void BindIndexBuffer(IndexBufferHandle handle);
+	void BindConstantBuffer(ConstantBufferHandle handle, U32 startSlot, U32 numOfBuffers);
+	void UpdateConstantBuffer(ConstantBufferHandle handle, void* data);
+	void CreateViewport(float w, float h, float maxDepth, float minDepth, float leftX, float leftY);
+	RenderTargetHandle CreateRenderTarget(TORC_TEXTURE2D_DESC desc);
+	void BindRenderTarget(RenderTargetHandle handle);
+	void BindRenderTarget(RenderTargetHandle rtHandle, DepthBufferHandle depthHandle);
+	
+	void DrawIndexed(U32 indexCount, U32 indexStartLocation, int baseVertexLocation);
+	// Reset render target and depth buffer to backbuffer's
+	void BindBackBufferAsRenderTarget();
+	TextureHandle CreateTexture(const char* filepath);
+	void BindTexture(TextureHandle handle, uint32_t slot, uint32_t numViews);
+	void BindSampler(const void* data);
+	SamplerHandle CreateSampler();
 };

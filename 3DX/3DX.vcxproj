@@ -202,15 +202,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AnimatedCharacter.cpp" />
+    <ClCompile Include="Backend.cpp" />
     <ClCompile Include="Bindable.cpp" />
     <ClCompile Include="BindingPass.cpp" />
     <ClCompile Include="BlendState.cpp" />
     <ClCompile Include="BlendTransparentPass.cpp" />
     <ClCompile Include="Box.cpp" />
+    <ClCompile Include="buckets.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="ClearBufferPass.cpp" />
+    <ClCompile Include="Command.cpp" />
     <ClCompile Include="CustomException.cpp" />
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="DefaultPass.cpp" />
@@ -268,7 +271,7 @@
     <ClCompile Include="ShadowMap.cpp" />
     <ClCompile Include="ShadowMapPass.cpp" />
     <ClCompile Include="Sink.cpp" />
-    <ClCompile Include="Sky.cpp" />
+    <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="SkyBoxPass.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Sphere.cpp" />
@@ -302,6 +305,7 @@
     <ClInclude Include="BlendState.h" />
     <ClInclude Include="BlendTransparentPass.h" />
     <ClInclude Include="Box.h" />
+    <ClInclude Include="buckets.h" />
     <ClInclude Include="BufferResource.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraComponent.h" />
@@ -313,7 +317,9 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="D3D11Renderer.h" />
+    <ClInclude Include="defines.h" />
     <ClInclude Include="FileUtils.h" />
+    <ClInclude Include="HandleAlloc.h" />
     <ClInclude Include="InspectorDock.h" />
     <ClInclude Include="IResource.h" />
     <ClInclude Include="MathUtils.h" />
@@ -375,6 +381,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="RgDynamicCubeMapping.h" />
+    <ClInclude Include="rrTorcDefines.h" />
     <ClInclude Include="SamplerState.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneDock.h" />
@@ -382,7 +389,7 @@
     <ClInclude Include="ShadowMap.h" />
     <ClInclude Include="ShadowMapPass.h" />
     <ClInclude Include="Sink.h" />
-    <ClInclude Include="Sky.h" />
+    <ClInclude Include="SkyBox.h" />
     <ClInclude Include="SkyBoxPass.h" />
     <ClInclude Include="Source.h" />
     <ClInclude Include="Sphere.h" />

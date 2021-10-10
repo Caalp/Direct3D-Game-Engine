@@ -60,78 +60,78 @@ void Graphics::DisableImgui()
 
 Graphics::Graphics(HWND hWnd, uint32_t w, uint32_t h) : width(w),height(h)
 {
-	DXGI_SWAP_CHAIN_DESC scd = {};
-	scd.BufferDesc.Width = 0;
-	scd.BufferDesc.Height = 0;
-	scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	scd.BufferDesc.RefreshRate.Numerator = 0;
-	scd.BufferDesc.RefreshRate.Denominator = 0;
-	scd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-	scd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	scd.SampleDesc.Count = 1;
-	scd.SampleDesc.Quality  = 0;
-	scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	scd.BufferCount = 1;
-	scd.OutputWindow = hWnd;
-	scd.Windowed = TRUE;
-	scd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-	scd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-	UINT creatingFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
-#if defined(_DEBUG)
-	creatingFlags |= D3D11_CREATE_DEVICE_DEBUG;
-#endif
-	D3D11CreateDeviceAndSwapChain(
-		nullptr,
-		D3D_DRIVER_TYPE_HARDWARE,
-		nullptr,
-		creatingFlags,
-		nullptr,
-		0,
-		D3D11_SDK_VERSION,
-		&scd,
-		&(GraphicsResources::GetSingleton().pSwapChain),
-		&GraphicsResources::GetSingleton().pDevice,
-		nullptr,
-		&GraphicsResources::GetSingleton().pImmediateContext);
-
-	wrl::ComPtr<ID3D11Texture2D> pBackBuffer ;
-	wrl::ComPtr<ID3D11Texture2D> pTexBuffer ;
-	
-	GraphicsResources::GetSingleton().pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &pBackBuffer);
-
-	pTarget = std::shared_ptr<RenderTarget>{ new BackBuffer(*this,pBackBuffer.Get()) };
-	//D3D11_TEXTURE2D_DESC texDesc;
-	//texDesc.Width = width;
-	//texDesc.Height = height;
-	//texDesc.MipLevels = 0;
-	//texDesc.ArraySize = 1;
-	//texDesc.SampleDesc.Count = 1;
-	//texDesc.SampleDesc.Quality = 0;
-	//texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; //DXGI_FORMAT_D24_UNORM_S8_UINT;
-	//texDesc.Usage = D3D11_USAGE_DEFAULT;
-	//texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-	//texDesc.CPUAccessFlags = 0;
-	//texDesc.MiscFlags = 0;
-
-	////Microsoft::WRL::ComPtr<ID3D11Texture2D> rtvTex;
-	//pDevice->CreateTexture2D(&texDesc, 0, texture.GetAddressOf());
-
-	//pTarget2 = std::shared_ptr<RenderTarget>{ new BackBuffer(*this,texture.Get()) };
-	//
-	//shaderResourceViewRT = new ShaderViewRenderTarget(*this, 800u, 600u, 0u);
+//	DXGI_SWAP_CHAIN_DESC scd = {};
+//	scd.BufferDesc.Width = 0;
+//	scd.BufferDesc.Height = 0;
+//	scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+//	scd.BufferDesc.RefreshRate.Numerator = 0;
+//	scd.BufferDesc.RefreshRate.Denominator = 0;
+//	scd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+//	scd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+//	scd.SampleDesc.Count = 1;
+//	scd.SampleDesc.Quality  = 0;
+//	scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+//	scd.BufferCount = 1;
+//	scd.OutputWindow = hWnd;
+//	scd.Windowed = TRUE;
+//	scd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+//	scd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+//	UINT creatingFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 //#if defined(_DEBUG)
-//	GraphicsResources::GetSingleton().pDevice->QueryInterface<ID3D11Debug>(&debug);
-//	debug->SetFeatureMask(D3D11_DEBUG_FEATURE_PRESENT_PER_RENDER_OP);
-//
+//	creatingFlags |= D3D11_CREATE_DEVICE_DEBUG;
 //#endif
-	
-
-	if (imguiEnabled)
-	{
-		ImGui_ImplDX11_Init(GraphicsResources::GetSingleton().pDevice.Get(), GraphicsResources::GetSingleton().pImmediateContext.Get());
-	}
-		
-	CreateViewport((float)w, (float)h);
+//	D3D11CreateDeviceAndSwapChain(
+//		nullptr,
+//		D3D_DRIVER_TYPE_HARDWARE,
+//		nullptr,
+//		creatingFlags,
+//		nullptr,
+//		0,
+//		D3D11_SDK_VERSION,
+//		&scd,
+//		&(GraphicsResources::GetSingleton().pSwapChain),
+//		&GraphicsResources::GetSingleton().pDevice,
+//		nullptr,
+//		&GraphicsResources::GetSingleton().pImmediateContext);
+//
+//	wrl::ComPtr<ID3D11Texture2D> pBackBuffer ;
+//	wrl::ComPtr<ID3D11Texture2D> pTexBuffer ;
+//	
+//	GraphicsResources::GetSingleton().pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &pBackBuffer);
+//
+//	pTarget = std::shared_ptr<RenderTarget>{ new BackBuffer(*this,pBackBuffer.Get()) };
+//	//D3D11_TEXTURE2D_DESC texDesc;
+//	//texDesc.Width = width;
+//	//texDesc.Height = height;
+//	//texDesc.MipLevels = 0;
+//	//texDesc.ArraySize = 1;
+//	//texDesc.SampleDesc.Count = 1;
+//	//texDesc.SampleDesc.Quality = 0;
+//	//texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; //DXGI_FORMAT_D24_UNORM_S8_UINT;
+//	//texDesc.Usage = D3D11_USAGE_DEFAULT;
+//	//texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+//	//texDesc.CPUAccessFlags = 0;
+//	//texDesc.MiscFlags = 0;
+//
+//	////Microsoft::WRL::ComPtr<ID3D11Texture2D> rtvTex;
+//	//pDevice->CreateTexture2D(&texDesc, 0, texture.GetAddressOf());
+//
+//	//pTarget2 = std::shared_ptr<RenderTarget>{ new BackBuffer(*this,texture.Get()) };
+//	//
+//	//shaderResourceViewRT = new ShaderViewRenderTarget(*this, 800u, 600u, 0u);
+////#if defined(_DEBUG)
+////	GraphicsResources::GetSingleton().pDevice->QueryInterface<ID3D11Debug>(&debug);
+////	debug->SetFeatureMask(D3D11_DEBUG_FEATURE_PRESENT_PER_RENDER_OP);
+////
+////#endif
+//	
+//
+//	if (imguiEnabled)
+//	{
+//		ImGui_ImplDX11_Init(GraphicsResources::GetSingleton().pDevice.Get(), GraphicsResources::GetSingleton().pImmediateContext.Get());
+//	}
+//		
+//	CreateViewport((float)w, (float)h);
 
 }
 

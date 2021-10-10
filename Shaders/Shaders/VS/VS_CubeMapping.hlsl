@@ -16,8 +16,8 @@ struct VertexOut
 VertexOut main(VertexIn vin)
 {
     VertexOut vout;
-    
-	vout.PosH = mul(float4(vin.PosL + cameraPos, 1.0f), transpose(model * viewXM * projXM)).xyww;
+    matrix worldViewProj = transpose(mul(mul(projXM, viewXM), model));
+	vout.PosH = mul(float4(vin.PosL + cameraPos, 1.0f), worldViewProj).xyww;
     
     vout.PosL = vin.PosL;
     return vout;

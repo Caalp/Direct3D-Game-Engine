@@ -24,8 +24,9 @@ struct CameraBuffer
 class CameraComponent : public Component
 {
 public:
-	CameraComponent() = default;
+	CameraComponent();
 
+	void Init();
 	/* Components should be move constructable and assignable */
 	CameraComponent(CameraComponent&& rhs);
 
@@ -63,7 +64,8 @@ public:
 public:
 	CameraBuffer camBuff;
 	std::vector<char> bytes;
-	VSConstBuff<std::vector<char>> tBuffer{ sizeof(CameraBuffer) };
+	U16 tBuffer;
+	//VSConstBuff<std::vector<char>> tBuffer{ sizeof(CameraBuffer) };
 	std::string m_Name;
 	CameraType m_CamType;
 

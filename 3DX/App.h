@@ -1,14 +1,6 @@
 #pragma once
-#include "Window.h"
-#include "ImguiHandler.h"
-#include "TestRenderGraph.h"
-#include "RenderGraph.h"
-#include "TestBox.h"
-#include "TransformationSystem.h"
-#include "RenderSystem.h"
-#include "CameraSystem.h"
-#include "SceneLoader.h"
-
+#include "CameraComponent.h"
+#include "SkyBox.h"
 class App
 {
 public:
@@ -20,17 +12,8 @@ private:
 	void Update(float dt);
 	void ImguiStatistic();
 private:
-
-	ImguiHandler& imguiHandler;
-	Window wnd;
-	SceneLoader* m_SceneLoader;
-	/*--------------------- Systems-------------------------------*/
-
-
-	/*---------------------------------------------------------*/
-	
-
-
+	CameraComponent m_mainCamera;
 	bool updated = false;
 	
+	SkyBox skyBox;
 };

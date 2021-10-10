@@ -1,6 +1,23 @@
 #include "CameraComponent.h"
+#include "defines.h"
 #include "Imgui/imgui.h"
+#include "Backend.h"
 
+CameraComponent::CameraComponent()
+{
+	m_Name = "EditorCamera";
+	m_CamType = CAM_PERSPECTIVE;
+	m_CamPos = { 0.0f,0.0f,-10.0f };
+	m_CamRight = { 1.0f,0.0f,0.0f };
+	m_CamUp = { 0.0f,1.0f,0.0f };
+	m_CamLook = { 0.0f,0.0f,1.0f };
+	SetCameraLens(0.25f * 3.1415926535f, 800.0f / 600.0f, 1.0f, 1000.0f);
+}
+
+void CameraComponent::Init()
+{
+	tBuffer = backend::CreateConstantBuffer(BufferType::VSConstantBuffer,sizeof(CameraBuffer), 0u, 0u).idx;
+}
 
 CameraComponent::CameraComponent(CameraComponent&& rhs)
 {
@@ -176,7 +193,7 @@ DirectX::XMMATRIX CameraComponent::ViewProjXM() const
 
 void CameraComponent::UpdateAndBindCameraBuffer()
 {
-
+	
 	bytes.resize(sizeof(camBuff));
 	UpdateXM(0.0f);
 
@@ -185,10 +202,15 @@ void CameraComponent::UpdateAndBindCameraBuffer()
 	camBuff.viewXM = DirectX::XMLoadFloat4x4(&m_ViewXM);
 	camBuff.projXM = DirectX::XMLoadFloat4x4(&m_ProjXM);
 
+	
 	memcpy(bytes.data(), &camBuff, sizeof(camBuff));
 
-	tBuffer.Update(bytes, bytes.size());
-	tBuffer.Bind(1u, 1u);
+	ConstantBufferHandle handle;
+	handle.idx = tBuffer;
+	backend::UpdateConstantBuffer(handle, bytes.data());
+	//tBuffer.Update(bytes, bytes.size());
+	//tBuffer.Bind(1u, 1u);
+	backend::BindConstantBuffer(handle, 1u, 1u);
 
 
 }
