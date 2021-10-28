@@ -378,6 +378,12 @@
     <ClCompile Include="buckets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TextureDB.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Loader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinHeader.h">
@@ -747,6 +753,12 @@
       <Filter>Header Files\CommandQueue</Filter>
     </ClInclude>
     <ClInclude Include="rrTorcDefines.h">
+      <Filter>Header Files\CommandQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureDB.h">
+      <Filter>Header Files\CommandQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="Loader.h">
       <Filter>Header Files\CommandQueue</Filter>
     </ClInclude>
   </ItemGroup>

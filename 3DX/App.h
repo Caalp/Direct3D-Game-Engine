@@ -1,6 +1,8 @@
 #pragma once
 #include "CameraComponent.h"
 #include "SkyBox.h"
+#include "TestShape.h"
+#include "ImguiHandler.h"
 class App
 {
 public:
@@ -14,6 +16,8 @@ private:
 private:
 	CameraComponent m_mainCamera;
 	bool updated = false;
-	
+	ImguiHandler& m_imguiInstance;
 	SkyBox skyBox;
+	TestShape testShape_1;
+	TestShape testShape_2;
 };

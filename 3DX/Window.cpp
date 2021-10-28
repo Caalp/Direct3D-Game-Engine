@@ -85,7 +85,7 @@ Window::Window(int width, int height,  const char* name) noexcept : width(width)
 	////p_gfx.get()->DisableImgui();
 	//if (p_gfx.get()->IsImguiEnabled())
 	//{
-	//	ImGui_ImplWin32_Init(hWnd);
+
 	//}
 	//
 	
@@ -99,10 +99,9 @@ Window::Window(int width, int height,  const char* name) noexcept : width(width)
 
 Window::~Window()
 {
-	/*if (p_gfx.get()->IsImguiEnabled())
-	{
-		ImGui_ImplWin32_Shutdown();
-	}*/
+#ifdef IMGUI
+	ImGui_ImplWin32_Shutdown();
+#endif
 	
 	DestroyWindow(hWnd);
 }
@@ -164,16 +163,21 @@ LRESULT WINAPI Window::HandleMsgTh(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lp
 
 		return pWnd->HandleMsg(hWnd, msg, wparam, lparam);
 }
-//extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+#ifdef IMGUI
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+#endif
+
 LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noexcept
 {
 	//emgr->QueueEvent(std::shared_ptr<IEventData>(new ImGuiEvent()));
-	//if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wparam, lparam))
-	//{
-	//	
-	//	return true;
-	//}
-	//const auto& imio = ImGui::GetIO();
+#ifdef IMGUI
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wparam, lparam))
+	{	
+		return true;
+	}
+	const auto& imio = ImGui::GetIO();
+#endif
+	
 	switch (msg)
 	{
 	case WM_CLOSE:

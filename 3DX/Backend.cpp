@@ -5,6 +5,10 @@
 #include "HandleAlloc.h"
 #include "D3D11Renderer.h"
 
+#ifdef IMGUI
+#include "Imgui/imgui_impl_dx11.h"
+#include "Imgui/imgui_impl_win32.h"
+#endif
 
 
 namespace backend
@@ -34,10 +38,21 @@ namespace backend
 	
 	void BeginFrame()
 	{
+#ifdef IMGUI
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+#endif
 		m_renderer->BeginFrame();
 	}
 	void EndFrame()
 	{
+#ifdef IMGUI
+		ImGui::Render();
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault();
+#endif
 		m_renderer->Present();
 	}
 	void ShutDown()
@@ -47,6 +62,7 @@ namespace backend
 	}
 	void Init(InitInfo init)
 	{
+		
 		m_initData = init;
 
 		switch (init.renderer)
@@ -58,7 +74,11 @@ namespace backend
 			break;
 		}
 		wnd = new Window(m_initData.width, m_initData.height, m_initData.windowName.c_str());
+#ifdef IMGUI
+	ImGui_ImplWin32_Init(wnd->getMainWindow());
+#endif
 		m_renderer->InitRenderer(wnd);
+		
 		RenderTargetHandle rt;
 		DepthBufferHandle depth;
 		depth.idx = 0;
@@ -66,8 +86,10 @@ namespace backend
 		//m_renderer->CreateDepthBuffer(depth);
 		m_renderer->BindRenderTarget(rt);
 		m_renderer->SetPrimitiveTopology();
-		m_renderer->SetDepthState();
-		m_renderer->SetRasterizerState();
+		//m_renderer->SetDepthState();
+		//m_renderer->SetRasterizerState();
+
+		
 	}
 
 	VertexLayoutHandle CreateVertexLayout(ShaderHandle vsHandle, void* data, U32 elemCount)
@@ -230,5 +252,10 @@ namespace backend
 		TextureHandle th = { m_textureHandle.Alloc() };
 		m_renderer->CreateTexture(th, filepath);
 		return th;
+	}
+
+	void SetState(uint64_t state, uint32_t stencil)
+	{
+		m_renderer->SetState(state, stencil);
 	}
 }

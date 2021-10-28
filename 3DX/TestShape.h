@@ -1,9 +1,9 @@
 #pragma once
 #include "defines.h"
 #include "Backend.h"
-#include "Command.h"
+#include "buckets.h"
 #include <vector>
-
+#include "TextureDB.h"
 
 class TestShape
 {
@@ -125,54 +125,52 @@ public:
 		DirectX::XMMATRIX model;
 		DirectX::XMMATRIX inverseTransform;
 	} modelTransform;
-	void Init()
+	void Init(TextureHandle textureHandle,DirectX::XMFLOAT3 pos)
 	{
 
+		m_pos = pos;
 
-
-		modelTransform.model = DirectX::XMMatrixIdentity();
+		modelTransform.model = DirectX::XMMatrixIdentity() * DirectX::XMMatrixTranslation(pos.x,pos.y,pos.z);
 		modelTransform.inverseTransform = DirectX::XMMatrixIdentity();
 		auto xm = DirectX::XMMatrixIdentity();
 		auto t1 = sizeof(xm);
 		auto t2 = sizeof(xm.r[1]);
-		m_vbh = backend::CreateVertexBuffer(vertices.data(), vertices.size() * sizeof(Vertex), sizeof(Vertex));
-		m_ibh = backend::CreateIndexBuffer(indices.data(), (indices.size() * sizeof(U16)), sizeof(U16));
-		m_vsh = backend::CreateShader("ColorBlenderVS.cso", ShaderType::VertexShader);
-		m_psh = backend::CreateShader("ColorBlenderPS.cso", ShaderType::PixelShader);
-		m_vsCB = backend::CreateConstantBuffer(BufferType::VSConstantBuffer, &modelTransform, sizeof(modelTransform), sizeof(DirectX::XMMATRIX), 0u);
+		//m_vsh = backend::CreateShader("ColorBlenderVS.cso", ShaderType::VertexShader);
+		m_vsh = backend::CreateShader("VS_TextureMapping.cso", ShaderType::VertexShader);
 
 		std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
-			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 }
-			//{ "TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0 }
+			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			{ "TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,12u,D3D11_INPUT_PER_VERTEX_DATA,0 }
 		};
-		m_vlh = backend::CreateVertexLayout(m_vsh, ied.data(), ied.size());
-
-		//uint64_t stateKey = TORC_STATE_DEPTH_ENABLE | TORC_STATE_STENCIL_DISABLE;
+		m_vsCB = backend::CreateConstantBuffer(BufferType::VSConstantBuffer, &modelTransform, sizeof(modelTransform), sizeof(DirectX::XMMATRIX), 0u);
 		backend::SortKey key;
-		key.m_sortKey = 1000;
-		uint32_t test_state = 0 | (BS_OPAQUE | DSS_DEFAULT | RS_CULL_COUNTER_CLOCKWISE | SS_ANISOTROPIC_WRAP);
-		command::DrawIndexed* draw = bucket::testBucket.AddCommand<command::DrawIndexed>(key, 0);
-		draw->indexBuffer = m_ibh;
-		draw->vertexBuffer = m_vbh;
-		draw->vertexLayout = m_vlh;
+		key.m_sortKey = TORC_STATE_DISCARD_ALL ;
+		command::BindSampler* sampler = bucket::testBucket.AddCommand<command::BindSampler>(key, 0);
+		sampler->Sampler = backend::CreateSampler();
+
+		command::DrawIndexed* draw = bucket::testBucket.AppendCommand<command::DrawIndexed>(sampler, 0);
+		draw->indexBuffer = backend::CreateIndexBuffer(indices.data(), (indices.size() * sizeof(U16)), sizeof(U16));
+		draw->vertexBuffer = backend::CreateVertexBuffer(vertices.data(), vertices.size() * sizeof(Vertex), sizeof(Vertex));
+		draw->vertexLayout = backend::CreateVertexLayout(m_vsh, ied.data(), ied.size());
+		draw->texHandle = textureHandle;
 		draw->indexCount = indices.size();
 		draw->baseVertexLocation = 0;
 		draw->startIndexLocation = 0u;
 		draw->drawInfo.cb = m_vsCB;
-		//draw->drawInfo.
-		draw->drawInfo.ps = m_psh;
+		draw->drawInfo.ps = backend::CreateShader("PS_TextureMapping.cso", ShaderType::PixelShader);
 		draw->drawInfo.vs = m_vsh;
 	}
 	void Update(float dt)
 	{
 		static float step = dt;
 		step += dt;
-		modelTransform.model = DirectX::XMMatrixIdentity() * DirectX::XMMatrixRotationRollPitchYaw(0.0f, 1.5708 * step, 0.0f);
+		modelTransform.model = DirectX::XMMatrixRotationRollPitchYaw(0.0f, 1.5708 * step, 0.0f) * DirectX::XMMatrixTranslation(m_pos.x, m_pos.y, m_pos.z);
 		modelTransform.inverseTransform = DirectX::XMMatrixIdentity();
 		backend::UpdateConstantBuffer(m_vsCB, &modelTransform);
 	}
 private:
+	DirectX::XMFLOAT3 m_pos;
 	IndexBufferHandle m_ibh;
 	VertexBufferHandle m_vbh;
 	ShaderHandle m_psh;

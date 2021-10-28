@@ -19,11 +19,32 @@ enum class BufferType
 
 };
 
+struct RenderJob
+{
+	uint64_t m_state;
+	uint32_t m_stencil;
+	int m_depthBias;
+	float m_depthBiasClamp;
+	float m_slopeScaledDepthBias;
 
+
+	IndexBufferHandle m_indexBufferHandle;
+	VertexBufferHandle m_vertexBufferHandle;
+
+
+};
+
+struct StateTracker
+{
+	uint64_t currentState = 0;
+	uint32_t currentStencil = 0;
+	bool hasStateSet = false;
+};
 
 namespace backend
 {
 
+	static StateTracker s_states;
 
 	
 	enum RendererType
@@ -86,6 +107,22 @@ namespace backend
 
 	struct SortKey
 	{
+		struct Default
+		{
+			uint64_t notinuse : 30;
+			uint64_t depth : 24;
+			uint64_t translucency : 2;
+			uint64_t viewportLayer : 3;
+			uint64_t viewport : 3;
+			uint64_t fullscreenLayer : 2;
+		};
+
+		struct Command
+		{
+
+		};
+
+
 		uint64_t m_sortKey;
 		uint64_t m_state;
 		uint32_t m_stencil;
@@ -127,4 +164,5 @@ namespace backend
 	void BindTexture(TextureHandle handle, uint32_t slot, uint32_t numViews);
 	void BindSampler(const void* data);
 	SamplerHandle CreateSampler();
+	void SetState(uint64_t state, uint32_t stencil);
 };

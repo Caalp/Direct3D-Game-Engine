@@ -17,7 +17,8 @@ private:
 
 public:
 	typedef KEY* Key;
-	std::map<KEY, CommandPacket> mCommands;
+	//std::map<KEY, CommandPacket> mCommands;
+	std::vector<std::pair<KEY,CommandPacket>> mCommands;
 	Key p_keys;
 	uint16_t m_currentIdx;
 
@@ -79,7 +80,7 @@ inline T* CommandBucket<KEY>::AddCommand(backend::SortKey key, uint32_t auxMemSi
 	void* commandPtr = commandpacket::Create<T>(auxMemSize);
 
 	p_keys[m_currentIdx] = key.m_sortKey;
-	mCommands[key.m_sortKey] = commandPtr;
+	mCommands.push_back(std::make_pair(key.m_sortKey,commandPtr));
 	m_currentIdx++;
 
 	commandpacket::SetBackendDispatchFunction(commandPtr, T::BACKEND_DISPATCH_FUNC);
@@ -115,9 +116,13 @@ inline void CommandBucket<KEY>::Submit()
 	CommandPacket cmd_pack;
 	for (auto cmd : mCommands)
 	{
+		uint64_t key = cmd.first;
+		backend::SetState(key, 0);
 		cmd_pack = cmd.second;
 		do
 		{
+			
+
 			SubmitCommand(cmd_pack);
 			cmd_pack = commandpacket::GetNextCommandPacket(cmd_pack);
 		} while (cmd_pack != nullptr);

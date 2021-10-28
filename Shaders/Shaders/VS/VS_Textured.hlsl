@@ -20,8 +20,9 @@ struct VertexOut
 
 VertexOut main(VertexIn vin)
 {
+    matrix worldViewProj = transpose(mul(mul(projXM, viewXM), model));
     VertexOut vout;
-	vout.PosH = mul(float4(vin.PosL, 1.0f), transpose(model * viewXM * projXM));
+	vout.PosH = mul(float4(vin.PosL, 1.0f), worldViewProj);
     vout.Tex = vin.Tex;
     
     return vout;

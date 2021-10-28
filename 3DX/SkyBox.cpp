@@ -30,37 +30,33 @@ void SkyBox::Init()
 	auto xm = DirectX::XMMatrixIdentity();
 	auto t1 = sizeof(xm);
 	auto t2 = sizeof(xm.r[1]);
-	m_vbh = backend::CreateVertexBuffer(m_sphere->vertices.data(), m_sphere->vertices.size() * sizeof(Vertex), sizeof(Vertex));
-	m_ibh = backend::CreateIndexBuffer(m_sphere->indices.data(), (m_sphere->indices.size() * sizeof(U16)), sizeof(U16));
 	m_vsh = backend::CreateShader("VS_CubeMapping.cso", ShaderType::VertexShader);
-	m_psh = backend::CreateShader("PS_CubeMapping.cso", ShaderType::PixelShader);
-	m_vsCB = backend::CreateConstantBuffer(BufferType::VSConstantBuffer, &modelTransform, sizeof(modelTransform), sizeof(DirectX::XMMATRIX), 0u);
-	m_sh = backend::CreateSampler();
-	m_th = backend::CreateTexture("../Textures/snowcube1024.dds");
+
 	std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 	{
 		{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 }
 	};
-	m_vlh = backend::CreateVertexLayout(m_vsh, ied.data(), ied.size());
 	backend::SortKey key;
-	key.m_sortKey = 1000;
-	uint32_t test_state = 0 | (BS_OPAQUE | DSS_DEFAULT | RS_CULL_COUNTER_CLOCKWISE | SS_ANISOTROPIC_WRAP);
+
+	key.m_sortKey = TORC_STATE_DEPTH_ENABLE | TORC_STATE_DEPTH_WRITE_MASK_ALL | TORC_STATE_COMPARISON_LESS_EQUAL |
+		TORC_STATE_FILL_SOLID | TORC_STATE_CULL_NONE;
 
 	command::BindSampler* sampler = bucket::testBucket.AddCommand<command::BindSampler>(key, 0);
-	sampler->Sampler = m_sh;
+	sampler->Sampler = backend::CreateSampler();
 
 	command::DrawIndexed* draw = bucket::testBucket.AppendCommand<command::DrawIndexed>(sampler, 0);
-	draw->indexBuffer = m_ibh;
-	draw->vertexBuffer = m_vbh;
-	draw->vertexLayout = m_vlh;
-	draw->texHandle = m_th;
+	draw->indexBuffer = backend::CreateIndexBuffer(m_sphere->indices.data(), (m_sphere->indices.size() * sizeof(U16)), sizeof(U16));
+	draw->vertexBuffer = backend::CreateVertexBuffer(m_sphere->vertices.data(), m_sphere->vertices.size() * sizeof(Vertex), sizeof(Vertex));
+	draw->vertexLayout = backend::CreateVertexLayout(m_vsh, ied.data(), ied.size());
+	draw->texHandle = backend::CreateTexture("../Textures/snowcube1024.dds");
 	draw->indexCount = m_sphere->indices.size();
 	draw->baseVertexLocation = 0;
 	draw->startIndexLocation = 0u;
-	draw->drawInfo.cb = m_vsCB;
+	draw->drawInfo.cb = backend::CreateConstantBuffer(BufferType::VSConstantBuffer, &modelTransform, sizeof(modelTransform), sizeof(DirectX::XMMATRIX), 0u);
 	//draw->drawInfo.
-	draw->drawInfo.ps = m_psh;
-	draw->drawInfo.vs = m_vsh;
+	draw->drawInfo.ps = backend::CreateShader("PS_CubeMapping.cso", ShaderType::PixelShader);
+	draw->drawInfo.vs = backend::CreateShader("VS_CubeMapping.cso", ShaderType::VertexShader);
+	//backend::SetState(key.m_sortKey, 0);
 
 }
 //

@@ -67,6 +67,7 @@ public:
 	virtual void BindBackBufferAsRenderTarget() = 0;
 	virtual void SetDepthState() = 0;
 	virtual void SetRasterizerState() = 0;
+	virtual void SetState(uint64_t state, uint32_t stencil) = 0;
 
 };
 

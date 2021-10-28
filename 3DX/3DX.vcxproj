@@ -108,7 +108,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)Vendor\Vendor;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
       <AdditionalUsingDirectories>
       </AdditionalUsingDirectories>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>IMGUI;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <EnableModules>true</EnableModules>
@@ -237,6 +237,7 @@
     <ClCompile Include="InputLayout.cpp" />
     <ClCompile Include="Job.cpp" />
     <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="Loader.cpp" />
     <ClCompile Include="MarkMirrorPass.cpp" />
     <ClCompile Include="MarkOutlinePass.cpp" />
     <ClCompile Include="MathUtils.cpp" />
@@ -283,6 +284,7 @@
     <ClCompile Include="TestCube.cpp" />
     <ClCompile Include="TestRenderGraph.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureDB.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="TextureResource.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -322,6 +324,7 @@
     <ClInclude Include="HandleAlloc.h" />
     <ClInclude Include="InspectorDock.h" />
     <ClInclude Include="IResource.h" />
+    <ClInclude Include="Loader.h" />
     <ClInclude Include="MathUtils.h" />
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="DefaultPass.h" />
@@ -406,6 +409,7 @@
     <ClInclude Include="TestRenderGraph.h" />
     <ClInclude Include="TestShape.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureDB.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="TextureResource.h" />
     <ClInclude Include="Timer.h" />

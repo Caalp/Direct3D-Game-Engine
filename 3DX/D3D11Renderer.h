@@ -6,6 +6,10 @@
 #include "DirectXTK/D3DX11tex.h"
 #include "DirectXTK/D3DX11.h"
 
+#ifdef IMGUI
+#include "Imgui/imgui_impl_dx11.h"
+#include "Imgui/imgui_impl_win32.h"
+#endif
 
 #pragma comment(lib,"DirectXTK/x86/DirectXTK.lib")
 #pragma comment(lib,"DirectXTK/x86/d3dx11d.lib")
@@ -335,6 +339,10 @@ public:
 		dsv.Flags = 0;
 		pDevice->CreateDepthStencilView(depthTex.Get(), &dsv, m_depthStencilView.GetAddressOf());
 
+#ifdef IMGUI
+		ImGui_ImplDX11_Init(pDevice.Get(), pImmediateContext.Get());
+#endif
+
 	}
 	void CreateViewport(float w, float h, float maxDepth, float minDepth, float leftX, float leftY) override
 	{
@@ -555,7 +563,11 @@ public:
 	}
 	void BindTexture(TextureHandle handle, uint32_t slot, uint32_t numViews) override
 	{
-		pImmediateContext->PSSetShaderResources(slot, numViews, m_shaderResourceViews[handle.get()].GetAddressOf());
+		if (handle.idx != 0xffff)
+		{
+			pImmediateContext->PSSetShaderResources(slot, numViews, m_shaderResourceViews[handle.get()].GetAddressOf());
+		}
+		
 	}
 	void CreateSampler(SamplerHandle handle) override
 	{
@@ -591,6 +603,360 @@ public:
 		pDevice->CreateRasterizerState(&rsDesc, m_rasterizerState.GetAddressOf());
 		pImmediateContext->RSSetState(m_rasterizerState.Get());
 	}
+
+	void SetState(uint64_t state, uint32_t stencil) override
+	{
+		
+
+		uint64_t stateChanged = backend::s_states.currentState ^ state;
+		uint32_t stencilChanged = backend::s_states.currentStencil ^ stencil;
+		if (!stateChanged && !stencilChanged)
+		{
+			return;
+		}
+		//// Fill blend desc
+		//if (state & TORC_STATE_DISCARD_ALL)
+		//{
+		//	pDevice->CreateRasterizerState(0, m_rasterizerState.GetAddressOf());
+		//	pImmediateContext->RSSetState(m_rasterizerState.Get());
+
+		//	pDevice->CreateDepthStencilState(0, m_depthStencilState.GetAddressOf());
+		//	pImmediateContext->OMSetDepthStencilState(m_depthStencilState.Get(), 1u);
+		//	
+		//	backend::s_states.currentState = state;
+		//	backend::s_states.currentStencil = stencil;
+		//	return;
+		//}
+		if ((backend::s_states.currentState & TORC_STATE_BLEND_STATE_DESC_MASK) ^ (state & TORC_STATE_BLEND_STATE_DESC_MASK))
+		{
+			D3D11_BLEND_DESC blendDesc;
+			ZeroMemory(&blendDesc, sizeof(D3D11_BLEND_DESC));
+			blendDesc.AlphaToCoverageEnable = (state & TORC_STATE_ALPHA_TO_COVERAGE_MASK) >> TORC_STATE_ALPHA_TO_COVERAGE_SHIFT;
+			blendDesc.IndependentBlendEnable = (state & TORC_STATE_INDEPENDENT_BLEND_ENABLE) >> TORC_STATE_INDEPENDENT_BLEND_MASK;
+
+			// we have to specify render target here for now it is just the first rt
+			blendDesc.RenderTarget[0].BlendEnable = (state & TORC_STATE_BLEND_STATUS_MASK) >> TORC_STATE_BLEND_STATUS_SHIFT;
+			//blendDesc.RenderTarget[0].SrcBlend = TORC_STATE_GET_BLEND_SRC(state);
+			blendDesc.RenderTarget[0].SrcBlend = GetBlend(TORC_STATE_GET_BLEND_SRC(state));
+			blendDesc.RenderTarget[0].DestBlend = GetBlend(TORC_STATE_GET_BLEND_DST(state));
+			blendDesc.RenderTarget[0].BlendOp = GetBlendOP(TORC_STATE_GET_BLEND_OP(state));
+
+			blendDesc.RenderTarget[0].SrcBlendAlpha = GetBlend(TORC_STATE_GET_BLEND_SRCA(state));
+			blendDesc.RenderTarget[0].DestBlendAlpha = GetBlend(TORC_STATE_GET_BLEND_DSTA(state));
+			blendDesc.RenderTarget[0].BlendOpAlpha = GetBlendOP(TORC_STATE_GET_BLEND_OP_ALPHA(state));
+
+			blendDesc.RenderTarget[0].RenderTargetWriteMask = TORC_STATE_GET_RT_WRITE_MASK(state);
+		}
+		
+
+		uint64_t s1 = (backend::s_states.currentState & TORC_STATE_RASTERIZER_STATE_DESC_MASK);
+		uint64_t s2 = (state & TORC_STATE_RASTERIZER_STATE_DESC_MASK);
+		if ( s1 ^ s2 )
+		{
+			// Fill rasterizer desc
+			D3D11_RASTERIZER_DESC rasterizerDesc;
+			ZeroMemory(&rasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
+			rasterizerDesc.FillMode = GetFillMode(TORC_STATE_GET_FILL_MODE(state));
+			rasterizerDesc.CullMode = GetCullMode(TORC_STATE_GET_CULL_MODE(state));
+			rasterizerDesc.FrontCounterClockwise = TORC_STATE_GET_FRONT_CULL_STATUS(state);
+			rasterizerDesc.DepthClipEnable = TORC_STATE_GET_DEPTH_CLIP_STATUS(state);
+			rasterizerDesc.ScissorEnable = TORC_STATE_GET_SCISSOR_STATUS(state);
+			rasterizerDesc.MultisampleEnable = TORC_STATE_GET_MSAA_STATUS(state);
+			rasterizerDesc.AntialiasedLineEnable = TORC_STATE_GET_AA_STATUS(state);
+			pDevice->CreateRasterizerState(&rasterizerDesc, m_rasterizerState.GetAddressOf());
+			pImmediateContext->RSSetState(m_rasterizerState.Get());
+		}
+
+
+		if ((backend::s_states.currentState & TORC_STATE_DEPTH_DESC_MASK) ^ (state & TORC_STATE_DEPTH_DESC_MASK))
+		{
+			//std::cout << "Depth state has changed!" << std::endl;
+			// fill depth stencil desc
+			D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
+			ZeroMemory(&depthStencilDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
+			depthStencilDesc.DepthEnable = TORC_STATE_GET_DEPTH_STATUS(state);
+			depthStencilDesc.DepthWriteMask = GetDepthWriteMask(TORC_STATE_GET_DEPTH_WRITE_MASK(state));
+			depthStencilDesc.DepthFunc = GetComparisonFunc(TORC_STATE_GET_DEPTH_COMP_FUNC(state));
+			depthStencilDesc.StencilEnable = TORC_STATE_GET_STENCIL_STATUS(state);
+			depthStencilDesc.FrontFace = GetStencilDesc(stencil & TORC_STATE_STENCIL_FRONTFACE_MASK);
+			depthStencilDesc.BackFace = GetStencilDesc((stencil & TORC_STATE_STENCIL_FRONTFACE_MASK) >> 16);
+			depthStencilDesc.StencilReadMask = 0xff;
+			depthStencilDesc.StencilWriteMask = 0xff;
+
+
+			pDevice->CreateDepthStencilState(&depthStencilDesc, m_depthStencilState.GetAddressOf());
+			pImmediateContext->OMSetDepthStencilState(m_depthStencilState.Get(), 1u);
+		}
+
+		
+
+		// if anything changed update the states
+		backend::s_states.currentState = state;
+		backend::s_states.currentStencil = stencil;
+
+
+	}
+private:
+
+	inline D3D11_DEPTH_STENCILOP_DESC GetStencilDesc(uint32_t stencil)
+	{
+		D3D11_DEPTH_STENCILOP_DESC desc{};
+		ZeroMemory(&desc, sizeof(D3D11_DEPTH_STENCILOP_DESC));
+		uint32_t failOp = stencil & TORC_STATE_STENCIL_FAIL_OP_MASK;
+		switch (failOp)
+		{
+		case TORC_STATE_STENCIL_FAIL_OP_KEEP:
+			desc.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+			break;
+		case TORC_STATE_STENCIL_FAIL_OP_ZERO:
+			desc.StencilFailOp = D3D11_STENCIL_OP_ZERO;
+			break;
+		case TORC_STATE_STENCIL_FAIL_OP_REPLACE:
+			desc.StencilFailOp = D3D11_STENCIL_OP_REPLACE;
+			break;
+		case TORC_STATE_STENCIL_FAIL_OP_INCR_SAT:
+			desc.StencilFailOp = D3D11_STENCIL_OP_INCR_SAT;
+			break;
+		case TORC_STATE_STENCIL_FAIL_OP_DECR_SAT:
+			desc.StencilFailOp = D3D11_STENCIL_OP_DECR_SAT;
+			break;
+		case TORC_STATE_STENCIL_FAIL_OP_INVERT:
+			desc.StencilFailOp = D3D11_STENCIL_OP_INVERT;
+			break;
+		case TORC_STATE_STENCIL_FAIL_OP_INCR:
+			desc.StencilFailOp = D3D11_STENCIL_OP_INCR;
+			break;
+		case TORC_STATE_STENCIL_FAIL_OP_DECR:
+			desc.StencilFailOp = D3D11_STENCIL_OP_DECR;
+			break;
+		default:
+			desc.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+			break;
+		}
+
+		uint32_t depthFailOp = stencil & TORC_STATE_STENCIL_DEPTH_FAIL_OP_MASK;
+		switch (depthFailOp)
+		{
+		case TORC_STATE_STENCIL_DEPTH_FAIL_OP_KEEP:
+			desc.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+			break;
+		case TORC_STATE_STENCIL_DEPTH_FAIL_OP_ZERO:
+			desc.StencilDepthFailOp = D3D11_STENCIL_OP_ZERO;
+			break;
+		case TORC_STATE_STENCIL_DEPTH_FAIL_OP_REPLACE:
+			desc.StencilDepthFailOp = D3D11_STENCIL_OP_REPLACE;
+			break;
+		case TORC_STATE_STENCIL_DEPTH_FAIL_OP_INCR_SAT:
+			desc.StencilFailOp = D3D11_STENCIL_OP_INCR_SAT;
+			break;
+		case TORC_STATE_STENCIL_DEPTH_FAIL_OP_DECR_SAT:
+			desc.StencilDepthFailOp = D3D11_STENCIL_OP_DECR_SAT;
+			break;
+		case TORC_STATE_STENCIL_DEPTH_FAIL_OP_INVERT:
+			desc.StencilDepthFailOp = D3D11_STENCIL_OP_INVERT;
+			break;
+		case TORC_STATE_STENCIL_DEPTH_FAIL_OP_INCR:
+			desc.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+			break;
+		case TORC_STATE_STENCIL_DEPTH_FAIL_OP_DECR:
+			desc.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+			break;
+		default:
+			desc.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+			break;
+		}
+
+		uint32_t stencilPassOp = stencil & TORC_STATE_STENCIL_PASS_OP_MASK;
+		switch (stencilPassOp)
+		{
+		case TORC_STATE_STENCIL_PASS_OP_KEEP:
+			desc.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+			break;
+		case TORC_STATE_STENCIL_PASS_OP_ZERO:
+			desc.StencilPassOp = D3D11_STENCIL_OP_ZERO;
+			break;
+		case TORC_STATE_STENCIL_PASS_OP_REPLACE:
+			desc.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+			break;
+		case TORC_STATE_STENCIL_PASS_OP_INCR_SAT:
+			desc.StencilPassOp = D3D11_STENCIL_OP_INCR_SAT;
+			break;
+		case TORC_STATE_STENCIL_PASS_OP_DECR_SAT:
+			desc.StencilPassOp = D3D11_STENCIL_OP_DECR_SAT;
+			break;
+		case TORC_STATE_STENCIL_PASS_OP_INVERT:
+			desc.StencilPassOp = D3D11_STENCIL_OP_INVERT;
+			break;
+		case TORC_STATE_STENCIL_PASS_OP_INCR:
+			desc.StencilPassOp = D3D11_STENCIL_OP_INCR;
+			break;
+		case TORC_STATE_STENCIL_PASS_OP_DECR:
+			desc.StencilPassOp = D3D11_STENCIL_OP_DECR;
+			break;
+		default:
+			desc.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+			break;
+		}
+
+		uint32_t stencilFunc = stencil & TORC_STATE_STENCIL_FUNC_MASK;
+		switch (stencilFunc)
+		{
+		case TORC_STATE_STENCIL_FUNC_COMPARISON_NEVER:
+			desc.StencilFunc = D3D11_COMPARISON_NEVER;
+			break;
+		case TORC_STATE_STENCIL_FUNC_COMPARISON_LESS:
+			desc.StencilFunc = D3D11_COMPARISON_LESS;
+			break;
+		case TORC_STATE_STENCIL_FUNC_COMPARISON_EQUAL:
+			desc.StencilFunc = D3D11_COMPARISON_EQUAL;
+			break;
+		case TORC_STATE_STENCIL_FUNC_COMPARISON_LESS_EQUAL:
+			desc.StencilFunc = D3D11_COMPARISON_LESS_EQUAL;
+			break;
+		case TORC_STATE_STENCIL_FUNC_COMPARISON_GREATER:
+			desc.StencilFunc = D3D11_COMPARISON_GREATER;
+			break;
+		case TORC_STATE_STENCIL_FUNC_COMPARISON_NOT_EQUAL:
+			desc.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
+			break;
+		case TORC_STATE_STENCIL_FUNC_COMPARISON_GREATER_EQUAL:
+			desc.StencilFunc = D3D11_COMPARISON_GREATER_EQUAL;
+			break;
+		case TORC_STATE_STENCIL_FUNC_COMPARISON_ALWAYS:
+			desc.StencilFunc = D3D11_COMPARISON_ALWAYS;
+			break;
+		default:
+			desc.StencilFunc = D3D11_COMPARISON_ALWAYS;
+			break;
+		}
+
+		return desc;
+	}
+	constexpr D3D11_COMPARISON_FUNC GetComparisonFunc(uint64_t flag)
+	{
+		switch (flag)
+		{
+		case TORC_STATE_COMPARISON_NEVER:
+			return D3D11_COMPARISON_FUNC::D3D11_COMPARISON_NEVER;
+		case TORC_STATE_COMPARISON_LESS:
+			return D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS;
+		case TORC_STATE_COMPARISON_EQUAL:
+			return D3D11_COMPARISON_FUNC::D3D11_COMPARISON_EQUAL;
+		case TORC_STATE_COMPARISON_LESS_EQUAL:
+			return D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS_EQUAL;
+		case TORC_STATE_COMPARISON_GREATER:
+			return D3D11_COMPARISON_FUNC::D3D11_COMPARISON_GREATER;
+		case TORC_STATE_COMPARISON_NOT_EQUAL:
+			return D3D11_COMPARISON_FUNC::D3D11_COMPARISON_NOT_EQUAL;
+		case TORC_STATE_COMPARISON_GREATER_EQUAL:
+			return D3D11_COMPARISON_FUNC::D3D11_COMPARISON_GREATER_EQUAL;
+		case TORC_STATE_COMPARISON_ALWAYS:
+			return D3D11_COMPARISON_FUNC::D3D11_COMPARISON_ALWAYS;
+		default:
+			break;
+		}
+	}
+	constexpr D3D11_DEPTH_WRITE_MASK GetDepthWriteMask(uint64_t flag)
+	{
+		switch (flag)
+		{
+		case TORC_STATE_DEPTH_WRITE_MASK_ZERO:
+			return D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ZERO;
+		case TORC_STATE_DEPTH_WRITE_MASK_ALL:
+			return D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ALL;
+		default:
+			break;
+		}
+	}
+	constexpr D3D11_FILL_MODE GetFillMode(uint64_t flag)
+	{
+		switch (flag)
+		{
+		case TORC_STATE_FILL_WIREFRAME:
+			return D3D11_FILL_MODE::D3D11_FILL_WIREFRAME;
+		case TORC_STATE_FILL_SOLID:
+			return D3D11_FILL_MODE::D3D11_FILL_SOLID;
+		default:
+			break;
+		}
+	}
+	constexpr D3D11_CULL_MODE GetCullMode(uint64_t flag)
+	{
+		switch (flag)
+		{
+		case TORC_STATE_CULL_NONE:
+			return D3D11_CULL_MODE::D3D11_CULL_NONE;
+		case TORC_STATE_CULL_FRONT:
+			return D3D11_CULL_MODE::D3D11_CULL_FRONT;
+		case TORC_STATE_CULL_BACK:
+			return D3D11_CULL_MODE::D3D11_CULL_BACK;
+		default:
+			break;
+		}
+	}
+	constexpr D3D11_COLOR_WRITE_ENABLE GetRTColorWriteMask(uint64_t flag)
+	{
+		switch (flag)
+		{
+		case TORC_COLOR_WRITE_RED:
+			return D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_RED;
+
+		case TORC_COLOR_WRITE_GREEN:
+			return D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_GREEN;
+		case TORC_COLOR_WRITE_BLUE:
+			return D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_BLUE;
+		case TORC_COLOR_WRITE_ALPHA:
+			return D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_ALPHA;
+		case TORC_COLOR_WRITE_ALL:
+			return D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_ALL;
+		}
+	}
+
+	constexpr D3D11_BLEND GetBlend(uint64_t flag)
+	{
+		if (flag >= 0 && flag <= 10)
+		{
+			return (D3D11_BLEND)(flag + 1);
+		}
+		switch (flag)
+		{
+		case TORC_STATE_BLEND_BLEND_FACTOR:
+			return D3D11_BLEND::D3D11_BLEND_BLEND_FACTOR;
+		case TORC_STATE_BLEND_INV_BLEND_FACTOR:
+			return D3D11_BLEND::D3D11_BLEND_INV_BLEND_FACTOR;
+		case TORC_STATE_BLEND_SRC1_COLOR:
+			return D3D11_BLEND::D3D11_BLEND_SRC1_COLOR;
+		case TORC_STATE_BLEND_INV_SRC1_COLOR:
+			return D3D11_BLEND::D3D11_BLEND_INV_SRC1_COLOR;
+		case TORC_STATE_BLEND_SRC1_ALPHA:
+			return D3D11_BLEND::D3D11_BLEND_SRC1_ALPHA;
+		case TORC_STATE_BLEND_INV_SRC1_ALPHA:
+			return D3D11_BLEND::D3D11_BLEND_INV_SRC1_ALPHA;
+		default:
+			break;
+		}
+	}
+
+	constexpr D3D11_BLEND_OP GetBlendOP(uint64_t flag)
+	{
+		switch (flag)
+		{
+		case TORC_BLEND_OP_ADD:
+			return D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+		case TORC_BLEND_OP_SUBTRACT:
+			return D3D11_BLEND_OP::D3D11_BLEND_OP_SUBTRACT;
+		case TORC_BLEND_OP_REV_SUBTRACT:
+			return D3D11_BLEND_OP::D3D11_BLEND_OP_REV_SUBTRACT;
+		case TORC_BLEND_OP_MIN:
+			return D3D11_BLEND_OP::D3D11_BLEND_OP_MIN;
+		case TORC_BLEND_OP_MAX:
+			return D3D11_BLEND_OP::D3D11_BLEND_OP_MAX;
+		default:
+			break;
+		}
+	}
+
+	
 private:
 
 

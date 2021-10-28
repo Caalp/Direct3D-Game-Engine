@@ -11,7 +11,7 @@ CameraComponent::CameraComponent()
 	m_CamRight = { 1.0f,0.0f,0.0f };
 	m_CamUp = { 0.0f,1.0f,0.0f };
 	m_CamLook = { 0.0f,0.0f,1.0f };
-	SetCameraLens(0.25f * 3.1415926535f, 800.0f / 600.0f, 1.0f, 1000.0f);
+	SetCameraLens(0.25f * 3.1415926535f, 1600.0f / 900.0f, 1.0f, 1000.0f);
 }
 
 void CameraComponent::Init()
@@ -219,8 +219,8 @@ void CameraComponent::DrawImgui()
 {
 
 	static bool showMatrices = false;
-	if (ImGui::BeginTabItem("CameraComponent", nullptr, ImGuiTabItemFlags_NoCloseWithMiddleMouseButton))
-	{
+	//if (ImGui::BeginTabItem("CameraComponent", nullptr, ImGuiTabItemFlags_NoCloseWithMiddleMouseButton))
+	//{
 		ImGui::DragFloat3("##Position", &m_CamPos.x, 0.01f);
 		ImGui::SameLine();
 		if (ImGui::Button("Position"))
@@ -268,18 +268,18 @@ void CameraComponent::DrawImgui()
 
 		}
 
-		std::vector<const char*> camNames;
+		/*std::vector<const char*> camNames;
 		auto  t = ECSFactory::GetComponents<CameraComponent>();
 
 		for (auto e : t)
 		{
 			const auto& cam = t.get(e);
 			camNames.emplace_back(cam.m_Name.c_str());
-		}
+		}*/
 
 		//ImGui::Separator();
 		//ImGui::PopStyleColor();
-		static int item_current_idx = 0;
+		/*static int item_current_idx = 0;
 		const char* combo_label = camNames[item_current_idx];
 		if (ImGui::BeginCombo("Active Camera", combo_label, 0))
 		{
@@ -292,9 +292,9 @@ void CameraComponent::DrawImgui()
 					ImGui::SetItemDefaultFocus();
 			}
 			ImGui::EndCombo();
-		}
+		}*/
 
-		auto cc = ECSFactory::GetComponents<CameraComponent, MainCamera>();
+		/*auto cc = ECSFactory::GetComponents<CameraComponent, MainCamera>();
 		auto mainCam = cc.front();
 
 		if (cc.get<CameraComponent>(mainCam).m_Name != camNames[item_current_idx])
@@ -312,10 +312,10 @@ void CameraComponent::DrawImgui()
 				}
 
 			}
-		}
+		}*/
 
-		ImGui::EndTabItem();
-	}
+		//ImGui::EndTabItem();
+	//}
 	
 
 	

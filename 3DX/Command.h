@@ -22,6 +22,12 @@ struct BackendDispatchFunction
 
 };
 
+enum Priority
+{
+	High = 0u,
+	Low,
+	Count
+};
 
 
 namespace command
@@ -74,6 +80,11 @@ namespace command
 
 	};
 
+	struct BindTexture
+	{
+		static const BackendDispatchFunc BACKEND_DISPATCH_FUNC;
+		TextureHandle m_texture;
+	};
 	struct UpdateConstantBuffer
 	{
 		static const BackendDispatchFunc BACKEND_DISPATCH_FUNC;

@@ -9,18 +9,21 @@
 #include "CommandBucket.h"
 //#include "TestShape.h"
 #include "buckets.h"
-
+#include "Loader.h"
 //TestShape testShape;
 #include "HandleAlloc.h"
+
+#include "TextureDB.h"
 App::App() :
-	skyBox("SkyBox",500,30,30)
+	skyBox("SkyBox", 500, 30, 30),
+	m_imguiInstance(ImguiHandler::GetInstance())
 	//wnd(1600, 900, "Hello"),
 	//m_SceneLoader(SceneLoader::GetSingleton()),
 	//imguiHandler(ImguiHandler::GetInstance())
 {
 
-	uint64_t testFlag = TORC_INDEPENDENT_BLEND_ENABLE;
-	uint64_t testFlagShift = 1 << TORC_INDEPENDENT_BLEND_SHIFT;
+
+
 	//FixedHandleAlloc<10> m_handleAlloc;
 	//ShaderHandle handle;
 	//handle = { m_handleAlloc.Alloc() };
@@ -42,24 +45,31 @@ App::App() :
 	m_handleAlloc.print();
 
 	backend::InitInfo init;
-	init.height = 600u;
-	init.width = 800u;
+	init.height = 900u;
+	init.width =1600u;
 	init.vsync = 1;
 	init.windowName = "Test";
 	init.renderer = backend::D3D11;
 
 	backend::Init(init);
-	backend::CreateViewport(800.0f,600.0f,1.0f,0.0f,0.0f,0.0f);
+	backend::CreateViewport(1600.0f,900.0f,1.0f,0.0f,0.0f,0.0f);
 	//bucket::testBucket.Init();
 	
 	//m_depth = backend::CreateDepthBuffer();
 	//backend::m_renderer->BindRenderTarget({});
 	
-
-	uint32_t test_state = 0 | (BS_OPAQUE | DSS_DEFAULT | RS_CULL_COUNTER_CLOCKWISE | SS_ANISOTROPIC_WRAP);
-	//testShape.Init();
+	Loader::GetInstance()->AddList(&TextureDB::Init, &TextureDB::Shutdown);
+	Loader::GetInstance()->Init();
+	
 	m_mainCamera.Init();
+
+	testShape_1.Init(TextureDB::GetInstance()->GetHandleToTexture(L"WoodCrate01.dds"), {0.0f,0.0f,0.0f});
+	testShape_2.Init(TextureDB::GetInstance()->GetHandleToTexture(L"WireFence.dds"), { 3.0f,0.0f,0.0f });
 	skyBox.Init();
+
+
+
+	//TextureHandle testHandle = TextureDB::GetInstance()->GetHandleToTexture(L"checkboard.dds");
 	//ResourceManager& rm = ResourceManager::GetSingleton();
 	//MeshResource* r1 = rm.CreateResource("boblamb",ResourceManager::TypeMeshResource)->get<MeshResource*>();
 	//r1->Load("../Models/boblamp/boblampclean.md5mesh");
@@ -139,8 +149,10 @@ int App::Go()
 
 		//wnd.gfx().BeginFrame();
 		// Enable dockspace before everything get processed
-		//imguiHandler.EnableDockspace();
+		
 		backend::BeginFrame();
+		//m_imguiInstance.EnableDockspace();
+		
 		Update(a);
 
 		//imguiHandler.ProcessImguiCalls();
@@ -171,9 +183,11 @@ void App::Update(float dt)
 	// A nice color
 	//float color[] = { 1.0f,0.5f,0.2f,1.0f };
 
+	m_mainCamera.DrawImgui();
 	m_mainCamera.UpdateAndBindCameraBuffer();
 
-	//testShape.Update(dt);
+	testShape_1.Update(dt);
+	testShape_2.Update(dt);
 
 	bucket::testBucket.Submit();
 	//	CommandPacket cmd_pack;
