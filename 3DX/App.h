@@ -1,7 +1,7 @@
 #pragma once
 
 #include "WindowsIncludes.h"
-#include "Server.h"
+//#include "Server.h"
 #include "Window.h"
 #include "Camera.h"
 #include "DirectionalLight.h"

@@ -73,7 +73,8 @@ public:
 		for (UINT i = 0; i < cb.size(); i++)
 		{
 			DirectX::XMMATRIX W = DirectX::XMLoadFloat4x4(&cb[i].World);
-			DirectX::XMMATRIX invWorld = DirectX::XMMatrixInverse(&DirectX::XMMatrixDeterminant(W), W);
+			DirectX::XMVECTOR WDet = DirectX::XMMatrixDeterminant(W);
+			DirectX::XMMATRIX invWorld = DirectX::XMMatrixInverse(&WDet, W);
 
 			DirectX::XMMATRIX toLocal = DirectX::XMMatrixMultiply(invView, invWorld);
 
