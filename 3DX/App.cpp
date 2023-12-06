@@ -4,24 +4,19 @@
 #include <random>
 #include "Surface.h"
 
-
-
-
 App::App() :
 	wnd(800, 600, "Hello"), x(0.5f), y(-4.5f), z(0.0f), last_x(0), last_y(0),
 	//(wnd.gfx()),
 	dirLight(wnd.gfx()), spotLight(wnd.gfx()),
 	pointLight(wnd.gfx()),
-	mPhi(1.5f*3.1415926535f), mTheta(1.5f*3.1415926535f), mRadius(80.0f),
+	mPhi(1.5f * 3.1415926535f), mTheta(1.5f * 3.1415926535f), mRadius(80.0f),
 	m(wnd.gfx(), "\\Models\\nano_textured\\nanosuit.obj"),
-	b1(wnd.gfx(), cam.GetPosition(), 50, 50, 120.0f, 120.0f,true),
+	b1(wnd.gfx(), cam.GetPosition(), 50, 50, 120.0f, 120.0f, true),
 	d1(wnd.gfx(), -2.5f, 0.0f, 0.0f),
 	crate(wnd.gfx(), 0.0f, 1.0f, -5.0f),
 	tree(wnd.gfx(), { "Textures\\tree0.dds","Textures\\tree1.dds","Textures\\tree2.dds","Textures\\tree3.dds" }),
 	sky(wnd.gfx(), "Textures\\snowcube1024.dds", 5000.0f),
 	bezierPatch(wnd.gfx())
-
-
 {
 	//server = new Server(8);
 	//server->CreateServerInterface();
@@ -33,7 +28,6 @@ App::App() :
 	mirror.GenerateGrid(wnd.gfx(), "Textures\\ice.dds", 10.0f, 10.0f, 1.0f, 0.03f, 0.0f, 1.0f);
 	//cylinder.GenerateCylinder(wnd.gfx(), "Textures\\BoltAnim2", 1, 1, 1, 30, 30,2.0f);
 	icosahedron.GenerateIcosahedron(wnd.gfx(), "Textures\\brick01.dds");
-
 
 	//Init Rotations
 	wall.RotateGeometry(0.0f, -1.5708f, 1.5708f);
@@ -60,110 +54,76 @@ int App::Go()
 		timer.StopTimer();
 		float a = timer.GetTime() / 1000;
 		Update(a);
-
-
 	}
-
 }
 
 void App::Update(float dt)
 {
-
 	static float d = 0;
 	d += dt;
 	//server->ReceivePackets();
 	crate.Update(dt);
-
 	float dtheta = 0.5f;
 	float v = 70.0f;
-
-
 	wnd.gfx().ClearFrame(0.75f, 0.75f, 0.75f);
-
-
-
 	if (wnd.kbd.KeyIsPressed('W'))
 	{
-
-		cam.Walk(v*dt);
-
+		cam.Walk(v * dt);
 	}
 	if (wnd.kbd.KeyIsPressed('S'))
 	{
-
-		cam.Walk(v*-dt);
+		cam.Walk(v * -dt);
 	}
 	if (wnd.kbd.KeyIsPressed('A'))
 	{
-
-		cam.Strafe(v*-dt);
+		cam.Strafe(v * -dt);
 	}
 	if (wnd.kbd.KeyIsPressed('D'))
 	{
-
-		cam.Strafe(v*dt);
+		cam.Strafe(v * dt);
 	}
-
-
 	float totalTime = 1.0f;
 	if (wnd.mouse.IsInWindow())
 	{
-
 		if (wnd.mouse.IsInWindow() && wnd.mouse.LeftIsPressed())
 		{
-
-			float dx = DirectX::XMConvertToRadians(0.25f*static_cast<float>(wnd.mouse.GetPosX() - last_x));
-			float dy = DirectX::XMConvertToRadians(0.25f*static_cast<float>(wnd.mouse.GetPosY() - last_y));
-
+			float dx = DirectX::XMConvertToRadians(0.25f * static_cast<float>(wnd.mouse.GetPosX() - last_x));
+			float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(wnd.mouse.GetPosY() - last_y));
 			cam.Pitch(dy);
 			cam.Yaw(dx);
 		}
 		last_x = (float)wnd.mouse.GetPosX();
 		last_y = (float)wnd.mouse.GetPosY();
-
 	}
-
 	static float t_base = 0.0f;
 	if ((totalTime - t_base) >= 0.25f)
 	{
 		t_base += 0.25f;
-
 		DWORD i = 5 + rand() % (water.GetRowCount() - 10);
 		DWORD j = 5 + rand() % (water.GetColumnCount() - 10);
-
 		float r = MatHelper::randF(1.0f, 2.0f);
-
 		water.Disturb(i, j, r);
 	}
-
 	if (wnd.kbd.KeyIsPressed('Q'))
 	{
-		cam.Pitch((float)-0.1*dtheta);
+		cam.Pitch((float)-0.1 * dtheta);
 	}
-
 	if (wnd.kbd.KeyIsPressed('E'))
 	{
-		cam.Pitch((float)0.1*dtheta);
+		cam.Pitch((float)0.1 * dtheta);
 	}
 	if (wnd.kbd.KeyIsPressed('Z'))
 	{
-		cam.RotateY((float)-0.1*dtheta);
+		cam.RotateY((float)-0.1 * dtheta);
 	}
-
 	if (wnd.kbd.KeyIsPressed('C'))
 	{
-
-		cam.RotateY((float)0.1*dtheta);
-
+		cam.RotateY((float)0.1 * dtheta);
 	}
 	if (wnd.kbd.KeyIsPressed('O'))
 	{
-
 		crate.MoveBox(dt, 0.0f, 0.0f);
-
 	}
-
-
 	/*{
 		using namespace DirectX;
 		float x(0.0f), y(0.0f), z(0.0f);
@@ -207,12 +167,12 @@ void App::Update(float dt)
 		dirLight.Bind(wnd.gfx());
 		pointLight.Bind(wnd.gfx());
 		spotLight.Bind(wnd.gfx());
-		
-		
+
+
 		sky.SetRS(wnd.gfx(), RasterizerState::RasterizerType::NoCull);
 		sky.SetDSS(wnd.gfx(), DSS::DSSType::LessOrEqual);
 		sky.Draw(wnd.gfx());
-		
+
 		wnd.gfx().ResetDSS();
 		wnd.gfx().ResetRS();
 		crate.Draw(wnd.gfx());
@@ -222,8 +182,6 @@ void App::Update(float dt)
 	wnd.gfx().SetDefaultViewport();
 	wnd.gfx().GenerateMIPsCubeMap();
 	wnd.gfx().ClearFrame(0.75f, 0.75f, 0.75f);
-	
-
 	dirLight.Bind(wnd.gfx());
 	pointLight.Bind(wnd.gfx());
 	spotLight.Bind(wnd.gfx());*/
@@ -232,12 +190,8 @@ void App::Update(float dt)
 	////wall.Draw(wnd.gfx());
 	//
 	//crate.Draw(wnd.gfx());
-	//
-
-	//
-	////d1.Update(0.015f);
-	////d1.Draw(wnd.gfx());
-	//
+	//d1.Update(0.015f);
+	//d1.Draw(wnd.gfx());
 
 	//mirror.SetBS(wnd.gfx(), BlendState::BlendType::NoRenderTargetWrite);
 	//mirror.SetDSS(wnd.gfx(), DSS::DSSType::Mirror);
@@ -268,10 +222,6 @@ void App::Update(float dt)
 	//wnd.gfx().ResetRS();
 	//wnd.gfx().ResetDSS();
 	//crate.ReflactionOn(false);
-
-	//
-
-	//
 
 	////water.Update(wnd.gfx(), 0.000648);
 	////water.Draw(wnd.gfx());
@@ -308,7 +258,7 @@ void App::Update(float dt)
 	//sphere.EnableTexture(true);
 	//sphere.EnableReflaction(true);
 	//crate.Update(dt);
-	
+
 	/*static bool initSphere = false;
 	if (!initSphere)
 	{
@@ -316,7 +266,7 @@ void App::Update(float dt)
 		sphere.GenerateSphere(wnd.gfx(), "Textures\\stone.dds", 3.0f, 20, 20);
 		initSphere = true;
 	}
-	
+
 	sphere.Draw(wnd.gfx());
 
 	sky.SetRS(wnd.gfx(), RasterizerState::RasterizerType::NoCull);
@@ -329,7 +279,7 @@ void App::Update(float dt)
 	cam.UpdateViewXM();
 	wnd.gfx().SetCamera(cam.ViewProjXM());
 	wnd.gfx().SetView(cam.GetViewXM());
-	wnd.gfx().SetCameraPos(cam.GetPosition());	
+	wnd.gfx().SetCameraPos(cam.GetPosition());
 	//b1.SetRS(wnd.gfx(), RasterizerState::RasterizerType::Default);
 	bezierPatch.SetRS(wnd.gfx(), RasterizerState::RasterizerType::Default);
 	//b1.Draw(wnd.gfx());
