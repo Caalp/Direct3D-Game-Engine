@@ -54,7 +54,7 @@ Surface::Surface(const std::string& filename)
 		{
 			file.seekg(padding, std::ios_base::cur);
 		}
-		 else if (bi32)
+		else if (bi32)
 		{
 			file.seekg(0, std::ios_base::cur);
 		}

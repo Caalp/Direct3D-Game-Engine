@@ -1,7 +1,7 @@
 #pragma once
 #include "Colors.h"
 #include <string>
-
+#include <memory>
 
 class Surface
 {
