@@ -5,10 +5,9 @@
 #include "SceneRenderer.h"
 #include "Technique.h"
 
-
-Drawable::Drawable(std::string id) : objectName(id)
-{
-}
+Drawable::Drawable(std::string id) 
+	: objectName(id)
+{}
 
 void Drawable::Bind(Graphics& gfx) const
 {
@@ -21,7 +20,6 @@ Scene Drawable::GetScene()
 {
 	return SceneRenderer::scene;
 }
-
 
 void Drawable::LinkTechnique(RenderGraph& rg)
 {
@@ -59,7 +57,6 @@ void Drawable::Update(float ft)
 	pitch += ft;
 	yaw += ft;
 	roll += ft;
-	
 }
 
 void Drawable::AppendTechnique(const Technique& tech)
@@ -109,6 +106,3 @@ uint32_t Drawable::GetID() const
 {
 	return m_id;
 }
-
-
-

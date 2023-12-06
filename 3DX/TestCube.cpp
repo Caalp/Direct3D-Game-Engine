@@ -11,7 +11,6 @@
 #include "Events.h"
 #include "App.h"
 
-
 TestCube::TestCube(Graphics& gfx, float x, float y, float z) : Drawable("testCube")
 {
 	posX = x;
@@ -50,11 +49,7 @@ TestCube::TestCube(Graphics& gfx, float x, float y, float z) : Drawable("testCub
 
 	std::vector<Vertex> vertices;
 	vertices.resize(24);
-
-
 	constexpr float side = 1.0f / 2.0f;
-
-
 	vertices[0].Pos = { -side,-side,-side };// 0 near side
 	vertices[1].Pos = { side,-side,-side };// 1
 	vertices[2].Pos = { -side,side,-side };// 2
@@ -129,7 +124,6 @@ TestCube::TestCube(Graphics& gfx, float x, float y, float z) : Drawable("testCub
 	vertices[22].Normal = { 1.0f,0.0f,0.0f };
 	vertices[23].Normal = { 1.0f,0.0f,0.0f };
 */
-
 	std::vector<unsigned short> indices =
 	{
 
@@ -141,16 +135,12 @@ TestCube::TestCube(Graphics& gfx, float x, float y, float z) : Drawable("testCub
 			20,23,21, 20,22,23
 
 	};
-
 	vertexBuffer = std::make_unique<VertexBuffer>(gfx, vertices);
 	primitiveTopology = std::make_unique<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	indexBuffer = std::make_unique<IndexBuff>(gfx, indices);
-
 	//vertexBuffer = std::make_shared<VertexBuffer>(gfx, vertices);
 	//primitiveTopology = std::make_shared<PrimitiveTopology>(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//indexBuffer = std::make_shared<IndexBuff>(gfx, indices);
-
-
 	Technique textured_object("testCube", channel1::defaultChannel);
 	{
 		{
@@ -169,7 +159,7 @@ TestCube::TestCube(Graphics& gfx, float x, float y, float z) : Drawable("testCub
 			s1.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
 
 			s1.AddBind(std::make_shared<SamplerState>(gfx));
-			s1.AddBind(std::make_shared<Texture>(gfx, "../Textures/WoodCrate01.dds"));
+			s1.AddBind(std::make_shared<Texture>(gfx, "WoodCrate01.dds"));
 
 			Entity* entt = GetScene().CreateEntity(this);
 			entt->AddComponent<Transformation>();
@@ -183,10 +173,6 @@ TestCube::TestCube(Graphics& gfx, float x, float y, float z) : Drawable("testCub
 			
 			GetScene().GetEntity(entt->GetID());
 			//evl.OnEvent<KeyboardEvent>([=](std::shared_ptr<KeyboardEvent> e) {UpdatePos(e->GetEvent(),mID); });
-			
-			
-			
-			
 			// chech valid
 			//bool b = SceneRenderer::scene.reg.valid((entt::entity)mID);
 			//auto version = SceneRenderer::scene.reg.version((entt::entity)mID);
@@ -211,7 +197,7 @@ TestCube::TestCube(Graphics& gfx, float x, float y, float z) : Drawable("testCub
 			s2.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
 
 			s2.AddBind(std::make_shared<SamplerState>(gfx));
-			s2.AddBind(std::make_shared<Texture>(gfx, "Textures\\WoodCrate01.dds"));
+			s2.AddBind(std::make_shared<Texture>(gfx, "WoodCrate01.dds"));
 
 			s2.AddBind(std::make_shared<TransformationBuffer>(gfx, *this));
 			DirectX::XMVECTOR mirrorPlane = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
@@ -222,8 +208,6 @@ TestCube::TestCube(Graphics& gfx, float x, float y, float z) : Drawable("testCub
 		}*/
 	}
 	AppendTechnique(textured_object);
-
-
 }
 
 void TestCube::UpdatePos(unsigned char key,uint32_t id)
@@ -240,8 +224,6 @@ void TestCube::UpdatePos(unsigned char key,uint32_t id)
 			transform = &view.get<Transformation>(e);
 			break;
 		}
-		
-		
 	}
 	float v = 100.0f;
 	switch (key)
@@ -262,7 +244,5 @@ void TestCube::UpdatePos(unsigned char key,uint32_t id)
 	
 		break;
 	}
-
-
 	transform->transform = DirectX::XMMatrixTranslation(pos->position.x, pos->position.y, pos->position.z);
 }

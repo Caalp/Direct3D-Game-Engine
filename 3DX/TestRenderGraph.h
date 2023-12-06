@@ -33,17 +33,11 @@ public:
 			AppendPass(std::move(pass));
 		}
 		{
-			auto pass = std::make_unique<DefaultPass>(gfx,"default");
+			auto pass = std::make_unique<DefaultPass>(gfx, "default");
 			// Link those render and deptstencil to existing buffers from clearRT and ClearDS
 			pass->SetSinkLinkage("rendertarget", "clearRT.buffer");
 			pass->SetSinkLinkage("depthstencil", "clearDS.buffer");
 			AppendPass(std::move(pass));
 		}
-
-
 	}
-
-
-private:
-
 };

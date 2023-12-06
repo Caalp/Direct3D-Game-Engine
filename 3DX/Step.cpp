@@ -4,18 +4,13 @@
 #include "Drawable.h"
 #include "RenderGraph.h"
 
-
-Step::Step(std::string ID) : targetPassName(std::move(ID))
-{
-	
-}
-
-
+Step::Step(std::string ID) 
+	: targetPassName(std::move(ID))
+{}
 
 void Step::AddBind(std::shared_ptr<Bindable> bindable)
 {
 	OutputDebugString(typeid(bindable.get()).name());
-		
 	bindables.push_back(std::move(bindable));
 }
 
@@ -42,11 +37,9 @@ void Step::Link(RenderGraph& rg)
 	{
 		printf("[ERROR]-Attempt linking against target pass %s failed!\n", targetPassName.c_str());
 	}*/
-	
-	
 }
 
-void Step::Bind(Graphics & gfx) const 
+void Step::Bind(Graphics& gfx) const
 {
 	//OutputDebugString(typeid(mDrawFunc.get()).name());
 	//DrawExample* dw = dynamic_cast<DrawExample*>(mDrawFunc.get());
@@ -56,16 +49,13 @@ void Step::Bind(Graphics & gfx) const
 	}
 }
 
-
-void Step::Draw(Graphics& gfx) const 
+void Step::Draw(Graphics& gfx) const
 {
 	for (auto elem : mDrawFunc)
 	{
 		elem->Draw(gfx);
 	}
-	
 }
-
 
 const std::string& Step::GetTargetPassName() const
 {

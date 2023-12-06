@@ -9,9 +9,8 @@ class Icosahedron : public Drawable
 		DirectX::XMFLOAT3 Normal;
 		DirectX::XMFLOAT2 texCoord;
 	};
-
 public:
-	Icosahedron(Graphics& gfx,std::string name);
+	Icosahedron(Graphics& gfx, std::string name);
 	void SubDivide(Graphics& gfx, unsigned int numTimesDivide);
 	void Utilize(Graphics& gfx);
 private:

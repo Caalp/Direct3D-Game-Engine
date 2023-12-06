@@ -1,11 +1,11 @@
 #pragma once
 #include "additional_headers.h"
 #include "Technique.h"
+
 class RenderGraph;
 class Scene;
 class Technique;
 class Graphics;
-
 
 class Drawable
 {
@@ -31,7 +31,6 @@ public:
 	UINT GetIndexCount() const;
 	void SetID(uint32_t id);
 	uint32_t GetID() const;
-
 protected:
 	std::string objectName;
 	uint32_t m_id;
@@ -45,5 +44,3 @@ protected:
 	float pitch{ 1.0f }, yaw{ 1.0f }, roll{1.0f};
 	float posX{ 0.0f }, posY{ 0.0f }, posZ{0.0f};
 };
-
-

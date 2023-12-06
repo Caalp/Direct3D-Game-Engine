@@ -7,9 +7,10 @@
 #include "DrawCallDispatch.h"
 #include "Imgui/imgui.h"
 
-PointLight::PointLight(Graphics & gfx) : __buff(gfx,2u),Sphere(gfx, "PointLight", 0.5f, 30.0f, 30.0f)
+PointLight::PointLight(Graphics& gfx) 
+	: __buff(gfx, 2u)
+	, Sphere(gfx, "PointLight", 0.5f, 30, 30)
 {
-	
 	__BufferData =
 	{
 		{0.3f,0.3f,0.3f,1.0f},//ambient
@@ -26,49 +27,40 @@ PointLight::PointLight(Graphics & gfx) : __buff(gfx,2u),Sphere(gfx, "PointLight"
 		0.045f,
 		0.0075f,*/
 	};
-	
 	Utilize(gfx);
 }
 
-void PointLight::Bind(Graphics & gfx)
+void PointLight::Bind(Graphics& gfx)
 {
-	
 	__buff.Update(gfx, __BufferData);
 	__buff.Bind(gfx);
 }
 void PointLight::Utilize(Graphics& gfx)
 {
-Technique textured_object("PointLight", channel1::defaultChannel);
-{
-	Step s1{ "default" };
-	s1.AddBind(std::make_shared<DrawIndexed>(0, indexBuffer.get()->GetIndexCount()));
-	s1.AddBind(std::make_shared<PixelShader>(gfx, "ColorBlenderPS.cso"));
-	auto vs = std::make_shared<VertexShader>(gfx, "ColorBlenderVS.cso");
-	auto vsBlob = vs->GetVBlob();
-	s1.AddBind(std::move(vs));
-	const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
+	Technique textured_object("PointLight", channel1::defaultChannel);
 	{
-		{"Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-
-	};
-
-	s1.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
-
-	//s1.AddBind(std::make_shared<SamplerState>(gfx));
-	s1.AddBind(std::make_shared<PSConstBuff<DirectX::XMFLOAT3>>(gfx, DirectX::XMFLOAT3{ 1.0f,0.0f,0.0f }, 1u));
-	Entity* entt = GetScene().CreateEntity(this);
-	//entt->AddComponent<Position>(__BufferData.pos);
-	entt->AddComponent<Transformation>(DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&__BufferData.pos)));
-
-	uint32_t mID = std::move(entt->GetID());
-
-	//evl.OnEvent<ImGuiEvent>([=](std::shared_ptr<ImGuiEvent> e) -> void {UpdatePos(__BufferData.pos, mID); });
-
-
-	s1.AddBind(std::make_shared<TransformationBuffer>(gfx, mID));
-	SetID(mID);
-	textured_object.AddStep(s1);
-}
+		Step s1{ "default" };
+		s1.AddBind(std::make_shared<DrawIndexed>(0, indexBuffer.get()->GetIndexCount()));
+		s1.AddBind(std::make_shared<PixelShader>(gfx, "ColorBlenderPS.cso"));
+		auto vs = std::make_shared<VertexShader>(gfx, "ColorBlenderVS.cso");
+		auto vsBlob = vs->GetVBlob();
+		s1.AddBind(std::move(vs));
+		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
+		{
+			{"Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		};
+		s1.AddBind(std::make_shared<InputLayout>(gfx, ied, vsBlob));
+		//s1.AddBind(std::make_shared<SamplerState>(gfx));
+		s1.AddBind(std::make_shared<PSConstBuff<DirectX::XMFLOAT3>>(gfx, DirectX::XMFLOAT3{ 1.0f,0.0f,0.0f }, 1u));
+		Entity* entt = GetScene().CreateEntity(this);
+		//entt->AddComponent<Position>(__BufferData.pos);
+		entt->AddComponent<Transformation>(DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&__BufferData.pos)));
+		uint32_t mID = std::move(entt->GetID());
+		//evl.OnEvent<ImGuiEvent>([=](std::shared_ptr<ImGuiEvent> e) -> void {UpdatePos(__BufferData.pos, mID); });
+		s1.AddBind(std::make_shared<TransformationBuffer>(gfx, mID));
+		SetID(mID);
+		textured_object.AddStep(s1);
+	}
 	AppendTechnique(textured_object);
 }
 void PointLight::DrawLightImgui(DirectX::XMFLOAT3& pos)
@@ -89,9 +81,7 @@ void PointLight::Update()
 		{
 			transform = &view.get<Transformation>(e);
 		}
-
 	}
 	transform->transform = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&__BufferData.pos));
 	DrawLightImgui(__BufferData.pos);
-
 }

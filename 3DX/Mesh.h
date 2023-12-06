@@ -7,7 +7,6 @@
 #include "assimp/scene.h"
 #include "Drawable.h"
 
-
 class Graphics;
 class Technique;
 class RenderGraph;
@@ -21,6 +20,7 @@ struct Vertices
 	DirectX::XMFLOAT4 weights;
 	BYTE boneIndices[4];
 };
+
 struct TextureData
 {
 	//unsigned int id;
@@ -28,29 +28,29 @@ struct TextureData
 	uint8_t type;
 	std::string path;
 };
+
 struct BoneVertexWeightInfo
 {
 	uint32_t boneVertexID; //vertexid where bone has affect on
 	float boneVertexWeight;
 };
+
 struct BoneData
 {
-
 	DirectX::XMMATRIX offsetMatrix; // Transforms mesh space to bone space
 	DirectX::XMMATRIX finalTransform;
 };
 
-class Mesh 
+class Mesh
 {
 public:
 	Mesh() = default;
 	void ParseMesh(const aiMesh& mesh, const aiMaterial* const* pMaterials, std::string texIncludeDir);
-	void InitDrawable(Graphics& gfx,const Technique& tech, std::string name,uint32_t id);
+	void InitDrawable(Graphics& gfx, const Technique& tech, std::string name, uint32_t id);
 	void Submit(size_t channel);
 	void LinkTechnique(RenderGraph& rg);
 	void SetName(std::string name);
 	std::string GetName() const;
-
 private:
 	void InitBuffers(Graphics& gfx);
 public:
@@ -59,5 +59,4 @@ public:
 	std::vector<Vertices> m_vertices;
 	std::vector<WORD> indices;
 	std::vector<TextureData> textures;
-
 };

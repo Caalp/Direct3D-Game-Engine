@@ -1,66 +1,59 @@
 #include "TextureLoader.h"
 #include <assert.h>
 
-
-TextureLoader::TextureLoader(const char * filePath):
-	index(0u),
-	width(0),height(0),
-	imgFormat(FIF_UNKNOWN),
-	pImage(nullptr)
-
+TextureLoader::TextureLoader(const char* filePath) 
+	: index(0u)
+	, width(0)
+	, height(0)
+	, imgFormat(FIF_UNKNOWN)
+	, pImage(nullptr)
 {
-	
 	if (std::filesystem::is_directory(filePath))
 	{
-		
 		for (const auto& elem : std::filesystem::directory_iterator(filePath))
 		{
 			sfilePath.push_back(elem.path().generic_string());
-			assert(LoadTexture(elem.path().generic_string().c_str()) == true, "Image Loading in FreeImage is Failed");
+			assert(LoadTexture(elem.path().generic_string().c_str()) == true);
 		}
 	}
 	else
 	{
 		sfilePath.push_back(filePath);
-		assert(LoadTexture(filePath) == true, "Image Loading in FreeImage is Failed");
+		assert(LoadTexture(filePath) == true);
 	}
-	
 }
 
-TextureLoader::TextureLoader(std::vector<const char*> filePaths):
-	index(0u),
-	width(0), height(0),
-	imgFormat(FIF_UNKNOWN),
-	pImage(nullptr)
+TextureLoader::TextureLoader(std::vector<const char*> filePaths) 
+	: index(0u)
+	, width(0)
+	, height(0)
+	, imgFormat(FIF_UNKNOWN)
+	, pImage(nullptr)
 {
-	
-	for (int i = 0; i < filePaths.size(); i++)
+	for (size_t i = 0; i < filePaths.size(); i++)
 	{
 		if (std::filesystem::is_directory(filePaths[i]))
 		{
-
 			for (const auto& elem : std::filesystem::directory_iterator(filePaths[i]))
 			{
 				sfilePath.push_back(elem.path().generic_string());
-				assert(LoadTexture(elem.path().generic_string().c_str()) == true, "Image Loading in FreeImage is Failed");
+				assert(LoadTexture(elem.path().generic_string().c_str()) == true);
 			}
 		}
 		else
 		{
 			sfilePath.push_back(filePaths[i]);
-			assert(LoadTexture(filePaths[i]) == true, "Image Loading in FreeImage is Failed");
+			assert(LoadTexture(filePaths[i]) == true);
 		}
-
 	}
 }
 
-TextureLoader::TextureLoader(const TextureLoader & rhs)
-{	
+TextureLoader::TextureLoader(const TextureLoader& rhs)
+{
 	*this = rhs;
-	
 }
 
-TextureLoader & TextureLoader::operator=(const TextureLoader & rhs)
+TextureLoader& TextureLoader::operator=(const TextureLoader& rhs)
 {
 	index = rhs.index;
 	width = rhs.width;
@@ -104,8 +97,6 @@ unsigned int TextureLoader::GetHeight() const
 	return height;
 }
 
-
-
 unsigned int TextureLoader::GetImageCount() const
 {
 	return bits.size();
@@ -121,9 +112,7 @@ void TextureLoader::GetImageByIndex(unsigned int i)
 }
 const BYTE* TextureLoader::GetImageData(unsigned int index) const
 {
-	
 	return bits[index];
-	
 }
 
 std::vector<std::string> TextureLoader::filePath() const
@@ -131,13 +120,11 @@ std::vector<std::string> TextureLoader::filePath() const
 	return this->sfilePath;
 }
 
-bool TextureLoader::LoadTexture(const char * filePath)
+bool TextureLoader::LoadTexture(const char* filePath)
 {
-	
 	auto a = sizeof(FIBITMAP);
 	//Image format.
 	imgFormat = FreeImage_GetFileType(filePath, 0);
-	
 	//If format is still unknown get it from filename
 	if (imgFormat == FIF_UNKNOWN)
 		imgFormat = FreeImage_GetFIFFromFilename(filePath);
@@ -159,7 +146,7 @@ bool TextureLoader::LoadTexture(const char * filePath)
 	height = FreeImage_GetHeight(pImage);
 	//If one of them is zero something is wrong return false
 	// add checking for bits too
-	if (( width == 0 || height == 0))
+	if ((width == 0 || height == 0))
 		return false;
 	// else true successfully loaded
 	return true;

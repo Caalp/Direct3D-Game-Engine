@@ -24,11 +24,8 @@ public:
 	void GetImageByIndex(unsigned int i);
 	const BYTE* GetImageData(unsigned int index = 0) const;
 	std::vector<std::string> filePath() const;
-	
 private:
-
 	bool LoadTexture(const char* filePath);
-	
 private:
 	std::vector<std::string> sfilePath;
 	unsigned int index;

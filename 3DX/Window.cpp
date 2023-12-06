@@ -6,7 +6,7 @@
 
 Window::WindowClass Window::WindowClass::wndClass;
 
-const char * Window::WindowClass::GetName() noexcept
+const char* Window::WindowClass::GetName() noexcept
 {
 	return d3dClassName;
 }
@@ -16,9 +16,8 @@ HINSTANCE Window::WindowClass::GetInstance() noexcept
 	return wndClass.hInst;
 }
 
-
-Window::WindowClass::WindowClass() noexcept : hInst(GetModuleHandle(nullptr))
-
+Window::WindowClass::WindowClass() noexcept 
+	: hInst(GetModuleHandle(nullptr))
 {
 	WNDCLASSEX wc = { 0 };
 	wc.cbSize = sizeof(wc);
@@ -41,23 +40,18 @@ Window::WindowClass::WindowClass() noexcept : hInst(GetModuleHandle(nullptr))
 
 	/*int scrrenWidth = GetSystemMetrics(SM_CXSCREEN);
 	int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-
 	if ()
-	{
-
-	}*/
+	{}*/
 }
 
 Window::WindowClass::~WindowClass()
 {
 	UnregisterClass(d3dClassName, GetInstance());
-	
 }
 
-Window::Window(int width, int height,  const char* name) noexcept : width(width),
-																	height(height)
-																	
-																	
+Window::Window(int width, int height, const char* name) noexcept 
+	: width(width)
+	, height(height)
 {
 	RECT wr;
 	wr.left = 100;
@@ -66,22 +60,20 @@ Window::Window(int width, int height,  const char* name) noexcept : width(width)
 	wr.bottom = height + wr.top;
 	AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE);
 	// Create Window
-	hWnd = CreateWindow(WindowClass::GetName(), 
-						name, 
-						WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, 
-						CW_USEDEFAULT, 
+	hWnd = CreateWindow(WindowClass::GetName(),
+						name,
+						WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
+						CW_USEDEFAULT,
 						CW_USEDEFAULT,
 						wr.right - wr.left,
-						wr.bottom - wr.top, 
-						nullptr, 
-						nullptr, 
+						wr.bottom - wr.top,
+						nullptr,
+						nullptr,
 						WindowClass::GetInstance(), this);
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 	ImGui_ImplWin32_Init(hWnd);
 	p_gfx = std::make_unique<Graphics>(hWnd);
 }
-
-
 
 Window::~Window()
 {
@@ -91,7 +83,7 @@ Window::~Window()
 
 void Window::SetWindowTitle(std::string& name)
 {
-	SetWindowText(hWnd,name.c_str());
+	SetWindowText(hWnd, name.c_str());
 }
 
 std::optional<int> Window::ProcessMessages() noexcept
@@ -121,8 +113,6 @@ Graphics& Window::gfx()
 	return *p_gfx;
 }
 
-
-
 LRESULT WINAPI Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noexcept
 {
 	if (msg == WM_NCCREATE) // sent WM_CREATE when a window is created
@@ -133,9 +123,7 @@ LRESULT WINAPI Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wparam, LPARAM
 		//Stores and sets user initialized data to window
 		SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pWnd));
 		SetWindowLongPtr(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&Window::HandleMsgTh));
-		
 		return pWnd->HandleMsg(hWnd, msg, wparam, lparam);
-		
 	}
 	return DefWindowProc(hWnd, msg, wparam, lparam);
 }
@@ -143,8 +131,7 @@ LRESULT WINAPI Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wparam, LPARAM
 LRESULT WINAPI Window::HandleMsgTh(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noexcept
 {
 	Window* const pWnd = reinterpret_cast<Window*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
-
-		return pWnd->HandleMsg(hWnd, msg, wparam, lparam);
+	return pWnd->HandleMsg(hWnd, msg, wparam, lparam);
 }
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noexcept
@@ -152,7 +139,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noe
 	//emgr->QueueEvent(std::shared_ptr<IEventData>(new ImGuiEvent()));
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wparam, lparam))
 	{
-		
+
 		return true;
 	}
 	const auto& imio = ImGui::GetIO();
@@ -160,55 +147,50 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noe
 	{
 	case WM_CLOSE:
 		PostQuitMessage(0);
-		return 0;
+	return 0;
 	case WM_KILLFOCUS:
-		kbd.ClearState();
+	kbd.ClearState();
 		break;
 	case WM_KEYDOWN:
-		// Imgui helper demo window 
-		//if (wparam == VK_F1 && show_demo_window == false)
-		//{
-		//	show_demo_window = true;
-		//}
-		//else if (wparam == VK_F1 && show_demo_window == true)
-		//{
-		//	show_demo_window = false;
-		//}
+	// Imgui helper demo window 
+	//if (wparam == VK_F1 && show_demo_window == false)
+	//{
+	//	show_demo_window = true;
+	//}
+	//else if (wparam == VK_F1 && show_demo_window == true)
+	//{
+	//	show_demo_window = false;
+	//}
 
-		// key handled except system keys
+	// key handled except system keys
 		kbd.OnKeyPressed(static_cast<unsigned char>(wparam));
-		break;
-		
-
+	break;
 	case WM_SYSKEYDOWN:
-		if (imio.WantCaptureKeyboard)
-		{
-			break;
-		}
-		if (!(lparam & 0x40000000) || kbd.AutorepeatIsEnabled()) //
-		{
-			kbd.OnKeyPressed(static_cast<unsigned char>(wparam));
-		}
+	if (imio.WantCaptureKeyboard)
+	{
 		break;
+	}
+	if (!(lparam & 0x40000000) || kbd.AutorepeatIsEnabled()) //
+	{
+		kbd.OnKeyPressed(static_cast<unsigned char>(wparam));
+	}
+	break;
 	case WM_KEYUP:
-
-		// KeyUp event except system keys such --ALT
-		if (imio.WantCaptureKeyboard)
-		{
-			break;
-		}
-		kbd.OnKeyReleased(static_cast<unsigned char>(wparam));
+	// KeyUp event except system keys such --ALT
+	if (imio.WantCaptureKeyboard)
+	{
 		break;
+	}
+		kbd.OnKeyReleased(static_cast<unsigned char>(wparam));
+	break;
 	case WM_SYSKEYUP:
 		kbd.OnKeyReleased(static_cast<unsigned char>(wparam));
-		break;
+	break;
 	case WM_CHAR:
 		kbd.OnChar(static_cast<unsigned char>(wparam));
-		break;
-		// Mouse move event in window message handling loop
+	break;
 	case WM_MOUSEMOVE:
 	{
-	
 		const POINTS pt = MAKEPOINTS(lparam);
 		// in client region -> log move, and log enter + capture mouse (if not previously in window)
 		if (pt.x >= 0 && pt.x < width && pt.y >= 0 && pt.y < height)
@@ -238,8 +220,8 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noe
 		{
 			break;
 		}
-		break;
 	}
+	break;
 	case WM_LBUTTONDOWN:
 	{
 		if (imio.WantCaptureMouse)
@@ -256,18 +238,18 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noe
 		{
 			break;
 		}
-		
+
 		const POINTS pt = MAKEPOINTS(lparam);
 		mouse.OnRightPressed(pt.x, pt.y);
-		break;
 	}
+	break;
 	case WM_LBUTTONUP:
 	{
 		if (imio.WantCaptureMouse)
 		{
 			break;
 		}
-				
+
 		const POINTS pt = MAKEPOINTS(lparam);
 		mouse.OnLeftReleased(pt.x, pt.y);
 		// release mouse if outside of window
@@ -276,11 +258,10 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noe
 			ReleaseCapture();
 			mouse.OnMouseLeave();
 		}
-		break;
 	}
+	break;
 	case WM_RBUTTONUP:
 	{
-		
 		if (imio.WantCaptureMouse)
 		{
 			break;
@@ -293,8 +274,8 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noe
 			ReleaseCapture();
 			mouse.OnMouseLeave();
 		}
-		break;
 	}
+	break;
 	case WM_MOUSEWHEEL:
 	{
 		if (imio.WantCaptureMouse)
@@ -304,49 +285,49 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) noe
 		const POINTS pt = MAKEPOINTS(lparam);
 		const int delta = GET_WHEEL_DELTA_WPARAM(wparam);
 		mouse.OnWheelDelta(pt.x, pt.y, delta);
-		break;
 	}
-	
+	break;
 	}
-
 	return DefWindowProc(hWnd, msg, wparam, lparam);
 }
 
 std::string Window::Exception::TranslateErrorCode(HRESULT hr) noexcept
 {
 	char* pMsgBuf = nullptr;
-	
 	// windows will allocate memory for err string and make our pointer point to it
 	const DWORD nMsgLen = FormatMessage(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER |
-		FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-		nullptr, hr, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		reinterpret_cast<LPSTR>(&pMsgBuf), 0, nullptr
+		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		nullptr, 
+		hr, 
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		reinterpret_cast<LPSTR>(&pMsgBuf), 
+		0, 
+		nullptr
 	);
+
 	// 0 string length returned indicates a failure
 	if (nMsgLen == 0)
 	{
 		return "Unidentified error code";
 	}
+
 	// copy error string from windows-allocated buffer to std::string
 	std::string errorString = pMsgBuf;
+
 	// free windows buffer
 	LocalFree(pMsgBuf);
 	return errorString;
 }
 
 Window::HrException::HrException(int line, const char* file, HRESULT hr) noexcept
-	:
-	Exception(line,file),
-	hr(hr)
-{
-	
-}
+	: Exception(line, file)
+	, hr(hr)
+{}
 
-const char * Window::HrException::what() const noexcept
+const char* Window::HrException::what() const noexcept
 {
 	std::ostringstream os;
-	os << GetType() << std::endl 
+	os << GetType() << std::endl
 		<< "[Error Code] 0x" << std::hex << std::uppercase << GetErrorCode()
 		<< std::dec << " (" << (unsigned long)GetErrorCode() << ")" << std::endl
 		<< "[Description] " << GetErrorDescription() << std::endl
@@ -355,7 +336,7 @@ const char * Window::HrException::what() const noexcept
 	return wBuffer.c_str();
 }
 
-const char * Window::HrException::GetType() const noexcept
+const char* Window::HrException::GetType() const noexcept
 {
 	return "HRESULT Window Exception";
 }
@@ -370,8 +351,7 @@ std::string Window::HrException::GetErrorDescription() const noexcept
 	return Exception::TranslateErrorCode(hr);
 }
 
-const char * Window::NoGfxException::GetType() const noexcept
+const char* Window::NoGfxException::GetType() const noexcept
 {
 	return "Window Exception [No Graphics]";
-	
 }

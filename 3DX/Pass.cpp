@@ -2,9 +2,9 @@
 #include "Bindable.h"
 #include "Sink.h"
 
-Pass::Pass(const std::string passName) : passName(passName)
-{
-}
+Pass::Pass(const std::string passName) 
+	: passName(passName)
+{}
 
 void Pass::RegisterSink(std::unique_ptr<Sink> sinkingObject)
 {
@@ -17,20 +17,16 @@ void Pass::RegisterSource(std::unique_ptr<Source> sourceObject)
 	sources.emplace_back(std::move(sourceObject));
 }
 
-
 void Pass::SetSinkLinkage(std::string registeredSinkName, std::string targetName)
 {
 	for (const auto& elem : sinks)
 	{
-		
 		if (elem->GetRegisteredName() == registeredSinkName)
 		{
 			// For now assume all global names will start with $. and rest the string
 			// if targetName doesn't have $ at starting index than interpret is as others
-
 			/*if (targetName[0] == '$')
 			{
-
 				elem->SetPassName("$");
 				auto tName = [=](std::string s) -> std::string { std::string new_str;
 				for (auto elem : s)
@@ -46,13 +42,11 @@ void Pass::SetSinkLinkage(std::string registeredSinkName, std::string targetName
 				}
 				return new_str; };
 				elem->SetTargetName(tName(targetName));
-
 			}
 			else
 			{*/
-
-				elem->SetPassName(passName);
-				elem->SetTargetName(targetName);
+			elem->SetPassName(passName);
+			elem->SetTargetName(targetName);
 			//}
 		}
 	}
@@ -80,15 +74,12 @@ const Sink& Pass::GetSinkByName(std::string sinkName)
 	}
 }
 
-
 const std::vector<std::unique_ptr<Sink>>& Pass::GetSinks()
 {
 	return sinks;
-	
 }
 
 const std::string Pass::GetPassName() const
 {
 	return passName;
 }
-

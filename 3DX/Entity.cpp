@@ -1,7 +1,6 @@
 #include "Entity.h"
 #include "Drawable.h"
 
-
 Entity::Entity(entt::registry& reg, Scene* scene) : scene(scene)
 {
 	entity = (reg).create();

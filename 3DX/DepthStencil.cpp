@@ -1,17 +1,12 @@
 #include "DepthStencil.h"
 
-DepthStencil::DepthStencil(Graphics& gfx) : DepthStencil(gfx,gfx.GetWidth(),gfx.GetHeight())
+DepthStencil::DepthStencil(Graphics& gfx)
+	: DepthStencil(gfx, gfx.GetWidth(), gfx.GetHeight())
+{}
+
+DepthStencil::DepthStencil(Graphics& gfx, UINT width, UINT height) : width(width), height(height)
 {
-}
-
-DepthStencil::DepthStencil(Graphics& gfx, UINT width, UINT height) : width(width),height(height)
-{
-	//Create default DSS state along with constructor
-
-
-
-
-	// TO DO: Enable support for MSAA
+	// TODO: Enable support for MSAA
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> depthTex;
 	D3D11_TEXTURE2D_DESC  depthTexDesc{};
 	ZeroMemory(&depthTexDesc, sizeof(depthTexDesc));
@@ -37,10 +32,8 @@ DepthStencil::DepthStencil(Graphics& gfx, UINT width, UINT height) : width(width
 	depthTex->Release();
 }
 
-
 DepthStencil::DepthStencil(Graphics& gfx, ID3D11Texture2D* texture, UINT state)
 {
-
 	D3D11_TEXTURE2D_DESC depthTexDesc;
 	texture->GetDesc(&depthTexDesc);
 	width = depthTexDesc.Width;
@@ -58,28 +51,21 @@ DepthStencil::DepthStencil(Graphics& gfx, ID3D11Texture2D* texture, UINT state)
 }
 
 void DepthStencil::BindAsBuffer(Graphics& gfx)
-{
-	// Set the depth State;
-}
+{ /* Set the depth State; */ }
 
 void DepthStencil::BindAsBuffer(Graphics& gfx, BufferResource* depth)
-{
-}
+{}
 
 void DepthStencil::Clear(Graphics& gfx)
 {
-	GetContext(gfx)->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f,0.0f);
+	GetContext(gfx)->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
-OutputOnlyDepthBuffer::OutputOnlyDepthBuffer(Graphics& gfx) : OutputOnlyDepthBuffer(gfx,gfx.GetWidth(),gfx.GetHeight())
-{
-}
+OutputOnlyDepthBuffer::OutputOnlyDepthBuffer(Graphics& gfx) : OutputOnlyDepthBuffer(gfx, gfx.GetWidth(), gfx.GetHeight())
+{}
 
-OutputOnlyDepthBuffer::OutputOnlyDepthBuffer(Graphics& gfx, UINT width, UINT height) :DepthStencil(gfx,width,height)
-{
-}
+OutputOnlyDepthBuffer::OutputOnlyDepthBuffer(Graphics& gfx, UINT width, UINT height) : DepthStencil(gfx, width, height)
+{}
 
 void OutputOnlyDepthBuffer::Bind(Graphics& gfx)
-{
-
-}
+{}

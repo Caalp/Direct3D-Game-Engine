@@ -1,10 +1,10 @@
 #pragma once
 #include "Bindable.h"
 #include <vector>
+
 template<typename C>
 class ConstBuffs : public Bindable
 {
-	
 public:
 	void Update(Graphics& gfx, const C& cb)
 	{
@@ -16,9 +16,9 @@ public:
 		);
 		memcpy(MappedSource.pData, &cb, sizeof(cb));
 		GetContext(gfx)->Unmap(pConstBuffer.Get(), 0u);
-		
+
 	}
-	void Update(Graphics& gfx, const C& cb,UINT size)
+	void Update(Graphics& gfx, const C& cb, UINT size)
 	{
 		D3D11_MAPPED_SUBRESOURCE MappedSource;
 		GetContext(gfx)->Map(
@@ -26,11 +26,11 @@ public:
 			D3D11_MAP_WRITE_DISCARD, 0u,
 			&MappedSource
 		);
-		memcpy(MappedSource.pData, cb.data(), sizeof(cb[0])*size);
+		memcpy(MappedSource.pData, cb.data(), sizeof(cb[0]) * size);
 		GetContext(gfx)->Unmap(pConstBuffer.Get(), 0u);
 
 	}
-	
+
 	ConstBuffs(Graphics& gfx, const C& consts, UINT slot = 0u)
 		:
 		slot(slot)
@@ -47,7 +47,7 @@ public:
 		csd.pSysMem = &consts;
 		GetDevice(gfx)->CreateBuffer(&cbd, &csd, &pConstBuffer);
 	}
-	ConstBuffs(Graphics& gfx, C& consts, UINT size,UINT slot)
+	ConstBuffs(Graphics& gfx, C& consts, UINT size, UINT slot)
 		:
 		slot(slot)
 	{
@@ -56,7 +56,7 @@ public:
 		cbd.Usage = D3D11_USAGE_DYNAMIC;
 		cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		cbd.MiscFlags = 0u;
-		cbd.ByteWidth = sizeof(consts[0])*55;
+		cbd.ByteWidth = sizeof(consts[0]) * 55;
 		cbd.StructureByteStride = 0u;
 
 		D3D11_SUBRESOURCE_DATA csd = {};
@@ -87,14 +87,14 @@ class VSConstBuff : public ConstBuffs<C>
 	using ConstBuffs<C>::pConstBuffer;
 public:
 	using ConstBuffs<C>::ConstBuffs;
-	
+
 	void Bind(Graphics& gfx) override
 	{
-		Bindable::GetContext(gfx)->VSSetConstantBuffers(0u, 1u,pConstBuffer.GetAddressOf());
+		Bindable::GetContext(gfx)->VSSetConstantBuffers(0u, 1u, pConstBuffer.GetAddressOf());
 	}
-	void Bind(Graphics& gfx, UINT startSlot,UINT numofBuff) override
+	void Bind(Graphics& gfx, UINT startSlot, UINT numofBuff) override
 	{
-		Bindable::GetContext(gfx)->VSSetConstantBuffers(startSlot,numofBuff, ConstBuffs<C>::pConstBuffer.GetAddressOf());
+		Bindable::GetContext(gfx)->VSSetConstantBuffers(startSlot, numofBuff, ConstBuffs<C>::pConstBuffer.GetAddressOf());
 	}
 };
 
@@ -108,7 +108,7 @@ public:
 
 	void Bind(Graphics& gfx) override
 	{
-		Bindable::GetContext(gfx)->PSSetConstantBuffers(slot, 1u,pConstBuffer.GetAddressOf());
+		Bindable::GetContext(gfx)->PSSetConstantBuffers(slot, 1u, pConstBuffer.GetAddressOf());
 	}
 	/*void Bind(Graphics& gfx, UINT startSlot, UINT numofBuff) override
 	{

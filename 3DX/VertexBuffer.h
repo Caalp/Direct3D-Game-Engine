@@ -3,8 +3,6 @@
 #include <vector>
 class VertexBuffer : public Bindable
 {
-
-
 public:
 	template<typename V>
 	VertexBuffer(Graphics& gfx, const std::vector<V>& v) : stride(UINT(sizeof(V))),offset(UINT(0u))
@@ -25,7 +23,6 @@ public:
 		
 	}
 	void Bind(Graphics& gfx);
-
 protected:
 	UINT stride;
 	UINT offset;

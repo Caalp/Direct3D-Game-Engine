@@ -6,7 +6,6 @@
 #include "Graphics.h"
 #include <memory>
 
-
 class Window
 {
 public:
@@ -35,7 +34,6 @@ public:
 		const char* GetType() const noexcept override;
 	};
 private:
-
 	class WindowClass
 	{
 	public:

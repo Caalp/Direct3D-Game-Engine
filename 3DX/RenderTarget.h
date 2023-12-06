@@ -2,9 +2,8 @@
 #include "BufferResource.h"
 #include "Bindable.h"
 
-
+// TODO : set viewport after setting render target
 class DepthStencil;
-// TO DO : set viewport after setting render target
 
 class RenderTarget : public Bindable, public BufferResource
 {
@@ -26,24 +25,19 @@ protected:
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
 };
 
-
 class ShaderViewRenderTarget : public RenderTarget
 {
-
 public:
 	ShaderViewRenderTarget(Graphics& gfx, UINT width, UINT Height, UINT slot);
 	void BindAsBuffer(Graphics& gfx) override;
-	
 private:
 	UINT slot;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shaderResourceView;
 };
 
-
 class BackBuffer : public RenderTarget
 {
 public:
-
 	BackBuffer(Graphics& gfx,ID3D11Texture2D* texture);
 	void Bind(Graphics& gfx);
 };

@@ -39,6 +39,3 @@
 //  using pT = typename std::remove_reference<T>::type;
 //  return std::forward<T>(*(pT*)std::addressof(u));
 //}
-//
-//
-//

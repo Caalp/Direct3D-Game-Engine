@@ -6,9 +6,11 @@
 #include "RenderTarget.h"
 #include "Imgui/imgui_impl_dx11.h"
 #include "Imgui/imgui_impl_win32.h"
+
 namespace wrl = Microsoft::WRL;
 
-
+static UINT width = 800u;
+static UINT height = 600u;
 
 HRESULT Graphics::CompileShader(LPCWSTR pScrData, LPCSTR entryPoint, LPCSTR shaderModel, ID3DBlob** ppBlobOut)
 {
@@ -21,7 +23,6 @@ HRESULT Graphics::CompileShader(LPCWSTR pScrData, LPCSTR entryPoint, LPCSTR shad
 	ID3DBlob* errorBlob = nullptr;
 
 	HRESULT hr = D3DCompileFromFile(pScrData, NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, entryPoint, shaderModel, D3DCOMPILE_DEBUG, 0, &shaderBlob, &errorBlob);
-
 	if (FAILED(hr))
 	{
 		OutputDebugString("Compilation of Shader is FAILED");
@@ -41,7 +42,6 @@ void Graphics::BeginFrame()
 	}
 }
 
-
 Graphics::Graphics(HWND hWnd)
 {
 	DXGI_SWAP_CHAIN_DESC scd = {};
@@ -53,7 +53,7 @@ Graphics::Graphics(HWND hWnd)
 	scd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 	scd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	scd.SampleDesc.Count = 1;
-	scd.SampleDesc.Quality  = 0;
+	scd.SampleDesc.Quality = 0;
 	scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	scd.BufferCount = 1;
 	scd.OutputWindow = hWnd;
@@ -75,12 +75,12 @@ Graphics::Graphics(HWND hWnd)
 		nullptr,
 		&pImmediateContext);
 
-	wrl::ComPtr<ID3D11Texture2D> pBackBuffer ;
+	wrl::ComPtr<ID3D11Texture2D> pBackBuffer;
 	pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &pBackBuffer);
 
 	pTarget = std::shared_ptr<RenderTarget>{ new BackBuffer(*this,pBackBuffer.Get()) };
 	//pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &pTarget);
-	
+
 	// depth stencil view creation
 	/*D3D11_DEPTH_STENCIL_DESC dsd = {};
 	dsd.DepthEnable = TRUE;
@@ -113,14 +113,11 @@ Graphics::Graphics(HWND hWnd)
 	dsv.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	dsv.Texture2D.MipSlice = 0;*/
 
-	
-	
 	//pImmediateContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), pdsView.Get());
-	
 	//pBackBuffer->Release();
 
 	D3D11_VIEWPORT vp;
-	vp.Width =800.0f;
+	vp.Width = 800.0f;
 	vp.Height = 600.0f;
 	vp.MinDepth = 0;
 	vp.MaxDepth = 1.0f;
@@ -128,8 +125,6 @@ Graphics::Graphics(HWND hWnd)
 	vp.TopLeftY = 0.0f;
 
 	pImmediateContext->RSSetViewports(1u, &vp);
-
-
 	//Imgui setup
 	//IMGUI_CHECKVERSION();
 	//ImGui::CreateContext();
@@ -137,18 +132,14 @@ Graphics::Graphics(HWND hWnd)
 	//ImGui_ImplWin32_Init(hWnd);
 	ImGui_ImplDX11_Init(this->pDevice.Get(), this->pImmediateContext.Get());
 	//ImGui::StyleColorsDark();
-
 }
 
 Graphics::~Graphics()
 {
 	ImGui_ImplDX11_Shutdown();
-
 }
 
-
-
-void Graphics::DrawIndexed(UINT count,uint32_t startIndexLocation, int startVertexLocation)
+void Graphics::DrawIndexed(UINT count, uint32_t startIndexLocation, int startVertexLocation)
 {
 	pImmediateContext->DrawIndexed(count, startIndexLocation, startVertexLocation);
 }
@@ -160,15 +151,11 @@ void Graphics::Draw(UINT vertexCount, UINT vertexStartLocation)
 
 void Graphics::EndFrame()
 {
-	
 	if (imguiEnabled)
 	{
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 	}
-
-
-	
 	HRESULT hr;
 	hr = pSwapChain->Present(0u, 0u);
 }
@@ -214,7 +201,7 @@ DirectX::XMMATRIX Graphics::GetCamera() const
 	return camera;
 }
 
-void Graphics::SetCameraPos(const DirectX::XMFLOAT3 & pos)
+void Graphics::SetCameraPos(const DirectX::XMFLOAT3& pos)
 {
 	cameraPos = pos;
 }
@@ -227,17 +214,14 @@ DirectX::XMFLOAT3 Graphics::GetCameraPos() const
 const UINT& Graphics::GetWidth() const
 {
 	// TODO: insert return statement here
-	return 800u;
+	return width;
 }
 
 const UINT& Graphics::GetHeight() const
 {
 	// TODO: insert return statement here
-	return 600u;
+	return height;
 }
-
-
-
 
 Microsoft::WRL::ComPtr<ID3D11Device> Graphics::pDevice;
 Microsoft::WRL::ComPtr<IDXGISwapChain> Graphics::pSwapChain;

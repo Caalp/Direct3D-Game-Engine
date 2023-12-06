@@ -1,7 +1,7 @@
 #include "RenderTarget.h"
 #include "DepthStencil.h"
 
-RenderTarget::RenderTarget(Graphics& gfx, UINT w, UINT h) : width(w),height(h)
+RenderTarget::RenderTarget(Graphics& gfx, UINT w, UINT h) : width(w), height(h)
 {
 	D3D11_TEXTURE2D_DESC texDesc;
 	texDesc.Width = width;
@@ -23,11 +23,7 @@ RenderTarget::RenderTarget(Graphics& gfx, UINT w, UINT h) : width(w),height(h)
 	rtvDesc.Format = texDesc.Format;
 	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 	rtvDesc.Texture2D.MipSlice = 0u;
-
-	
-		
 	GetDevice(gfx)->CreateRenderTargetView(rtvTex.Get(), &rtvDesc, renderTargetView.GetAddressOf());
-	
 }
 
 RenderTarget::RenderTarget(Graphics& gfx, ID3D11Texture2D* texture)
@@ -36,7 +32,6 @@ RenderTarget::RenderTarget(Graphics& gfx, ID3D11Texture2D* texture)
 	texture->GetDesc(&textureDesc);
 	width = textureDesc.Width;
 	height = textureDesc.Height;
-
 
 	D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
 	rtvDesc.Format = textureDesc.Format;
@@ -54,7 +49,6 @@ void RenderTarget::BindAsBuffer(Graphics& gfx)
 
 void RenderTarget::BindAsBuffer(Graphics& gfx, BufferResource* depth)
 {
-
 	// TO DO : Make sure depth variable is not null or other type than DepthStencil !!!
 	GetContext(gfx)->OMSetRenderTargets(1u, renderTargetView.GetAddressOf(), dynamic_cast<DepthStencil*>(depth)->depthStencilView.Get());
 }
@@ -87,22 +81,18 @@ UINT RenderTarget::GetHeight() const
 }
 
 void RenderTarget::Bind(Graphics& gfx)
-{
-}
+{}
 
-
-ShaderViewRenderTarget::ShaderViewRenderTarget(Graphics& gfx, UINT width, UINT height, UINT slot) : RenderTarget(gfx,width,height),slot(slot)
+ShaderViewRenderTarget::ShaderViewRenderTarget(Graphics& gfx, UINT width, UINT height, UINT slot) 
+	: RenderTarget(gfx, width, height), slot(slot)
 {
 	Microsoft::WRL::ComPtr<ID3D11Resource> resource;
 	renderTargetView.Get()->GetResource(resource.GetAddressOf());
-
-	
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;;
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.TextureCube.MipLevels = -1;
 	srvDesc.TextureCube.MostDetailedMip = 0;
-
 	GetDevice(gfx)->CreateShaderResourceView(resource.Get(), &srvDesc, shaderResourceView.GetAddressOf());
 }
 
@@ -111,12 +101,8 @@ void ShaderViewRenderTarget::BindAsBuffer(Graphics& gfx)
 	GetContext(gfx)->PSSetShaderResources(1u, 1u, shaderResourceView.GetAddressOf());
 }
 
-
-
-BackBuffer::BackBuffer(Graphics& gfx, ID3D11Texture2D* texture) : RenderTarget(gfx,texture)
-{
-}
+BackBuffer::BackBuffer(Graphics& gfx, ID3D11Texture2D* texture) : RenderTarget(gfx, texture)
+{}
 
 void BackBuffer::Bind(Graphics& gfx)
-{
-}
+{}

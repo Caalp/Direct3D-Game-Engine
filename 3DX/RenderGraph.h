@@ -7,14 +7,9 @@
 #include "RenderGraph.h"
 #include "Pass.h"
 
-
 class RenderQueuePass;
-
-
-
 class RenderGraph
 {
-	
 public:
 	//void AddPass(std::unique_ptr<Pass> pass, std::string passName)
 	//{
@@ -40,7 +35,6 @@ private:
 	std::shared_ptr<RenderTarget> backBuffer;
 	std::shared_ptr<DepthStencil> depthBuffer;
 private:
-
 	std::vector<std::unique_ptr<Pass>> passes;
 	std::vector<std::unique_ptr<Sink>> globalSinks;
 	std::vector<std::unique_ptr<Source>> globalSources;

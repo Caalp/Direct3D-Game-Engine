@@ -1,10 +1,8 @@
 #pragma once
-
 #include <vector>
 #include <memory>
 #include <string>
 #include "DrawCallDispatch.h"
-
 
 class PixelShader;
 class VertexShader;
@@ -14,11 +12,8 @@ class Bindable;
 class Drawable;
 class Graphics;
 
-
-
 class Step
 {
-
 public:
 	Step(std::string targetName);
 	Step(const Step&) = default;
@@ -27,14 +22,10 @@ public:
 	void AddBind(const std::shared_ptr<IBackendDispatch>& drawFunc);
 	void Submit(Drawable& d);
 	void Link(RenderGraph& rg);
-	void Bind(Graphics& gfx) const ;
-	
-	
+	void Bind(Graphics& gfx) const;
 	void Draw(Graphics& gfx) const;
-
 	const std::string& GetTargetPassName() const;
 	bool isLinked() const;
-
 	//void Submit(RenderGraph& rg);
 private:
 	bool linked = false;
@@ -42,5 +33,4 @@ private:
 	std::vector<std::shared_ptr<Bindable>> bindables;
 	RenderQueuePass* targetPass;
 	std::vector<std::shared_ptr<IBackendDispatch>> mDrawFunc;
-
 };
